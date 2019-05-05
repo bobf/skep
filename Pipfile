@@ -8,6 +8,9 @@ verify_ssl = true
 [packages]
 docker = "*"
 flask = "*"
+flask-socketio = "*"
+werkzeug = "*"
+eventlet = "*"
 
 [requires]
 python_version = "3.7"
