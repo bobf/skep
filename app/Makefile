@@ -1,6 +1,6 @@
 all:
-	mkdir -p .build/app
-	git show HEAD:app/Dockerfile > .build/app/Dockerfile
-	git archive --format tar -o .build/app/build.tar HEAD
-	cd .build/app && docker build . -t skep/app
+	mkdir -p .build/
+	git show HEAD:app/Dockerfile > .build/Dockerfile
+	git archive --format tar -o .build/build.tar HEAD
+	cd .build/ && docker build . -t skep/app
 

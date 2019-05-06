@@ -92,7 +92,7 @@ class StatRunner:
 if __name__ == '__main__':
 
     StatRunner(
-        url=urllib.urlparse.urljoin(os.environ['SKEP_HOST_URL'], '/stats'),
+        url=urllib.parse.urljoin(os.environ['SKEP_HOST_URL'], '/stats'),
         drives=os.environ.get('DISK_DRIVES', '').split(','),
         network=os.environ.get('NETWORK_INTERFACES', '').split(','),
         interval=int(os.environ.get('INTERVAL', '5')),
