@@ -14,7 +14,7 @@ services:
     volumes:
       - "/proc:/hostfs/proc:ro"
     environment:
-      SKEP_HOST_URL: http://skep:8080
+      SKEP_HOST_URL: http://app:8080
       LINUX_METRICS_ROOT_FS: '/hostfs'
       DISK_DRIVES: 'sda:sda1'
       NETWORK_INTERFACES: 'eth0'
