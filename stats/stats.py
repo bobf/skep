@@ -39,7 +39,9 @@ class StatRunner:
                 'Could not publish stats: %s (%s)' % (self.opts['url'], e)
             )
         else:
-            self.log.info('Published stats: %s' % resp.getcode())
+            self.log.info(
+                'Published stats: %s %s' % (resp.getcode(), resp.read())
+            )
 
     def stats(self):
         return {
