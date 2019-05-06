@@ -1,7 +1,7 @@
 import json
 import os
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_from_directory
 from flask.json import JSONEncoder
 from flask_socketio import SocketIO, emit
 
@@ -33,13 +33,17 @@ application.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev-key')
 application.json_encoder = DelegatingJSONEncoder
 socketio = SocketIO(application)
 
-@application.route("/swarm.json")
-def swarm():
-    return jsonify(Swarm().manifest())
+@application.route('/files/<path:path>')
+def files(path):
+    return send_from_directory('files', path)
 
 @application.route("/")
 def root():
     return render_template('layout.html')
+
+@application.route("/swarm.json")
+def swarm():
+    return jsonify(Swarm().manifest())
 
 @application.route("/stats", methods=["POST"])
 def stats_create():

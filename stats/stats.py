@@ -41,6 +41,7 @@ class StatRunner:
 
     def stats(self):
         return {
+            'host': self.opts['hostname'],
             'network': self.network(),
             'memory': self.memory(),
             'drives': self.drives(),
@@ -99,6 +100,7 @@ class StatRunner:
 if __name__ == '__main__':
 
     StatRunner(
+        hostname=open('/hostfs/etc/hostname', 'r').read().strip(),
         url=urllib.parse.urljoin(os.environ['SKEP_HOST_URL'], '/stats'),
         drives=os.environ.get('DISK_DRIVES', '').split(','),
         network=os.environ.get('NETWORK_INTERFACES', '').split(','),

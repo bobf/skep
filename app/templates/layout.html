@@ -4,31 +4,6 @@
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-    <script type="text/javascript" charset="utf-8">
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
-        socket.on('connect', function() {
-          socket.emit('manifest');
-        });
-
-        socket.on('manifest', function(data) {
-          var manifest = JSON.parse(data);
-
-          for (var i = 0; i < manifest.stacks.length; i++) {
-            var stack = $("<div></div>");
-
-            stack.append("<div>" + manifest.stacks[i].name + "</div>");
-
-            for (var j = 0; j < manifest.stacks[i].services.length; j++) {
-              stack.append("<div>" + manifest.stacks[i].services[j].Spec.Name + "</div>");
-            }
-
-            $("#manifest").append(stack);
-          }
-        });
-
-        socket.on('stats', function (data) {
-          console.log(JSON.parse(data));
-        });
-    </script>
+    <script type="text/javascript" src="/files/app.js"></script>
   </body>
 </html>

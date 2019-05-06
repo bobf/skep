@@ -8,11 +8,13 @@ services:
       - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./app:/skep:rw"
 
   stats:
     image: skep/stats
     volumes:
       - "/proc:/hostfs/proc:ro"
+      - "/etc:/hostfs/etc:ro"
     environment:
       SKEP_HOST_URL: http://app:8080
       LINUX_METRICS_ROOT_FS: '/hostfs'
