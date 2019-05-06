@@ -3,8 +3,10 @@
 import json
 import logging
 import os
-import time
+import random
+import string
 import sys
+import time
 import urllib.parse
 import urllib.request
 from urllib.request import Request
@@ -97,10 +99,19 @@ class StatRunner:
         logger.addHandler(handler)
         return logger
 
-if __name__ == '__main__':
+def hostname():
+    path = os.environ.get('HOSTNAME_PATH', '/hostfs/etc/hostname')
+    try:
+        return open(path, 'r').read().strip()
+    except FileNotFoundError:
+        return ''.join(
+            random.choice(string.ascii_lowercase)
+            for _ in range(8)
+        )
 
+if __name__ == '__main__':
     StatRunner(
-        hostname=open('/hostfs/etc/hostname', 'r').read().strip(),
+        hostname=hostname(),
         url=urllib.parse.urljoin(os.environ['SKEP_HOST_URL'], '/stats'),
         drives=os.environ.get('DISK_DRIVES', '').split(','),
         network=os.environ.get('NETWORK_INTERFACES', '').split(','),
