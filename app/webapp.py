@@ -21,10 +21,6 @@ class DelegatingJSONEncoder(JSONEncoder):
         except AttributeError:
             return obj
 
-print(os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
-        'templates'
-    ))
 application = Flask(
     __name__,
     template_folder=os.path.join(
