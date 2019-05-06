@@ -1,9 +1,7 @@
-FROM alpine:3.9.3
+FROM python:3.7-alpine
 ADD build.tar /skep
-RUN apk --update add python3 wget \
- && wget 'https://bootstrap.pypa.io/get-pip.py' -O get-pip.py \
- && python3 get-pip.py \
- && pip install pipenv
-RUN /skep && pipenv sync
+RUN pip install pipenv
+RUN cd /skep && pipenv sync
+RUN apk add --update gcc
 WORKDIR /skep
 CMD FLASK_APP=controller.py pipenv run python webapp.py
