@@ -1,5 +1,10 @@
 version: '3.7'
 services:
+  skep:
+    image: skep/app
+    networks:
+      - skep
+
   stats:
     image: skep/stats
     volumes:
@@ -10,3 +15,9 @@ services:
       DISK_DRIVES: 'sda:sda1'
       NETWORK_INTERFACES: 'eth0'
       LOG_LEVEL: 'DEBUG'
+
+    networks:
+      - skep
+
+networks:
+  skep: {}

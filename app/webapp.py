@@ -21,16 +21,16 @@ class DelegatingJSONEncoder(JSONEncoder):
         except AttributeError:
             return obj
 
-webapp = Flask(__name__)
-webapp.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev-key')
-webapp.json_encoder = DelegatingJSONEncoder
-socketio = SocketIO(webapp)
+application = Flask(__name__)
+application.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev-key')
+application.json_encoder = DelegatingJSONEncoder
+socketio = SocketIO(application)
 
-@webapp.route("/swarm.json")
+application.route("/swarm.json")
 def swarm():
     return jsonify(Swarm().manifest())
 
-@webapp.route("/")
+@application.route("/")
 def root():
     return render_template('layout.html')
 
@@ -39,4 +39,4 @@ def handle_message():
     emit("manifest", json.dumps(Swarm().manifest(), cls=DelegatingJSONEncoder))
 
 if __name__ == "__main__":
-    socketio.run(webapp)
+    socketio.run(application)

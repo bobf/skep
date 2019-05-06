@@ -1,7 +1,7 @@
 FROM python:3.7-alpine
 ADD build.tar /skep
 RUN pip install pipenv
+RUN apk add --update build-base gcc
 RUN cd /skep && pipenv sync
-RUN apk add --update gcc
 WORKDIR /skep
-CMD FLASK_APP=controller.py pipenv run python webapp.py
+CMD pipenv run gunicorn webapp -b 0.0.0.0:8080
