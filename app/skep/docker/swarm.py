@@ -3,9 +3,9 @@ import os
 
 import docker
 
-from app.docker.node import Node
-from app.docker.service import Service
-from app.docker.stack import Stack
+from skep.docker.node import Node
+from skep.docker.service import Service
+from skep.docker.stack import Stack
 
 class Swarm:
     def __init__(self):

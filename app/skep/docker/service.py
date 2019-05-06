@@ -1,4 +1,4 @@
-from app.docker.task import Task
+from skep.docker.task import Task
 
 class Service:
     def __init__(self, service):

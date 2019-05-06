@@ -1,2 +1,0 @@
-#!/bin/bash
-FLASK_APP=app/controller.py FLASK_DEBUG=1 pipenv run python webapp.py

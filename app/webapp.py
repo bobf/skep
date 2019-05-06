@@ -5,7 +5,7 @@ from flask import Flask, jsonify, render_template
 from flask.json import JSONEncoder
 from flask_socketio import SocketIO, emit
 
-from app.docker.swarm import Swarm
+from skep.docker.swarm import Swarm
 
 class DelegatingJSONEncoder(JSONEncoder):
     def default(self, obj):
