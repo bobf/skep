@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
+import json
 import logging
 import os
 import time
 import sys
 import urllib.parse
 import urllib.request
+from urllib.request import Request
 
 import linux_metrics as lm
 
@@ -22,15 +24,20 @@ class StatRunner:
     def ping(self):
         stats = self.stats()
         self.log.debug(str(stats))
+        request = Request(
+            self.opts['url'],
+            data=json.dumps(stats).encode('utf8'),
+            headers={ 'Content-Type': 'application/json' }
+        )
+
         try:
-            resp = urllib.request.urlopen(
-                self.opts['url'],
-                urllib.parse.urlencode(stats).encode('utf8')
-            )
+            resp = urllib.request.urlopen(request)
         except urllib.error.URLError as e:
             self.log.warn(
-                'Unable to connect to Skep host: %s (%s)' % (self.opts['url'], e)
+                'Could not publish stats: %s (%s)' % (self.opts['url'], e)
             )
+        else:
+            self.log.info('Published stats: %s' % resp.getcode())
 
     def stats(self):
         return {

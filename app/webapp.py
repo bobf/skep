@@ -43,7 +43,7 @@ def root():
 
 @application.route("/stats", methods=["POST"])
 def stats_create():
-    socketio.emit("stats", json.dumps(dict(request.data)), broadcast=True)
+    socketio.emit("stats", json.dumps(request.get_json()), broadcast=True)
     return 'OK', 200
 
 @socketio.on("manifest")
