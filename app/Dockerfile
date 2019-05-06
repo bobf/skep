@@ -6,4 +6,5 @@ COPY Pipfile Pipfile.lock /skep/
 WORKDIR /skep
 RUN pipenv sync
 ADD build.tar .
+RUN pipenv sync
 CMD pipenv run gunicorn webapp -b 0.0.0.0:8080
