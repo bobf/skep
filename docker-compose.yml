@@ -4,6 +4,8 @@ services:
     image: skep/app
     networks:
       - skep
+    ports:
+      - "8080:8080"
 
   stats:
     image: skep/stats

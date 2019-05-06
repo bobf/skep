@@ -21,12 +21,23 @@ class DelegatingJSONEncoder(JSONEncoder):
         except AttributeError:
             return obj
 
-application = Flask(__name__)
+print(os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        'templates'
+    ))
+application = Flask(
+    __name__,
+    template_folder=os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        'templates'
+    )
+)
+
 application.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev-key')
 application.json_encoder = DelegatingJSONEncoder
 socketio = SocketIO(application)
 
-application.route("/swarm.json")
+@application.route("/swarm.json")
 def swarm():
     return jsonify(Swarm().manifest())
 
