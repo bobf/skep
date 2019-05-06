@@ -34,6 +34,10 @@ def swarm():
 def root():
     return render_template('layout.html')
 
+@application.route("/stats", methods=["POST"])
+def stats_create():
+    emit("stats", request.data)
+
 @socketio.on("manifest")
 def handle_message():
     emit("manifest", json.dumps(Swarm().manifest(), cls=DelegatingJSONEncoder))

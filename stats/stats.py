@@ -25,11 +25,11 @@ class StatRunner:
         try:
             resp = urllib.request.urlopen(
                 self.opts['url'],
-                urllib.parse.urlencode(stats)
+                urllib.parse.urlencode(stats).encode('utf8')
             )
-        except urllib.error.URLError:
+        except urllib.error.URLError as e:
             self.log.warn(
-                'Unable to connect to Skep host: %s' % (self.opts['url'],)
+                'Unable to connect to Skep host: %s (%s)' % (self.opts['url'], e)
             )
 
     def stats(self):
@@ -92,7 +92,7 @@ class StatRunner:
 if __name__ == '__main__':
 
     StatRunner(
-        url=os.environ['SKEP_HOST_URL'],
+        url=urllib.urlparse.urljoin(os.environ['SKEP_HOST_URL'], '/stats'),
         drives=os.environ.get('DISK_DRIVES', '').split(','),
         network=os.environ.get('NETWORK_INTERFACES', '').split(','),
         interval=int(os.environ.get('INTERVAL', '5')),
