@@ -4,6 +4,7 @@ import logging
 import os
 import time
 import sys
+import urllib.parse
 import urllib.request
 
 import linux_metrics as lm
@@ -22,7 +23,10 @@ class StatRunner:
         stats = self.stats()
         self.log.debug(str(stats))
         try:
-            resp = urllib.request.urlopen(self.opts['url'], stats)
+            resp = urllib.request.urlopen(
+                self.opts['url'],
+                urllib.parse.urlencode(stats)
+            )
         except urllib.error.URLError:
             self.log.warn(
                 'Unable to connect to Skep host: %s' % (self.opts['url'],)
