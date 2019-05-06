@@ -25,6 +25,10 @@
             $("#manifest").append(stack);
           }
         });
+
+        socket.on('stats', function (data) {
+          console.log(data);
+        });
     </script>
   </body>
 </html>
