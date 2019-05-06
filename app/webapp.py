@@ -37,6 +37,7 @@ def root():
 @application.route("/stats", methods=["POST"])
 def stats_create():
     socketio.emit("stats", request.data)
+    return 'OK', 200
 
 @socketio.on("manifest")
 def handle_message():
