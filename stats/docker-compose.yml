@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  stats:
+    image: skep/stats
+    volumes:
+      - "/proc:/hostfs/proc:ro"
+    environment:
+      SKEP_HOST_URL: http://skep:8080
+      LINUX_METRICS_ROOT_FS: '/hostfs'
+      DISK_DRIVES: 'sda:sda1'
+      NETWORK_INTERFACES: 'eth0'
+      LOG_LEVEL: 'DEBUG'
