@@ -1,7 +1,7 @@
 import json
 import os
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 from flask.json import JSONEncoder
 from flask_socketio import SocketIO, emit
 
@@ -36,7 +36,7 @@ def root():
 
 @application.route("/stats", methods=["POST"])
 def stats_create():
-    emit("stats", request.data)
+    socketio.emit("stats", request.data)
 
 @socketio.on("manifest")
 def handle_message():
