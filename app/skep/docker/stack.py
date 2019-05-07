@@ -3,8 +3,8 @@ class Stack:
         self.name = name
         self.services = services
 
-    def as_json(self):
+    def serializable(self):
         return {
             "name": self.name,
-            "services": [x.attrs for x in self.services] 
+            "services": [x.attrs() for x in self.services]
         }

@@ -1,0 +1,21 @@
+#nodes {
+  float: left;
+  height: 100%;
+  width: 20%;
+  border: 1px solid #f0f;
+  padding: 1em;
+}
+
+#stacks {
+  padding: 1em;
+  float: left;
+  height: 100%;
+  border: 1px solid #f0f;
+  width: 75%;
+}
+
+.service {
+  padding: 1em;
+  margin: 1em;
+  border: 1px solid #000;
+}

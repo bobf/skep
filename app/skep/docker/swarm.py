@@ -25,7 +25,7 @@ class Swarm:
 
     def stacks(self):
         return [
-            Stack(name, list(services))
+            Stack(name, list(Service(x) for x in services))
             for name, services in self.grouped_services()
         ]
 
@@ -38,8 +38,16 @@ class Swarm:
     def nodes(self):
         return [Node(x) for x in self.client.nodes.list()]
 
-    def as_json(self):
-        return self.client.swarm.attrs
+    def attrs(self):
+        attrs = self.client.swarm.attrs
+        return {
+            "created": attrs["CreatedAt"],
+            "name": attrs["Spec"]["Name"],
+            "updated": attrs["UpdatedAt"]
+        }
+
+    def serializable(self):
+        return self.attrs()
 
     def by_stack(self, obj):
         return obj.attrs['Spec']['Labels']['com.docker.stack.namespace']

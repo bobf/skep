@@ -45,7 +45,7 @@ class StatRunner:
 
     def stats(self):
         return {
-            'host': self.opts['hostname'],
+            'hostname': self.opts['hostname'],
             'network': self.network(),
             'memory': self.memory(),
             'drives': self.drives(),

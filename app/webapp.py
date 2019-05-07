@@ -17,7 +17,7 @@ class DelegatingJSONEncoder(JSONEncoder):
         if isinstance(obj, list):
             return [self.serialize(x) for x in obj]
         try:
-            return obj.as_json()
+            return obj.serializable()
         except AttributeError:
             return obj
 
