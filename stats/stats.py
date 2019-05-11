@@ -6,6 +6,7 @@ import os
 import random
 import string
 import sys
+import shutil
 import time
 import urllib.parse
 import urllib.request
@@ -17,6 +18,7 @@ class StatRunner:
     def __init__(self, **kwargs):
         self.opts = kwargs
         self.log = self.logger(kwargs)
+        self.log.info('Launching StatRunner(%s)' % (kwargs,))
 
     def run(self):
         while True:
@@ -39,7 +41,7 @@ class StatRunner:
                 'Could not publish stats: %s (%s)' % (self.opts['url'], e)
             )
         else:
-            self.log.info(
+            self.log.debug(
                 'Published stats: %s %s' % (resp.getcode(), resp.read())
             )
 
@@ -48,9 +50,24 @@ class StatRunner:
             'hostname': self.opts['hostname'],
             'network': self.network(),
             'memory': self.memory(),
-            'drives': self.drives(),
+            'disks': self.disks(),
+            'filesystems': self.filesystems(),
             'cpu': self.cpu()
         }
+
+    def filesystems(self):
+        usages = [
+            (path, shutil.disk_usage(path))
+            for path in self.opts['filesystems']
+        ]
+
+        return [
+            { 'path': path,
+              'total': usage.total,
+              'free': usage.free,
+              'used': usage.used }
+            for path, usage in usages
+        ]
 
     def cpu(self):
         return {
@@ -64,21 +81,28 @@ class StatRunner:
         used, total, _, _, _, _ = lm.mem_stat.mem_stats()
         return { 'used': used, 'total': total }
 
-    def drives(self):
-        stats = {}
+    def disks(self):
+        stats = []
+        duration = self.opts['duration']
 
-        for drive in self.opts['drives']:
-            disk, partition = drive.split(':')
-            stats[disk] = stats.get(disk, {})
-
-            stats[disk]['busy'] = lm.disk_stat.disk_busy(
-                disk,
-                sample_duration=self.opts['duration']
+        for disk in list(self.opts['disks']):
+            io_operations, io_time, weighted = lm.disk_io_operations(disk)
+            reads_per_sec, writes_per_sec = lm.disk_reads_writes_persec(
+                disk, sample_duration=duration
             )
 
-            r, w = lm.disk_stat.disk_reads_writes(partition)
-
-            stats[disk][partition] = { 'reads': r, 'writes': w }
+            stats.append({
+                'name': disk,
+                'io': {
+                    'ops': io_operations,
+                    'time': io_time,
+                    'weighted': weighted,
+                    'tps': {
+                        'reads': reads_per_sec,
+                        'writes': writes_per_sec
+                    }
+                }
+            })
 
         return stats
 
@@ -127,8 +151,15 @@ if __name__ == '__main__':
     StatRunner(
         hostname=hostname(),
         url=urllib.parse.urljoin(os.environ['SKEP_APP_URL'], '/stats'),
-        drives=filter(None, os.environ.get('DISK_DRIVES', '').split(',')),
-        network=filter(None, os.environ.get('NETWORK_INTERFACES', '').split(',')),
+        disks=list(
+            filter(None, os.environ.get('DISKS', '').split(','))
+        ),
+        filesystems=list(
+            filter(None, os.environ.get('FILE_SYSTEMS', '').split(','))
+        ),
+        network=list(
+            filter(None, os.environ.get('NETWORK_INTERFACES', '').split(','))
+        ),
         interval=int(os.environ.get('INTERVAL', '5')),
         duration=int(os.environ.get('DURATION', '1')),
         log_level=os.environ.get('LOG_LEVEL', 'INFO')

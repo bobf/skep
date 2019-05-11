@@ -13,9 +13,9 @@ class MemoryStats {
   level() {
     const percent = 100 * (this.stats.used / this.stats.total);
 
-    if (percent < 75) {
+    if (percent < 50) {
       return 'success';
-    } else if (percent < 90) {
+    } else if (percent < 80) {
       return 'warning';
     } else {
       return 'danger';

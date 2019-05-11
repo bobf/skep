@@ -64,6 +64,14 @@
   padding: 0.2em;
 }
 
+.disk-stats .label {
+  font-family: monospace;
+}
+
+.disk-stats .badge {
+  color: #fff;
+}
+
 .node-stats .progress {
   padding: 0.2em;
   margin: 0.2em;
