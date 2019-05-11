@@ -2,6 +2,7 @@
 
 import json
 import logging
+import multiprocessing
 import os
 import random
 import string
@@ -52,7 +53,14 @@ class StatRunner:
             'memory': self.memory(),
             'disks': self.disks(),
             'filesystems': self.filesystems(),
-            'cpu': self.cpu()
+            'cpu': self.cpu(),
+            'load': self.load()
+        }
+
+    def load(self):
+        return {
+            'averages': list(os.getloadavg()),
+            'cores': multiprocessing.cpu_count()
         }
 
     def filesystems(self):

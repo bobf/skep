@@ -1,17 +1,19 @@
+#wrapper {
+}
+
 #nodes {
   float: left;
   height: 100%;
   width: 20%;
-  border: 1px solid #f0f;
   padding: 1em;
   overflow-y: scroll;
+  border-right: 1px dotted #eee;
 }
 
 #stacks {
   padding: 1em;
   float: left;
   height: 100%;
-  border: 1px solid #f0f;
   width: 75%;
 }
 
@@ -22,11 +24,16 @@
 }
 
 .node {
-  border: 1px solid #999;
+  border: 0.2em solid #999;
+  padding: 0.2em;
+  border-radius: 15px 15px 0px 0px;
+  box-shadow: 0px 0px 5px #555;
 }
 
 .node h2 {
-  font-size: 1.5em;
+  font-size: 1.2em;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
 }
 
 .node h3 {
@@ -37,6 +44,13 @@
   font-family: monospace;
   text-align: center;
   padding: 0.2em;
+  font-size: 1.0em;
+  color: #0b0;
+  background-color: #0c0c0c;
+  margin: 0.4em auto;
+  width: 80%;
+  border: 2px solid #7d7d7d;
+  border-radius: 5px;
 }
 
 .node .badge {
@@ -54,13 +68,14 @@
 
 .node-stats th {
   padding: 0.2em;
+  font-family: monospace;
 }
 
 .node-stats .label {
   text-align: center;
   width: 100%;
-  color: #555;
-  text-shadow: 0px 0px 5px #fff;
+  color: #fff;
+  text-shadow: 0px 0px 5px #555;
   padding: 0.2em;
 }
 

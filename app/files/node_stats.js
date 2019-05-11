@@ -6,12 +6,13 @@ class NodeStats extends React.Component {
 
   initialize(props) {
     const { stats } = props;
-    const { memory, cpu, disks, filesystems } = (stats || {});
+    const { memory, cpu, disks, filesystems, load } = (stats || {});
 
     this.memory = memory ? new MemoryStats(memory) : null;
     this.cpu = cpu ? new CPUStats(cpu) : null;
     this.disks = this.diskStats(disks);
     this.filesystems = this.filesystemStats(filesystems);
+    this.load = load;
   }
 
   diskStats(disks) {
@@ -58,6 +59,40 @@ class NodeStats extends React.Component {
       level: this.cpu.level(),
       className: 'cpu'
     });
+  }
+
+  loadLevel(index) {
+    const load = this.load.averages[index];
+    const cores = this.load.cores;
+    const percent = 100 * (load / cores);
+
+    if (percent < 50) {
+      return 'success';
+    } else if (percent < 80) {
+      return 'warning';
+    } else {
+      return 'danger';
+    }
+  }
+
+  renderLoadAverage(index) {
+    return (
+      <span className={'badge bg-' + this.loadLevel(index)}>
+        {numeral(this.load.averages[index]).format('0.00')}
+      </span>
+    );
+  }
+
+  renderLoad() {
+    if (!this.load) return null;
+
+    return (
+      <div className={'load'}>
+        {this.renderLoadAverage(0)}
+        {this.renderLoadAverage(1)}
+        {this.renderLoadAverage(2)}
+      </div>
+    );
   }
 
   renderDisk(disk) {
@@ -131,6 +166,14 @@ class NodeStats extends React.Component {
               </th>
               <td>
                 {this.renderCPU()}
+              </td>
+            </tr>
+            <tr>
+              <th>
+                {'Load'}
+              </th>
+              <td>
+                {this.renderLoad()}
               </td>
             </tr>
             {this.disks.map(disk => this.renderDisk(disk))}
