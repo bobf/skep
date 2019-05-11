@@ -102,7 +102,19 @@ class StatRunner:
         return logger
 
 def hostname():
-    path = os.environ.get('HOSTNAME_PATH', '/hostfs/etc/hostname')
+    if 'SKEP_HOST' in os.environ:
+        # Allow manual configuration for e.g. testing on Mac with Docker
+        # Machine.
+        return os.environ['SKEP_HOST']
+
+    path = os.environ.get(
+        'HOSTNAME_PATH',
+        os.path.join(
+            os.environ.get('LINUX_METRICS_ROOT_FS', '/'),
+            '/etc/hostname'
+        )
+    )
+
     try:
         return open(path, 'r').read().strip()
     except FileNotFoundError:
@@ -114,9 +126,9 @@ def hostname():
 if __name__ == '__main__':
     StatRunner(
         hostname=hostname(),
-        url=urllib.parse.urljoin(os.environ['SKEP_HOST_URL'], '/stats'),
-        drives=os.environ.get('DISK_DRIVES', '').split(','),
-        network=os.environ.get('NETWORK_INTERFACES', '').split(','),
+        url=urllib.parse.urljoin(os.environ['SKEP_APP_URL'], '/stats'),
+        drives=filter(None, os.environ.get('DISK_DRIVES', '').split(',')),
+        network=filter(None, os.environ.get('NETWORK_INTERFACES', '').split(',')),
         interval=int(os.environ.get('INTERVAL', '5')),
         duration=int(os.environ.get('DURATION', '1')),
         log_level=os.environ.get('LOG_LEVEL', 'INFO')

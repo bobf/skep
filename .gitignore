@@ -35,3 +35,12 @@
 
 app/.build
 stats/.build
+
+linux-metrics
+bin/
+install/
+include/
+lib/
+pyvenv.cfg
+.Python
+.env

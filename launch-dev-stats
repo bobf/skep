@@ -1,0 +1,6 @@
+#!/bin/bash
+cd stats
+export SKEP_APP_URL=http://localhost:5000/
+export LINUX_METRICS_ROOT_FS=../linux-metrics/linux_metrics/test_filesystem/
+
+../bin/python stats.py

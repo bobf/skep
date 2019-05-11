@@ -4,6 +4,7 @@
   width: 20%;
   border: 1px solid #f0f;
   padding: 1em;
+  overflow-y: scroll;
 }
 
 #stacks {
@@ -18,4 +19,52 @@
   padding: 1em;
   margin: 1em;
   border: 1px solid #000;
+}
+
+.node {
+  border: 1px solid #999;
+}
+
+.node h2 {
+  font-size: 1.5em;
+}
+
+.node h3 {
+  font-size: 1.0em;
+}
+
+.node h2.hostname {
+  font-family: monospace;
+  text-align: center;
+  padding: 0.2em;
+}
+
+.node .badge {
+  margin: 0.2em;
+}
+
+.node .alert {
+  padding: 0.2em;
+  margin: 0.2em;
+}
+
+.node-stats table {
+  width: 100%;
+}
+
+.node-stats th {
+  padding: 0.2em;
+}
+
+.node-stats .label {
+  text-align: center;
+  width: 100%;
+  color: #555;
+  text-shadow: 0px 0px 5px #fff;
+  padding: 0.2em;
+}
+
+.node-stats .progress {
+  padding: 0.2em;
+  margin: 0.2em;
 }

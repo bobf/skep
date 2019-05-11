@@ -16,7 +16,8 @@ services:
       - "/proc:/hostfs/proc:ro"
       - "/etc:/hostfs/etc:ro"
     environment:
-      SKEP_HOST_URL: http://app:8080
+      SKEP_APP_URL: http://host.docker.internal:5000
+      SKEP_HOST:
       LINUX_METRICS_ROOT_FS: '/hostfs'
       DISK_DRIVES: 'sda:sda1'
       NETWORK_INTERFACES: 'eth0'
