@@ -20,12 +20,12 @@ $(function () {
 
     if (!Skep.dashboard) {
       Skep.dashboard = ReactDOM.render(
-        React.createElement(Dashboard, { manifest: manifest }, null),
+        React.createElement(Dashboard, null),
         document.getElementById('content')
       );
-    } else {
-      Skep.dashboard.setState({ manifest: manifest });
     }
+
+    Skep.dashboard.setState({ manifest: manifest });
   });
 
   socket.on('stats', function (json) {

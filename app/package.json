@@ -16,7 +16,8 @@
     "popper.js": "^1.15.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "socket.io-client": "^2.2.0"
+    "socket.io-client": "^2.2.0",
+    "webpack-dev-server": "^3.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",

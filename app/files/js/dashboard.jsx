@@ -7,6 +7,7 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this._nodes = [];
+    this.state = {};
   }
 
   getNode(hostname) {
@@ -16,35 +17,35 @@ class Dashboard extends React.Component {
   }
 
   nodes() {
-    return this.props.manifest.nodes.map(
+    return this.state.manifest.nodes.map(
       node => this.findOrCreateNode(node)
     );
   }
 
-  findOrCreateNode(props) {
-    var found = this._nodes.find(node => node.id === props.id);
+  findOrCreateNode(state) {
+    var found = this._nodes.find(node => node.id === state.id);
 
     if (found) {
       return found;
     }
 
-    var node = this.node(props);
+    var node = this.node(state);
     this._nodes.push(node);
     return node;
   }
 
-  node(props) {
+  node(state) {
     var ref = React.createRef();
     return {
-      id: props.id,
-      hostname: props.hostname,
+      id: state.id,
+      hostname: state.hostname,
       ref: ref,
       component: (
         <Node
-          key={props.id}
+          key={state.id}
           ref={ref}
-          node={props}
-          stacks={this.props.manifest.stacks}
+          node={state}
+          stacks={this.state.manifest.stacks}
         />
       )
     }
@@ -71,7 +72,17 @@ class Dashboard extends React.Component {
     );
   }
 
+  renderManifestMissing() {
+    return (
+      <div className={'error'}>
+        {'Waiting for data'}
+      </div>
+    );
+  }
+
   render() {
+    if (!this.state.manifest) return this.renderManifestMissing();
+
     return (
       <div id={'dashboard'}>
         <div id={'section-toggles'}>
@@ -86,11 +97,11 @@ class Dashboard extends React.Component {
 
         <div id={'stacks'}>
           <h2 className={'section-header'}>Stacks</h2>
-          {this.props.manifest.stacks.map(stack => (
+          {this.state.manifest.stacks.map(stack => (
             <Stack
               key={'stack_' + stack.name}
               stack={stack}
-              manifest={this.props.manifest}
+              manifest={this.state.manifest}
             />
           ))}
         </div>

@@ -30,27 +30,30 @@ class Service extends React.Component {
 
     return ports.map(
       mapping => (
-        <span
+        <div
           key={`service-${id}-${mapping.published}-${mapping.target}`}
           className={'ports'}>
           <span
             data-toggle={'tooltip'}
             title={'Published Port'}
-            className={'published'}>
-            &#8615;
+            className={'published port'}>
+            {':'}
             {mapping.published}
           </span>
-          <span className={'syntax'}>
-          {':'}
+          <span className={'published arrow'}>
+            &#8615;
           </span>
           <span
             data-toggle={'tooltip'}
             title={'Target Port'}
-            className={'target'}>
+            className={'target port'}>
+            {':'}
             {mapping.target}
+          </span>
+          <span className={'target arrow'}>
             &#8613;
           </span>
-        </span>
+        </div>
       )
     );
   }
@@ -62,12 +65,12 @@ class Service extends React.Component {
       <div className={'service'}>
 
         <h2>
-          {this.renderPorts()}
           {this.updateStatus()}
           <span className={'title'}>{name}</span>
           <span className={'tag'}>
             {`[${image.id}:${image.tag}]`}
           </span>
+          {this.renderPorts()}
         </h2>
 
         <div className={'tasks'}>

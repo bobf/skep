@@ -15,6 +15,21 @@
 .service .ports {
   font-family: monospace;
   font-size: 1.4em;
+  margin-left: 1em;
+  margin-top: 0.4em;
+}
+
+.service .ports .arrow {
+  margin-right: 0.2em;
+}
+
+.service .ports .published.arrow {
+  color: #393;
+  margin-right: 0.4em;
+}
+
+.service .ports .target.arrow {
+  color: #993;
 }
 
 .service .ports .published {
@@ -23,10 +38,6 @@
 
 .service .ports .target {
   color: #dd9;
-}
-
-.service .ports .syntax {
-  margin: 0 0.2em;
 }
 
 .service .tag {
