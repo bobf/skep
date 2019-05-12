@@ -1,3 +1,8 @@
+import React from 'react';
+
+import Node from './node';
+import Stack from './stack';
+
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
@@ -35,21 +40,52 @@ class Dashboard extends React.Component {
       hostname: props.hostname,
       ref: ref,
       component: (
-        <Node key={props.id} ref={ref} node={props} stacks={this.props.manifest.stacks} />
+        <Node
+          key={props.id}
+          ref={ref}
+          node={props}
+          stacks={this.props.manifest.stacks}
+        />
       )
     }
+  }
+
+  toggle(id) {
+    $(`#${id}`).toggle();
+  }
+
+  renderToggleButton(id) {
+    return (
+      <span className={'toggle'}>
+        <input
+          type={'checkbox'}
+          onClick={() => this.toggle(id)}
+          name={`toggle-${id}`}
+          defaultChecked={true}>
+        </input>
+        <label
+          htmlFor={`toggle-${id}`}>
+          {id}
+        </label>
+      </span>
+    );
   }
 
   render() {
     return (
       <div id={'dashboard'}>
+        <div id={'section-toggles'}>
+          {this.renderToggleButton('nodes')}
+          {this.renderToggleButton('stacks')}
+        </div>
+
         <div id={'nodes'}>
-          <h2>Nodes</h2>
+          <h2 className={'section-header'}>Nodes</h2>
           {this.nodes().map(node => node.component)}
         </div>
 
         <div id={'stacks'}>
-          <h2>Stacks</h2>
+          <h2 className={'section-header'}>Stacks</h2>
           {this.props.manifest.stacks.map(stack => (
             <Stack
               key={'stack_' + stack.name}
@@ -62,3 +98,5 @@ class Dashboard extends React.Component {
     )
   }
 }
+
+export default Dashboard;

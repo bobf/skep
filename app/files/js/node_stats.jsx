@@ -1,3 +1,8 @@
+import DiskStats from './disk_stats';
+import FilesystemStats from './filesystem_stats';
+import MemoryStats from './memory_stats';
+import CPUStats from './cpu_stats';
+
 class NodeStats extends React.Component {
   constructor(props) {
     super(props);
@@ -184,3 +189,5 @@ class NodeStats extends React.Component {
     );
   }
 }
+
+export default NodeStats;

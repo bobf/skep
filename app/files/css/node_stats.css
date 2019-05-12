@@ -1,0 +1,29 @@
+.node-stats table {
+  width: 100%;
+}
+
+.node-stats th {
+  padding: 0.2em;
+  font-family: monospace;
+}
+
+.node-stats .label {
+  text-align: center;
+  width: 100%;
+  color: #fff;
+  text-shadow: 0px 0px 5px #555;
+  padding: 0.2em;
+}
+
+.disk-stats .label {
+  font-family: monospace;
+}
+
+.disk-stats .badge {
+  color: #fff;
+}
+
+.node-stats .progress {
+  padding: 0.2em;
+  margin: 0.2em;
+}

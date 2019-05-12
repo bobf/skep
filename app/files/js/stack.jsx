@@ -1,8 +1,10 @@
+import Service from './service';
+
 class Stack extends React.Component {
   render() {
     return (
       <div className={'stack'}>
-        <h2>{this.props.stack.name}</h2>
+        <h2 className='stack'>{this.props.stack.name}</h2>
         <div className={'services'}>
           {this.props.stack.services.map(service => (
             <Service
@@ -16,3 +18,5 @@ class Stack extends React.Component {
     );
   }
 }
+
+export default Stack;

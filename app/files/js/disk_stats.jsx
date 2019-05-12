@@ -68,3 +68,5 @@ class DiskStats {
     return numeral(100 - this.stats.busy).format('0.00') + '%';
   }
 }
+
+export default DiskStats;

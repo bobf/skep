@@ -1,3 +1,5 @@
+import NodeStats from './node_stats';
+
 class Node extends React.Component {
   tasks() {
     return this.services().map(
@@ -36,7 +38,6 @@ class Node extends React.Component {
   }
 
   roleClass() {
-    console.log(this.props.node.role);
     if (this.props.node.role === 'manager') {
       return 'primary';
     } else {
@@ -72,8 +73,10 @@ class Node extends React.Component {
 
   render() {
     return (
-      <div className={'node'}>
-        <h2 alt={'Version: ' + this.props.node.version} className={'hostname'}>{this.props.node.hostname}</h2>
+      <div id={`node-${this.props.node.id}`} className={'node'}>
+        <h2 alt={'Version: ' + this.props.node.version} className={'hostname'}>
+          {this.props.node.hostname}
+        </h2>
 
         {this.roleBadge()}
         {this.leaderBadge()}
@@ -86,3 +89,5 @@ class Node extends React.Component {
     );
   }
 }
+
+export default Node;

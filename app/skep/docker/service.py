@@ -1,6 +1,7 @@
 from skep.docker.task import Task
+from skep.docker.mixins import ImageParser
 
-class Service:
+class Service(ImageParser):
     def __init__(self, service):
         self.service = service
 
@@ -31,11 +32,9 @@ class Service:
         return mappings
 
     def image(self):
-        spec = self.service.attrs['Spec']['TaskTemplate']['ContainerSpec']
-        image, _, __ = spec['Image'].rpartition('@')
-        id, ___, tag = image.rpartition(':')
-
-        return { 'id': id, 'tag': tag }
+        return self.parse_image(
+            self.service.attrs['Spec']['TaskTemplate']['ContainerSpec']['Image']
+        )
 
     def updating(self):
         state = self.service.attrs.get('UpdateStatus', {}).get('State', None)

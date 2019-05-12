@@ -1,3 +1,8 @@
+import io from 'socket.io-client';
+import 'bootstrap';
+
+import Dashboard from './dashboard';
+
 $(function () {
   var socket = io.connect('http://' + document.domain + ':' + location.port);
   window.Skep = window.Skep || {};
@@ -15,7 +20,7 @@ $(function () {
 
     if (!Skep.dashboard) {
       Skep.dashboard = ReactDOM.render(
-        <Dashboard manifest={manifest}/>,
+        React.createElement(Dashboard, { manifest: manifest }, null),
         document.getElementById('content')
       );
     } else {
@@ -32,5 +37,9 @@ $(function () {
     }
 
     node.ref.current.setState({ stats: data });
+  });
+
+  $('body').tooltip({
+    selector: '[data-toggle="tooltip"]'
   });
 });

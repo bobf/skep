@@ -1,0 +1,15 @@
+#section-toggles {
+  position: absolute;
+  margin: 1em;
+  margin-right: 0;
+  width: 90%;
+  text-align: right;
+}
+
+.toggle {
+  padding: 0.4em;
+}
+
+.toggle label {
+  text-transform: capitalize;
+}

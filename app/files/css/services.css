@@ -1,0 +1,74 @@
+.service {
+  padding-left: 1em;
+  margin-bottom: 1em;
+}
+
+.service h2 {
+  font-size: 0.8em;
+  color: #999;
+}
+
+.service span.title {
+  text-transform: uppercase;
+}
+
+.service .ports {
+  font-family: monospace;
+  font-size: 1.4em;
+}
+
+.service .ports .published {
+  color: #9d9;
+}
+
+.service .ports .target {
+  color: #dd9;
+}
+
+.service .ports .syntax {
+  margin: 0 0.2em;
+}
+
+.service .tag {
+  font-family: monospace;
+  padding-left: 0.2em;
+  font-size: 1.4em;
+  color: #adacac;
+  background-color: #3d3f42;
+  margin: 0.8em;
+  padding: 0.2em;
+}
+
+.service .updated {
+  color: #4d4;
+  float: left;
+  margin-right: 0.4em;
+}
+
+/* https://loading.io/css/ */
+
+.service .updating {
+  float: left;
+  display: inline-block;
+  top: 0.4em;
+  content: " ";
+  width: 0.8em;
+  height: 0.8em;
+  margin: 1px;
+  margin-right: 0.4em;
+  margin-left: 0.4em;
+  border-radius: 50%;
+  border: 2px solid #dd4;
+  border-color: #dd4 transparent #dd4 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+

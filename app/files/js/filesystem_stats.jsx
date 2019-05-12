@@ -27,3 +27,5 @@ class FilesystemStats {
     return numeral(this.stats.free / this.stats.total).format('0.00%');
   }
 }
+
+export default FilesystemStats;

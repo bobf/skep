@@ -1,3 +1,5 @@
+import numeral from 'numeral';
+
 class CPUStats {
   constructor(stats) {
     this.stats = stats;
@@ -23,3 +25,5 @@ class CPUStats {
     return numeral(100 - this.stats.cpu_usage.idle).format('0.00') + '%';
   }
 }
+
+export default CPUStats;

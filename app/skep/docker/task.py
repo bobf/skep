@@ -1,4 +1,6 @@
-class Task:
+from skep.docker.mixins import ImageParser
+
+class Task(ImageParser):
     def __init__(self, task):
         self.task = task
 
@@ -8,8 +10,14 @@ class Task:
     def attrs(self):
         attrs = self.task
         return {
+            "id": attrs["ID"],
             "node_id": attrs["NodeID"],
-            "id": attrs["ID"]
+            "message": attrs["Status"]["Message"],
+            "state": attrs["Status"]["State"],
+            "environment": attrs['Spec']['ContainerSpec'].get('Env', []),
+            "image": self.parse_image(
+                attrs['Spec']['ContainerSpec'].get('Image', None)
+            )
         }
 
     def serializable(self):

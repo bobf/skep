@@ -1,0 +1,21 @@
+#stacks {
+  padding: 1em;
+  float: left;
+  height: 100%;
+  min-width: 75%;
+  max-width: 100%;
+  padding-left: 2em;
+  overflow-y: scroll;
+}
+
+h2.stack {
+  font-size: 1.2em;
+  font-family: monospace;
+  text-transform: uppercase;
+  color: #eee;
+}
+
+div.stack {
+  border-bottom: 1px solid #fef;
+  margin-bottom: 1em;
+}

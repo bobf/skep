@@ -34,3 +34,5 @@ class MemoryStats {
     return numeral(number).format('0.00b');
   }
 }
+
+export default MemoryStats;
