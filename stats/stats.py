@@ -13,6 +13,7 @@ import urllib.parse
 import urllib.request
 from urllib.request import Request
 
+os.environ['LINUX_METRICS_ROOT_FS'] = '/hostfs'
 import linux_metrics as lm
 
 class StatRunner:
@@ -139,13 +140,7 @@ def hostname():
         # Machine.
         return os.environ['SKEP_HOST']
 
-    path = os.environ.get(
-        'HOSTNAME_PATH',
-        os.path.join(
-            os.environ.get('LINUX_METRICS_ROOT_FS', '/hostfs'),
-            '/etc/hostname'
-        )
-    )
+    path = os.environ.get('HOSTNAME_PATH', '/hostfs/etc/hostname')
 
     try:
         return open(path, 'r').read().strip()

@@ -19,7 +19,6 @@ services:
     environment:
       SKEP_APP_URL: http://host.docker.internal:5000
       SKEP_HOST:
-      LINUX_METRICS_ROOT_FS: '/hostfs'
       DISKS: 'sda1'
       FILE_SYSTEMS: '/'
       NETWORK_INTERFACES: 'eth0'
