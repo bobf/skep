@@ -11,8 +11,12 @@ class FilesystemStats {
     return this.percent();
   }
 
+  available() {
+    return this.stats.total - this.stats.free;
+  }
+
   level() {
-    const percent = 100 * (this.stats.free / this.stats.total);
+    const percent = 100 * (this.available() / this.stats.total);
 
     if (percent < 60) {
       return 'success';
@@ -24,7 +28,7 @@ class FilesystemStats {
   }
 
   percent() {
-    return numeral(this.stats.free / this.stats.total).format('0.00%');
+    return numeral(this.available() / this.stats.total).format('0.00%');
   }
 }
 
