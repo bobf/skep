@@ -8,14 +8,78 @@
   overflow-y: scroll;
 }
 
-h2.stack {
+.stack h2.name {
   font-size: 1.2em;
   font-family: monospace;
   text-transform: uppercase;
   color: #eee;
+  margin: 0.4em 1em;
 }
 
 div.stack {
   border-bottom: 1px solid #fef;
   margin-bottom: 1em;
+}
+
+button.stack {
+  padding: 0.2em 0.4em;
+  text-transform: uppercase;
+  margin: 1em;
+  font-size: 0.2em;
+}
+
+.collapsed td.ports {
+  font-family: monospace;
+  font-size: 1.2em;
+  margin: 0 0.2em;
+}
+
+.collapsed .published {
+  color: #9d9;
+  margin-right: 0.2em;
+}
+
+.collapsed .target {
+  color: #dd9;
+}
+
+.collapsed th {
+  font-family: monospace;
+  font-size: 1.2em;
+  text-transform: uppercase;
+  padding: 0.4em;
+}
+
+.collapsed .indent {
+  padding: 0;
+}
+
+.collapsed .image td {
+  padding: 0.4em;
+}
+
+.collapsed .image span {
+  font-family: monospace;
+  background-color: #555;
+  border-radius: 0.4em;
+  margin: 0.2em;
+  text-shadow: 0px 0px 5px #555;
+  padding: 0.2em 0.4em;
+}
+
+.collapsed th.name {
+  width: 14em;
+}
+
+.collapsed .service .service-name {
+  color: #aaa;
+  padding-left: 1em;
+}
+
+.collapsed .service .ports {
+  width: 10em;
+}
+
+.collapsed .service .image {
+  width: 10em;
 }

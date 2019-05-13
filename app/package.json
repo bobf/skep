@@ -16,6 +16,8 @@
     "popper.js": "^1.15.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-feather": "^1.1.6",
+    "react-pose": "^4.0.8",
     "socket.io-client": "^2.2.0",
     "webpack-dev-server": "^3.3.1"
   },

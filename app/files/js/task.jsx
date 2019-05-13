@@ -1,3 +1,5 @@
+import * as Icon from 'react-feather';
+
 class Task extends React.Component {
   constructor(props) {
     super(props);
@@ -51,12 +53,15 @@ class Task extends React.Component {
 
 
   render() {
+    const { highlight } = this.state;
+
     return (
-      <span className={'task'}>
-        <h3
-          className={this.state.highlight ? 'highlight' : null}
-          onMouseEnter={() => this.highlightNode(true)}
-          onMouseLeave={() => this.highlightNode(false)}>
+      <span
+        className={'task ' + (highlight ? 'highlight' : null)}
+        onMouseEnter={() => this.highlightNode(true)}
+        onMouseLeave={() => this.highlightNode(false)}>
+        {<Icon.Server />}
+        <h3>
           {this.node().hostname}
         </h3>
         {this.renderState()}

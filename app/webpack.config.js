@@ -3,6 +3,9 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: './files/js/application.jsx',
+  devServer: {
+    writeToDisk: true
+  },
   output: {
     path: path.resolve(__dirname, 'files'),
     filename: 'bundle.js'
