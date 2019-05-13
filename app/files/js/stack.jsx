@@ -1,6 +1,5 @@
 import Service from './service';
 import * as Icon from 'react-feather';
-import posed from 'react-pose';
 
 class Stack extends React.Component {
   constructor(props) {

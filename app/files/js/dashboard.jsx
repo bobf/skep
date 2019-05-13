@@ -21,10 +21,10 @@ class Dashboard extends React.Component {
       node => this.findOrCreateNode(node)
     ).sort(
       (left, right) => {
-        if (left.leader()) return -1;
-        if (right.leader()) return 1;
-        if (left.manager()) return -1;
-        if (right.manager()) return 1;
+        if (left.ref.current && left.ref.current.leader()) return -1;
+        if (right.ref.current && right.ref.current.leader()) return 1;
+        if (left.ref.current && left.ref.current.manager()) return -1;
+        if (right.ref.current && right.ref.current.manager()) return 1;
         if (left.hostname < right.hostname) return -1;
         if (left.hostname > right.hostname) return 1;
         return 0;
