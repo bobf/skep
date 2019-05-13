@@ -10,6 +10,7 @@
 
 .service span.title {
   text-transform: uppercase;
+  font-size: 1.2em;
 }
 
 .service .ports {

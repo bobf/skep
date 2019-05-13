@@ -51,7 +51,7 @@ class Stack extends React.Component {
     const { name } = this.props.stack;
     const { collapsed } = this.state;
     const callback = collapsed ? () => this.expand() : () => this.collapse();
-    const icon = collapsed ? <Icon.ArrowDownRight size={18} /> : <Icon.ArrowUpLeft size={18} />
+    const icon = collapsed ? <Icon.Eye size={18} /> : <Icon.EyeOff size={18} />
     return (
       <button
         type={'button'}

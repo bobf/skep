@@ -9,7 +9,7 @@
 }
 
 .stack h2.name {
-  font-size: 1.2em;
+  font-size: 1.4em;
   font-family: monospace;
   text-transform: uppercase;
   color: #eee;
@@ -26,6 +26,8 @@ button.stack {
   text-transform: uppercase;
   margin: 1em;
   font-size: 0.2em;
+  float: right;
+  margin-top: 0;
 }
 
 .collapsed td.ports {
@@ -68,7 +70,7 @@ button.stack {
 }
 
 .collapsed th.name {
-  width: 14em;
+  min-width: 20em;
 }
 
 .collapsed .service .service-name {

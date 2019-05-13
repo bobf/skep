@@ -29,6 +29,8 @@ $(function () {
   });
 
   socket.on('stats', function (json) {
+    if (!Skep.dashboard) return;
+
     var data = JSON.parse(json);
     var node = Skep.dashboard.getNode(data.hostname)
     if (!node) {
