@@ -142,7 +142,7 @@ def hostname():
     path = os.environ.get(
         'HOSTNAME_PATH',
         os.path.join(
-            os.environ.get('LINUX_METRICS_ROOT_FS', '/'),
+            os.environ.get('LINUX_METRICS_ROOT_FS', '/hostfs'),
             '/etc/hostname'
         )
     )
