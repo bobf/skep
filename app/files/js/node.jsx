@@ -37,8 +37,16 @@ class Node extends React.Component {
     return this.state.stats;
   }
 
+  leader() {
+    return this.props.node.leader;
+  }
+
+  manager() {
+    return this.props.node.role === 'manager';
+  }
+
   roleClass() {
-    if (this.props.node.role === 'manager') {
+    if (this.manager()) {
       return 'primary';
     } else {
       return 'info';
@@ -62,7 +70,7 @@ class Node extends React.Component {
   }
 
   leaderBadge() {
-    if (!this.props.node.leader) {
+    if (!this.leader()) {
       return null;
     }
 

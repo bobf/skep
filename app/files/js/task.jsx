@@ -57,7 +57,7 @@ class Task extends React.Component {
 
     return (
       <span
-        className={'task ' + (highlight ? 'highlight' : null)}
+        className={'task ' + (highlight ? 'highlight' : '')}
         onMouseEnter={() => this.highlightNode(true)}
         onMouseLeave={() => this.highlightNode(false)}>
         {<Icon.Server />}

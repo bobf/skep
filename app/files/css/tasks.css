@@ -24,4 +24,6 @@ span.task {
   padding: 0.8em;
   border: 1px solid #eee;
   border-radius: 5px;
+  display: inline-table;
+  margin: 1em;
 }
