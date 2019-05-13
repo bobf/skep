@@ -6,6 +6,7 @@
   max-width: 75%;
   padding-left: 2em;
   overflow-y: scroll;
+  table-layout: fixed;
 }
 
 .stack h2.name {
@@ -70,7 +71,7 @@ button.stack {
 }
 
 .collapsed th.name {
-  min-width: 22em;
+  min-width: 15em;
 }
 
 .collapsed .service .service-name {

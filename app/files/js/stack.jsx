@@ -66,26 +66,22 @@ class Stack extends React.Component {
     const { name } = this.props.stack;
     const { manifest } = this.props;
 
-    return (
-      <div className={'collapsed'}>
-        <table>
-          <tbody>
-            {this.services().map((service, idx) => (
-             <tr key={`service-collapsed-${service.name}`} className={'service'}>
-               <th className={'name'}>
-                 {idx === 0 ? this.collapseButton() : null}
-                 {idx === 0 ? name : null }
-               </th>
-               <td className={'image'}>
-                 <span>{service.image.id}:{service.image.tag}</span>
-               </td>
-               <td className={'ports'}>{this.renderPortsCollapsed(service)}</td>
-               <th className={'service-name'}>{service.name}</th>
-              </tr>
-             ))}
-          </tbody>
-        </table>
-      </div>
+    return this.services().map(
+      (service, idx) => (
+        <tr
+          key={`service-collapsed-${service.name}`}
+          className={'service collapsed'}>
+          <th className={'name'}>
+            {idx === 0 ? this.collapseButton() : null}
+            {idx === 0 ? name : null }
+          </th>
+          <td className={'image'}>
+            <span>{service.image.id}:{service.image.tag}</span>
+          </td>
+          <td className={'ports'}>{this.renderPortsCollapsed(service)}</td>
+          <th className={'service-name'}>{service.name}</th>
+       </tr>
+      )
     );
   }
 
@@ -94,19 +90,23 @@ class Stack extends React.Component {
     const { manifest } = this.props;
 
     return (
-      <div>
-        {this.collapseButton()}
-        <h2 className={'name'}>{name}</h2>
-        <div className={'services'}>
-          {this.services().map(service => (
-            <Service
-              key={service.name}
-              service={service}
-              manifest={manifest}
-            />
-          ))}
-        </div>
-      </div>
+      <tr>
+        <td colSpan={4}>
+          <div className={'stack'}>
+            {this.collapseButton()}
+            <h2 className={'name'}>{name}</h2>
+            <div className={'services'}>
+              {this.services().map(service => (
+                <Service
+                  key={service.name}
+                  service={service}
+                  manifest={manifest}
+                />
+              ))}
+            </div>
+          </div>
+        </td>
+      </tr>
     );
   }
 
@@ -123,6 +123,7 @@ class Stack extends React.Component {
   render() {
     const { manifest } = this.props;
     const content = this.renderContent();
+    return content;
 
     return (
       <div className={'stack'}>

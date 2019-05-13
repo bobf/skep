@@ -1,4 +1,22 @@
 h2.section-header {
   font-size: 1.4em;
   margin: 0.8em 0;
+  display: inline-block;
+}
+
+.toggle-section {
+  height: 100%;
+  padding: 0;
+  float: left;
+}
+
+.section {
+  float: left;
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+#stacks {
+  position: absolute;
 }

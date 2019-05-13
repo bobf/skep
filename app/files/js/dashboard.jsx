@@ -1,4 +1,5 @@
 import React from 'react';
+import * as Icon from 'react-feather';
 
 import Node from './node';
 import Stack from './stack';
@@ -7,7 +8,9 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this._nodes = [];
-    this.state = {};
+    this.state = {
+      stacksExpanded: true
+    };
   }
 
   getNode(hostname) {
@@ -65,23 +68,6 @@ class Dashboard extends React.Component {
     $(`#${id}`).toggle();
   }
 
-  renderToggleButton(id) {
-    return (
-      <span className={'toggle'}>
-        <input
-          type={'checkbox'}
-          onClick={() => this.toggle(id)}
-          name={`toggle-${id}`}
-          defaultChecked={true}>
-        </input>
-        <label
-          htmlFor={`toggle-${id}`}>
-          {id}
-        </label>
-      </span>
-    );
-  }
-
   renderManifestMissing() {
     return (
       <div className={'error'}>
@@ -90,30 +76,53 @@ class Dashboard extends React.Component {
     );
   }
 
+  toggleStacks() {
+    const visible = $("#stacks").is(':visible');
+
+    if (visible) {
+      $('.node').addClass('grid');
+      $('#nodes').animate({ width: '90%' }, 1000, 'swing',
+                          () => $('#stacks').fadeOut());
+      this.setState({ stacksExpanded: false });
+    } else {
+      $('#stacks').show();
+      $('#nodes').animate({ width: '20em' }, 1000, 'swing',
+                          () => $('.node').removeClass('grid'));
+      this.setState({ stacksExpanded: true });
+    }
+  }
+
   render() {
     if (!this.state.manifest) return this.renderManifestMissing();
 
     return (
       <div id={'dashboard'}>
-        <div id={'section-toggles'}>
-          {this.renderToggleButton('nodes')}
-          {this.renderToggleButton('stacks')}
+        <div className={'section'} id={'nodes'}>
+          <div className={'section-content'}>
+            {this.nodes().map(node => node.component)}
+          </div>
         </div>
 
-        <div id={'nodes'}>
-          <h2 className={'section-header'}>Nodes</h2>
-          {this.nodes().map(node => node.component)}
-        </div>
+        <button
+          onClick={() => this.toggleStacks()}
+          className={'toggle-section btn btn-secondary'}>
+          {this.state.stacksExpanded ? <Icon.ChevronsRight/> : <Icon.ChevronsLeft/>}
+        </button>
 
-        <div id={'stacks'}>
-          <h2 className={'section-header'}>Stacks</h2>
-          {this.state.manifest.stacks.map(stack => (
-            <Stack
-              key={'stack_' + stack.name}
-              stack={stack}
-              manifest={this.state.manifest}
-            />
-          ))}
+        <div id={'stacks'} className={'section'}>
+          <div className={'section-content'}>
+            <table>
+              <tbody>
+                {this.state.manifest.stacks.map(stack => (
+                  <Stack
+                    key={'stack_' + stack.name}
+                    stack={stack}
+                    manifest={this.state.manifest}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     )

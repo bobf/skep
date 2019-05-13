@@ -1,11 +1,9 @@
 #nodes {
   float: left;
   height: 100%;
-  min-width: 20%;
-  max-width: 100%;
+  width: 20em;
   padding: 1em;
   overflow-y: scroll;
-  border-right: 1px solid #eee;
 }
 
 .node {
@@ -14,10 +12,11 @@
   border-radius: 15px 15px 0px 0px;
   box-shadow: 0px 0px 5px #555;
   margin-bottom: 1em;
+  width: 15em;
 }
 
 .node.highlight {
-  border-color: #ff0;
+  border-color: #dd9;
 }
 
 .node h2 {

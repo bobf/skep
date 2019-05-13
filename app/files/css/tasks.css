@@ -6,22 +6,24 @@
   font-size: 1.0em;
 }
 
-.task.highlight {
-  border: 1px solid #ff0;
-}
-
 .task .badge {
   margin: 0 0.2em;
   text-shadow: 0px 0px 5px #555;
 }
 
-.tasks {
+span.task {
+  display: inline-table;
 }
 
-span.task {
+.task .border {
   padding: 0.8em;
   border: 1px solid #eee;
   border-radius: 5px;
-  display: inline-table;
   margin: 1em;
+  display: block;
 }
+
+.task.highlight {
+  background-color: rgba(240,240,102,0.1);
+}
+

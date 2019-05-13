@@ -60,12 +60,14 @@ class Task extends React.Component {
         className={'task ' + (highlight ? 'highlight' : '')}
         onMouseEnter={() => this.highlightNode(true)}
         onMouseLeave={() => this.highlightNode(false)}>
-        {<Icon.Server />}
-        <h3>
-          {this.node().hostname}
-        </h3>
-        {this.renderState()}
-        {this.renderMessage()}
+        <span className="border">
+          {<Icon.Server />}
+          <h3>
+            {this.node().hostname}
+          </h3>
+          {this.renderState()}
+          {this.renderMessage()}
+        </span>
       </span>
     );
   }
