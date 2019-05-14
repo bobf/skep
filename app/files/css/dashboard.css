@@ -8,6 +8,7 @@ h2.section-header {
   height: 100%;
   padding: 0;
   float: left;
+  width: 28px; /* In pixels because we use this to calculate screen offsets */
 }
 
 .section {

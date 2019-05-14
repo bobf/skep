@@ -15,10 +15,35 @@
   width: 18em;
 }
 
-.node.grid {
+#nodes.expanded .node {
   display: inline-block;
   margin: 1em;
 }
+
+#nodes.collapsed .node tr.memory th {
+  display: none;
+}
+
+#nodes.collapsed .node tr.cpu th {
+  display: none;
+}
+
+#nodes.collapsed .node tr.load th {
+  display: none;
+}
+
+#nodes.collapsed .node tr.load td {
+  display: none;
+}
+
+#nodes.collapsed .node tr.disk-stats {
+  display: none;
+}
+
+#nodes.collapsed .node tr.filesystem-stats {
+  display: none;
+}
+
 
 .node.highlight {
   border-color: #dd9;

@@ -83,16 +83,24 @@ class Dashboard extends React.Component {
 
   toggleStacks() {
     const visible = $("#stacks").is(':visible');
+    const $nodes = $('#nodes');
+    const $dashboard = $('#dashboard');
+    const $stacks = $('#stacks');
+    const $eachNode = $('.node');
 
     if (visible) {
-      $('.node').addClass('grid');
-      $('#nodes').animate({ width: '90%' }, 1000, 'swing',
-                          () => $('#stacks').fadeOut());
+      $nodes.addClass('expanded');
+      $nodes.removeClass('collapsed');
+      $nodes.animate({ width: $dashboard.width() - 28}, 1000, 'swing',
+                     () => $stacks.fadeOut());
       this.setState({ stacksExpanded: false });
     } else {
-      $('#stacks').show();
-      $('#nodes').animate({ width: '21em' }, 1000, 'swing',
-                          () => $('.node').removeClass('grid'));
+      $stacks.show();
+      $nodes.animate({ width: '21em' }, 1000, 'swing',
+                     () => {
+                       $nodes.removeClass('expanded');
+                       $nodes.addClass('collapsed');
+                     });
       this.setState({ stacksExpanded: true });
     }
   }
@@ -102,7 +110,7 @@ class Dashboard extends React.Component {
 
     return (
       <div id={'dashboard'}>
-        <div className={'section'} id={'nodes'}>
+        <div className={'section collapsed'} id={'nodes'}>
           <div className={'section-content'}>
             {this.nodes().map(node => node.component)}
           </div>

@@ -9,6 +9,10 @@
   table-layout: fixed;
 }
 
+.services {
+  margin-top: 0.8em;
+}
+
 .stack h2.name {
   font-size: 1.4em;
   font-family: monospace;

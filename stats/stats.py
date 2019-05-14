@@ -13,7 +13,7 @@ import urllib.parse
 import urllib.request
 from urllib.request import Request
 
-os.environ['LINUX_METRICS_ROOT_FS'] = '/hostfs'
+os.environ['LINUX_METRICS_ROOT_FS'] = os.environ.get('HOSTFS_PATH', '/hostfs')
 import linux_metrics as lm
 
 class StatRunner:

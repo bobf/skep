@@ -82,7 +82,7 @@ class Node extends React.Component {
   render() {
     return (
       <div id={`node-${this.props.node.id}`} className={'node'}>
-        <h2 alt={'Version: ' + this.props.node.version} className={'hostname'}>
+        <h2 title={'Version: ' + this.props.node.version} className={'hostname'}>
           {this.props.node.hostname}
         </h2>
 

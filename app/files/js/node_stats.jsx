@@ -157,7 +157,7 @@ class NodeStats extends React.Component {
       <div className={'node-stats'}>
         <table>
           <tbody>
-            <tr>
+            <tr className={'memory'}>
               <th>
                 {'RAM'}
               </th>
@@ -165,7 +165,7 @@ class NodeStats extends React.Component {
                 {this.renderMemory()}
               </td>
             </tr>
-            <tr>
+            <tr className={'cpu'}>
               <th>
                 {'CPU'}
               </th>
@@ -173,7 +173,7 @@ class NodeStats extends React.Component {
                 {this.renderCPU()}
               </td>
             </tr>
-            <tr>
+            <tr className={'load'}>
               <th>
                 {'Load'}
               </th>
