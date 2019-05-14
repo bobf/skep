@@ -13,12 +13,7 @@ h2.section-header {
 .section {
   float: left;
   overflow: hidden;
-  white-space: nowrap;
   display: inline-block;
-}
-
-.section.wrap {
-  white-space: wrap;
 }
 
 #stacks {

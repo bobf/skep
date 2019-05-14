@@ -81,14 +81,12 @@ class Dashboard extends React.Component {
 
     if (visible) {
       $('.node').addClass('grid');
-      $('#nodes').removeClass('wrap')
-                 .animate({ width: '90%' }, 1000, 'swing',
+      $('#nodes').animate({ width: '90%' }, 1000, 'swing',
                           () => $('#stacks').fadeOut());
       this.setState({ stacksExpanded: false });
     } else {
       $('#stacks').show();
-      $('#nodes').addClass('wrap')
-                 .animate({ width: '21em' }, 1000, 'swing',
+      $('#nodes').animate({ width: '21em' }, 1000, 'swing',
                           () => $('.node').removeClass('grid'));
       this.setState({ stacksExpanded: true });
     }
