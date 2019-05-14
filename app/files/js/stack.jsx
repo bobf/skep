@@ -9,6 +9,7 @@ class Stack extends React.Component {
 
   componentDidUpdate(_, prevState, __) {
     if (prevState.collapsed !== this.state.collapsed) {
+      // TODO: Move all collapsed/expanded etc. from dashboard into here.
     }
   }
 
@@ -62,26 +63,29 @@ class Stack extends React.Component {
     );
   }
 
-  renderCollapsed() {
+  renderCollapsedService(service, firstRow) {
     const { name } = this.props.stack;
-    const { manifest } = this.props;
 
+    return (
+      <tr
+        key={`service-collapsed-${service.name}`}
+        className={'service collapsed ' + (firstRow ? 'stack' : '')}>
+        <th className={'name'}>
+          {firstRow ? this.collapseButton() : null}
+          {firstRow ? name : null }
+        </th>
+        <td className={'image'}>
+          <span>{service.image.id}:{service.image.tag}</span>
+        </td>
+        <td className={'ports'}>{this.renderPortsCollapsed(service)}</td>
+        <th className={'service-name'}>{service.name}</th>
+     </tr>
+    );
+  }
+
+  renderCollapsed() {
     return this.services().map(
-      (service, idx) => (
-        <tr
-          key={`service-collapsed-${service.name}`}
-          className={'service collapsed'}>
-          <th className={'name'}>
-            {idx === 0 ? this.collapseButton() : null}
-            {idx === 0 ? name : null }
-          </th>
-          <td className={'image'}>
-            <span>{service.image.id}:{service.image.tag}</span>
-          </td>
-          <td className={'ports'}>{this.renderPortsCollapsed(service)}</td>
-          <th className={'service-name'}>{service.name}</th>
-       </tr>
-      )
+      (service, idx) => this.renderCollapsedService(service, idx === 0)
     );
   }
 

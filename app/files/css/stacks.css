@@ -18,8 +18,8 @@
 }
 
 div.stack {
-  border-bottom: 1px solid #fef;
-  margin-bottom: 1em;
+  border-top: 1px solid #ddd;
+  padding-top: 0.2em;
 }
 
 button.stack {
@@ -29,6 +29,21 @@ button.stack {
   font-size: 0.2em;
   float: right;
   margin-top: 0;
+}
+
+table.stacks {
+  width: 100%;
+}
+
+table.stacks thead th {
+  text-align: left;
+  color: #aaa;
+  padding-left: 0.4em;
+  padding-bottom: 0.2em;
+}
+
+.collapsed.stack {
+  border-top: 1px solid #999;
 }
 
 .collapsed td.ports {

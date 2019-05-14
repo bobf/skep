@@ -116,7 +116,23 @@ class Dashboard extends React.Component {
 
         <div id={'stacks'} className={'section'}>
           <div className={'section-content'}>
-            <table>
+            <table className='stacks'>
+              <thead>
+                <tr>
+                  <th>
+                    {'Stack Name'}
+                  </th>
+                  <th>
+                    {'Image'}
+                  </th>
+                  <th>
+                    {'Ports'}
+                  </th>
+                  <th>
+                    {'Service Name'}
+                  </th>
+                </tr>
+              </thead>
               <tbody>
                 {this.state.manifest.stacks.map(stack => (
                   <Stack
