@@ -93,9 +93,9 @@ class NodeStats extends React.Component {
 
     return (
       <div className={'load'}>
-        {this.renderLoadAverage(2)}
-        {this.renderLoadAverage(1)}
         {this.renderLoadAverage(0)}
+        {this.renderLoadAverage(1)}
+        {this.renderLoadAverage(2)}
       </div>
     );
   }
