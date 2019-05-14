@@ -24,10 +24,15 @@ class Dashboard extends React.Component {
       node => this.findOrCreateNode(node)
     ).sort(
       (left, right) => {
-        if (left.ref.current && left.ref.current.leader()) return -1;
-        if (right.ref.current && right.ref.current.leader()) return 1;
-        if (left.ref.current && left.ref.current.manager()) return -1;
-        if (right.ref.current && right.ref.current.manager()) return 1;
+        const leftManager = left.ref.current && left.ref.current.manager();
+        const leftLeader = left.ref.current && left.ref.current.leader();
+        const rightManager = right.ref.current && right.ref.current.manager();
+        const rightLeader = right.ref.current && right.ref.current.leader();
+
+        if (leftLeader) return -1;
+        if (rightLeader) return 1;
+        if (leftManager && !rightManager) return -1;
+        if (rightManager && !leftManager) return 1;
         if (left.hostname < right.hostname) return -1;
         if (left.hostname > right.hostname) return 1;
         return 0;
