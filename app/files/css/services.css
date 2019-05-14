@@ -8,6 +8,10 @@
   color: #999;
 }
 
+.service-name {
+  color: #999;
+}
+
 .service span.title {
   text-transform: uppercase;
   font-size: 1.2em;
