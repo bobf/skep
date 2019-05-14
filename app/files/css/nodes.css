@@ -1,7 +1,7 @@
 #nodes {
   float: left;
   height: 100%;
-  width: 20em;
+  width: 21em;
   padding: 1em;
   overflow-y: scroll;
 }
@@ -12,7 +12,12 @@
   border-radius: 15px 15px 0px 0px;
   box-shadow: 0px 0px 5px #555;
   margin-bottom: 1em;
-  width: 15em;
+  width: 18em;
+}
+
+.node.grid {
+  display: inline-block;
+  margin: 1em;
 }
 
 .node.highlight {

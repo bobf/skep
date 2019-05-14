@@ -17,6 +17,10 @@ h2.section-header {
   display: inline-block;
 }
 
+.section.wrap {
+  white-space: wrap;
+}
+
 #stacks {
   position: absolute;
 }
