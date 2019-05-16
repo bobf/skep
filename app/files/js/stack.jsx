@@ -2,17 +2,6 @@ import Service from './service';
 import * as Icon from 'react-feather';
 
 class Stack extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { collapsed: true };
-  }
-
-  componentDidUpdate(_, prevState, __) {
-    if (prevState.collapsed !== this.state.collapsed) {
-      // TODO: Move all collapsed/expanded etc. from dashboard into here.
-    }
-  }
-
   services() {
     return this.props.stack.services.sort(
       (left, right) => {
@@ -26,33 +15,28 @@ class Stack extends React.Component {
   }
 
   expand() {
-    this.setState({ collapsed: false });
+    const { name } = this.props.stack;
+    const { dashboard } = this.props;
+
+    dashboard.collapseAll({ except: name });
+
     return false;
   }
 
   collapse() {
-    this.setState({ collapsed: true });
-    return false;
-  }
+    const { dashboard } = this.props;
+    const { name } = this.props.stack;
 
-  renderPortsCollapsed(service) {
-    return service.ports.map((mapping, idx) => (
-      <span
-        key={`ports-${service.name}-${mapping.published}-${mapping.target}`}>
-        <span className={'published'}>{mapping.published}</span>
-        {':'}
-        <span className={'target'}>{mapping.target}</span>
-        {idx + 1 < service.ports.length ? <br /> : null}
-      </span>
-      )
-    );
+    dashboard.collapse(name);
+
+    return false;
   }
 
   collapseButton() {
     const { name } = this.props.stack;
-    const { collapsed } = this.state;
+    const { collapsed } = this.props;
     const callback = collapsed ? () => this.expand() : () => this.collapse();
-    const icon = collapsed ? <Icon.Eye size={18} /> : <Icon.EyeOff size={18} />
+    const icon = collapsed ? <Icon.Eye size={'3em'} /> : <Icon.EyeOff size={'3em'} />
     return (
       <button
         type={'button'}
@@ -63,45 +47,53 @@ class Stack extends React.Component {
     );
   }
 
-  renderCollapsedService(service, firstRow) {
+  headerRow() {
     const { name } = this.props.stack;
+    const { collapsed } = this.props;
+    const className = collapsed ? 'collapsed' : 'expanded';
 
     return (
-      <tr
-        key={`service-collapsed-${service.name}`}
-        className={'service collapsed ' + (firstRow ? 'stack' : '')}>
-        <th className={'name'}>
-          {firstRow ? this.collapseButton() : null}
-          {firstRow ? name : null }
+      <tr key={`stack-${name}-header-row`} className={`stack header ${className}`}>
+        <th colSpan={4} className={'name'}>
+          <span className={'name'}>{name}</span>
+          {this.collapseButton()}
         </th>
-        <td className={'image'}>
-          <span>{service.image.id}:{service.image.tag}</span>
-        </td>
-        <td className={'ports'}>{this.renderPortsCollapsed(service)}</td>
-        <th className={'service-name'}>{service.name}</th>
-     </tr>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
     );
   }
 
   renderCollapsed() {
-    return this.services().map(
-      (service, idx) => this.renderCollapsedService(service, idx === 0)
+    const { name } = this.props.stack;
+    const services = this.services().map(
+      service => (
+        <Service
+          key={service.name}
+          collapsed={true}
+          service={service}
+        />
+      )
     );
+
+    services.unshift(this.headerRow());
+
+    return services;
   }
 
   renderExpanded() {
     const { name } = this.props.stack;
     const { manifest } = this.props;
 
-    return (
+    return [this.headerRow(), (
       <tr>
         <td colSpan={4}>
           <div className={'stack'}>
-            {this.collapseButton()}
-            <h2 className={'name'}>{name}</h2>
             <div className={'services'}>
               {this.services().map(service => (
                 <Service
+                  collapsed={false}
                   key={service.name}
                   service={service}
                   manifest={manifest}
@@ -111,11 +103,11 @@ class Stack extends React.Component {
           </div>
         </td>
       </tr>
-    );
+    )];
   }
 
   renderContent() {
-    const { collapsed } = this.state;
+    const { collapsed } = this.props;
 
     if (collapsed) {
       return this.renderCollapsed();
@@ -126,14 +118,7 @@ class Stack extends React.Component {
 
   render() {
     const { manifest } = this.props;
-    const content = this.renderContent();
-    return content;
-
-    return (
-      <div className={'stack'}>
-        {content}
-      </div>
-    );
+    return this.renderContent();
   }
 }
 

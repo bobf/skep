@@ -29,11 +29,15 @@ class NodeStats extends React.Component {
   }
 
   progress(options) {
+    const { minimized } = this.props;
     const { percent, level, label, className } = options;
+    const tooltip = minimized ? label : null;
 
     return (
       <div className={'progress position-relative ' + className}
-           style={{ height: '2em' }}>
+           style={{ height: '2em' }}
+           title={tooltip}
+           data-toggle={tooltip ? 'tooltip' : null}>
         <div className={'progress-bar bg-' + level}
              style={{ width: percent }}>
           <span className={'label'}>
@@ -47,8 +51,11 @@ class NodeStats extends React.Component {
   renderMemory() {
     if (!this.memory) return null;
 
+    const { minimized } = this.props;
+
     return this.progress({
       percent: this.memory.percent(),
+      tooltip: minimized ? this.memory.label() : null,
       label: this.memory.label(),
       level: this.memory.level(),
       className: 'memory'
@@ -150,9 +157,23 @@ class NodeStats extends React.Component {
     });
   }
 
-  render() {
-    this.initialize(this.props);
+  renderMinimized() {
+    return (
+      <div className={'node-stats'}>
+        <div className={'meter memory'}>
+          {this.renderMemory()}
+        </div>
+        <div className={'meter cpu'}>
+          {this.renderCPU()}
+        </div>
+        <div className={'load-averages'}>
+          {this.renderLoad()}
+        </div>
+      </div>
+    );
+  }
 
+  renderMaximized() {
     return (
       <div className={'node-stats'}>
         <table>
@@ -188,6 +209,19 @@ class NodeStats extends React.Component {
       </div>
     );
   }
+
+  render() {
+    const { minimized } = this.props;
+
+    this.initialize(this.props);
+
+    if (minimized) {
+      return this.renderMinimized();
+    } else {
+      return this.renderMaximized();
+    }
+  }
 }
+
 
 export default NodeStats;

@@ -13,12 +13,16 @@
   margin-top: 0.8em;
 }
 
-.stack h2.name {
+.stack.header th {
   font-size: 1.4em;
   font-family: monospace;
-  text-transform: uppercase;
-  color: #eee;
+  color: #555;
   margin: 0.4em 1em;
+}
+
+.stack.header th.name {
+  color: #eee;
+  text-transform: uppercase;
 }
 
 div.stack {
@@ -31,11 +35,13 @@ button.stack {
   text-transform: uppercase;
   margin: 1em;
   font-size: 0.2em;
-  float: right;
+  float: left;
 }
 
 table.stacks {
   width: 100%;
+  border-spacing: 0 0.4em;
+  border-collapse: separate;
 }
 
 table.stacks thead th {
@@ -47,6 +53,7 @@ table.stacks thead th {
 
 .collapsed.stack {
   border-top: 1px solid #999;
+  background-color: #333;
 }
 
 .collapsed td.ports {
@@ -64,11 +71,14 @@ table.stacks thead th {
   color: #dd9;
 }
 
-.collapsed th {
-  font-family: monospace;
+.stacks th {
   font-size: 1.2em;
-  text-transform: uppercase;
-  padding: 0.4em;
+}
+
+.stacks th.service-name {
+  font-family: monospace;
+  text-transform: lowercase;
+  padding: 0.2em;
 }
 
 .collapsed .indent {
@@ -86,6 +96,11 @@ table.stacks thead th {
   margin: 0.2em;
   text-shadow: 0px 0px 5px #555;
   padding: 0.2em 0.4em;
+}
+
+.stack span.name {
+  padding-top: 0.3em;
+  display: inline-grid;
 }
 
 .collapsed th.name {

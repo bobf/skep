@@ -7,8 +7,15 @@
 }
 
 .task .badge {
-  margin: 0 0.2em;
+  margin: 0.4em 0;
   text-shadow: 0px 0px 5px #555;
+  text-align: right;
+  display: block;
+}
+
+.badges {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 span.task {

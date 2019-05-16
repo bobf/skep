@@ -27,3 +27,25 @@
   padding: 0.2em;
   margin: 0.2em;
 }
+
+.minimized .node-stats .meter {
+  display: inline-block;
+  width: 30%;
+}
+
+.minimized .load-averages {
+  display: inline-block;
+  width: 40%;
+}
+
+.minimized .load-averages .badge {
+  display: inline;
+}
+
+
+.minimized .node-stats .progress {
+}
+
+.minimized .node-stats .progress .label {
+  visibility: hidden;
+}

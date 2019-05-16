@@ -1,32 +1,8 @@
 import NodeStats from './node_stats';
 
 class Node extends React.Component {
-  tasks() {
-    return this.services().map(
-      service => service.tasks.filter(
-        task => task.node_id === this.props.node.id
-      )
-    ).flat(1)
-  }
-
-  services() {
-    return this.stacks().map(
-      stack => stack.services.filter(
-        service => service.tasks.find(
-          task => task.node_id === this.props.node.id
-        )
-      )
-    ).flat(1)
-  }
-
-  stacks() {
-    return this.props.stacks.filter(
-      stack => stack.services.filter(
-        service => service.tasks.find(
-          task => task.node_id === this.props.node.id
-        )
-      )
-    )
+  constructor(props) {
+    super(props);
   }
 
   stats() {
@@ -54,43 +30,54 @@ class Node extends React.Component {
   }
 
   roleBadge() {
-    if (this.props.node.role === 'manager') {
-      return (
-        <span className={'badge badge-primary'}>
-          Manager
-        </span>
-      );
-    } else {
-      return (
-        <span className={'badge badge-info'}>
-          Worker
-        </span>
-      );
-    }
+    const { minimized } = this.props;
+    const { role } = this.props.node;
+
+    const label = {
+      manager: { abbrev: 'M', full: 'Manager', level: 'primary' },
+      worker: { abbrev: 'W', full: 'Worker', level: 'info' }
+    }[role];
+
+    return (
+      <span
+        title={minimized ? label.full : ''}
+        data-toggle={'tooltip'}
+        className={`badge badge-${label.level}`}>
+        {minimized ? label.abbrev : label.full}
+      </span>
+    );
   }
 
   leaderBadge() {
+    const { minimized } = this.props;
     if (!this.leader()) {
       return null;
     }
-
+    const label = minimized ? 'L' : 'Leader';
     return (
-      <span className={'badge badge-success'}>Leader</span>
+      <span
+        title={minimized ? 'Leader' : ''}
+        data-toggle={'tooltip'}
+        className={'badge badge-success'}>
+        {label}
+      </span>
     );
   }
 
   render() {
+    const { minimized, node } = this.props;
     return (
       <div id={`node-${this.props.node.id}`} className={'node'}>
-        <h2 title={'Version: ' + this.props.node.version} className={'hostname'}>
-          {this.props.node.hostname}
+        <span className={'status'}></span>
+        <h2 title={'Version: ' + node.version} className={'hostname'}>
+          {node.hostname}
         </h2>
-
         {this.roleBadge()}
         {this.leaderBadge()}
 
         <NodeStats
-          key={'node_' + this.props.node.id + '_stats'}
+          key={'node_' + node.id + '_stats'}
+          minimized={minimized}
           stats={this.stats()}
         />
       </div>

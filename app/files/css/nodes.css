@@ -7,43 +7,59 @@
 }
 
 .node {
-  border: 0.2em solid #999;
+  border: 1px solid #333;
   padding: 0.2em;
-  border-radius: 15px 15px 0px 0px;
+  border-radius: 15px;
   box-shadow: 0px 0px 5px #555;
   margin-bottom: 1em;
   width: 18em;
 }
 
-#nodes.expanded .node {
+#nodes.maximized .node {
   display: inline-block;
   margin: 1em;
 }
 
-#nodes.collapsed .node tr.memory th {
+.node .status {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  background-color: #9d9;
+  border-radius: 1em;
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+.node.ping .status {
+  visibility: visible;
+}
+
+#nodes.minimized .node tr.memory th {
   display: none;
 }
 
-#nodes.collapsed .node tr.cpu th {
+#nodes.minimized .node tr.cpu th {
   display: none;
 }
 
-#nodes.collapsed .node tr.load th {
+#nodes.minimized .node tr.load th {
   display: none;
 }
 
-#nodes.collapsed .node tr.load td {
+#nodes.minimized .node tr.load td {
   display: none;
 }
 
-#nodes.collapsed .node tr.disk-stats {
+#nodes.minimized .node tr.disk-stats {
   display: none;
 }
 
-#nodes.collapsed .node tr.filesystem-stats {
+#nodes.minimized .node tr.filesystem-stats {
   display: none;
 }
 
+#nodes.minimized .node .hostname {
+}
 
 .node.highlight {
   border-color: #dd9;
@@ -59,8 +75,12 @@
   font-size: 1.0em;
 }
 
-.node h2.hostname {
+.node .hostname {
   font-family: monospace;
+  display: inline-block;
+}
+
+#nodes.maximized .node .hostname {
   text-align: center;
   padding: 0.2em;
   font-size: 1.0em;

@@ -9,8 +9,10 @@ class Dashboard extends React.Component {
     super(props);
     this._nodes = [];
     this.state = {
-      stacksExpanded: true
-    };
+      nodesMinimized: true,
+      stacksMinimized: false,
+      collapsedStacks: []
+    }
   }
 
   getNode(hostname) {
@@ -41,29 +43,29 @@ class Dashboard extends React.Component {
   }
 
   findOrCreateNode(state) {
-    var found = this._nodes.find(node => node.id === state.id);
+    const found = this._nodes.find(node => node.id === state.id);
 
     if (found) {
       return found;
     }
 
-    var node = this.node(state);
+    const node = this.createNode(state);
     this._nodes.push(node);
     return node;
   }
 
-  node(state) {
-    var ref = React.createRef();
+  createNode(state) {
+    const ref = React.createRef();
     return {
       id: state.id,
       hostname: state.hostname,
       ref: ref,
-      component: (
+      component: (minimized) => (
         <Node
           key={state.id}
           ref={ref}
           node={state}
-          stacks={this.state.manifest.stacks}
+          minimized={minimized}
         />
       )
     }
@@ -89,20 +91,41 @@ class Dashboard extends React.Component {
     const $eachNode = $('.node');
 
     if (visible) {
-      $nodes.addClass('expanded');
-      $nodes.removeClass('collapsed');
+      $nodes.addClass('maximized');
+      $nodes.removeClass('minimized');
       $nodes.animate({ width: $dashboard.width() - 28}, 1000, 'swing',
                      () => $stacks.fadeOut());
-      this.setState({ stacksExpanded: false });
+      this.setState({ stacksMinimized: true, nodesMinimized: false });
     } else {
       $stacks.show();
-      $nodes.animate({ width: '21em' }, 1000, 'swing',
-                     () => {
-                       $nodes.removeClass('expanded');
-                       $nodes.addClass('collapsed');
-                     });
-      this.setState({ stacksExpanded: true });
+      $nodes.animate({ width: '21em' }, 1000, 'swing');
+      $nodes.removeClass('maximized');
+      $nodes.addClass('minimized');
+      this.setState({ stacksMinimized: false, nodesMinimized: true });
     }
+  }
+
+  collapseAll(options = {}) {
+    const { stacks } = this.state.manifest;
+    const stackNames = stacks.map(stack => stack.name);
+    const toCollapse = stackNames.filter(
+      name => !options.except || name !== options.except
+    );
+
+    this.setState({ collapsedStacks: toCollapse })
+  }
+
+  collapse(stackName) {
+    const { stacks } = this.state.manifest;
+    this.setState({ collapsedStacks: stacks.map(stack => stack.name) });
+  }
+
+  isCollapsed(stackName) {
+    const { collapsedStacks } = this.state;
+
+    if (!collapsedStacks.length) return true;
+
+    return collapsedStacks.includes(stackName);
   }
 
   render() {
@@ -110,43 +133,31 @@ class Dashboard extends React.Component {
 
     return (
       <div id={'dashboard'}>
-        <div className={'section collapsed'} id={'nodes'}>
+        <div className={'section minimized'} id={'nodes'}>
           <div className={'section-content'}>
-            {this.nodes().map(node => node.component)}
+            {this.nodes().map(
+              node => node.component(this.state.nodesMinimized)
+            )}
           </div>
         </div>
 
         <button
           onClick={() => this.toggleStacks()}
           className={'toggle-section btn btn-secondary'}>
-          {this.state.stacksExpanded ? <Icon.ChevronsRight/> : <Icon.ChevronsLeft/>}
+          {this.state.stacksMinimized ? <Icon.ChevronsLeft/> : <Icon.ChevronsRight/>}
         </button>
 
         <div id={'stacks'} className={'section'}>
           <div className={'section-content'}>
             <table className='stacks'>
-              <thead>
-                <tr>
-                  <th>
-                    {'Stack Name'}
-                  </th>
-                  <th>
-                    {'Image'}
-                  </th>
-                  <th>
-                    {'Ports'}
-                  </th>
-                  <th>
-                    {'Service Name'}
-                  </th>
-                </tr>
-              </thead>
               <tbody>
                 {this.state.manifest.stacks.map(stack => (
                   <Stack
+                    dashboard={this}
                     key={'stack_' + stack.name}
                     stack={stack}
                     manifest={this.state.manifest}
+                    collapsed={this.isCollapsed(stack.name)}
                   />
                 ))}
               </tbody>

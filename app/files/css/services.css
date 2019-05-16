@@ -4,8 +4,13 @@
 }
 
 .service h2 {
-  font-size: 0.8em;
+  font-size: 1.2em;
   color: #999;
+}
+
+.image {
+  color: #ccc;
+  padding: 0.2em 0.6em;
 }
 
 .service-name {
@@ -13,14 +18,12 @@
 }
 
 .service span.title {
-  text-transform: uppercase;
-  font-size: 1.5em;
+  text-transform: lowercase;
   font-family: monospace;
 }
 
 .service .ports {
   font-family: monospace;
-  font-size: 1.4em;
   margin-left: 1em;
   margin-top: 0.4em;
 }
@@ -49,7 +52,6 @@
 .service .tag {
   font-family: monospace;
   padding-left: 0.2em;
-  font-size: 1.4em;
   color: #adacac;
   background-color: #3d3f42;
   margin: 0.8em;

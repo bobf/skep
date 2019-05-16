@@ -13,6 +13,7 @@ class Task(ImageParser):
             "id": attrs["ID"],
             "node_id": attrs["NodeID"],
             "message": attrs["Status"]["Message"],
+            "when": attrs["Status"]["Timestamp"],
             "state": attrs["Status"]["State"],
             "environment": attrs['Spec']['ContainerSpec'].get('Env', []),
             "image": self.parse_image(

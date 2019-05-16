@@ -42,6 +42,10 @@ $(function () {
     }
 
     node.ref.current.setState({ stats: data });
+    $('#node-' + node.id).addClass('ping');
+    setTimeout(function () {
+      $('#node-' + node.id).removeClass('ping');
+    }, 200);
   });
 
   $('body').tooltip({

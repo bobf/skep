@@ -36,18 +36,21 @@ class Task extends React.Component {
     const { state } = this.props.task;
 
     return (
-      <span className={`badge bg-${this.level()}`}>
+      <div className={`badge bg-${this.level()}`}>
         {state}
-      </span>
+      </div>
     );
   }
 
   renderMessage () {
-    const { message } = this.props.task;
+    const { message, when } = this.props.task;
     return (
-      <span className={'badge bg-primary'}>
+      <div
+        data-toggle={'tooltip'}
+        title={moment(when).fromNow()}
+        className={'badge bg-primary'}>
         {message}
-      </span>
+      </div>
     );
   }
 
@@ -61,12 +64,13 @@ class Task extends React.Component {
         onMouseEnter={() => this.highlightNode(true)}
         onMouseLeave={() => this.highlightNode(false)}>
         <span className="border">
-          {<Icon.Server />}
-          <h3>
-            {this.node().hostname}
+          {<Icon.Server size={'2.4em'} />}
+          <h3 title={this.node().hostname}>
           </h3>
-          {this.renderState()}
-          {this.renderMessage()}
+          <div className={'badges'}>
+            {this.renderState()}
+            {this.renderMessage()}
+          </div>
         </span>
       </span>
     );

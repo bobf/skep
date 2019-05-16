@@ -18,14 +18,13 @@ class Service extends React.Component {
       <span
         title={`Updated ${moment(updated).fromNow()}`}
         data-toggle={'tooltip'}
-        data-placement={'top'}
         className={'updated'}>
         &#10003;
       </span>
     );
   }
 
-  renderPorts() {
+  renderPortsExpanded() {
     const { ports, id } = this.props.service;
 
     return ports.map(
@@ -58,7 +57,42 @@ class Service extends React.Component {
     );
   }
 
-  render() {
+  renderPortsCollapsed() {
+    const { service } = this.props;
+
+    return service.ports.map((mapping, idx) => (
+      <span
+        className={'ports'}
+        key={`ports-${service.name}-${mapping.published}-${mapping.target}`}>
+        <span className={'published'}>{mapping.published}</span>
+        {':'}
+        <span className={'target'}>{mapping.target}</span>
+        {idx + 1 < service.ports.length ? <br /> : null}
+      </span>
+      )
+    );
+  }
+
+  renderCollapsed() {
+    const { service } = this.props;
+
+    return (
+      <tr
+        key={`service-collapsed-${service.name}`}
+        className={'service collapsed'}>
+        <th className={'service-name'}>
+          {this.updateStatus()}
+          {service.name}
+        </th>
+        <td className={'image'}>
+          <span>{service.image.id}:{service.image.tag}</span>
+        </td>
+        <td className={'ports'}>{this.renderPortsCollapsed()}</td>
+     </tr>
+    );
+  }
+
+  renderExpanded() {
     const { name, image } = this.props.service;
 
     return (
@@ -70,7 +104,7 @@ class Service extends React.Component {
           <span className={'tag'}>
             {`[${image.id}:${image.tag}]`}
           </span>
-          {this.renderPorts()}
+          {this.renderPortsExpanded()}
         </h2>
 
         <div className={'tasks'}>
@@ -84,6 +118,12 @@ class Service extends React.Component {
         </div>
       </div>
     );
+  }
+
+  render() {
+    const { collapsed } = this.props;
+
+    return collapsed ? this.renderCollapsed() : this.renderExpanded();
   }
 }
 

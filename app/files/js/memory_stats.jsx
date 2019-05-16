@@ -4,7 +4,7 @@ class MemoryStats {
   }
 
   label() {
-    const free = this.formatNumber(this.free());
+    const free = this.formatNumber(this.stats.total - this.free());
     const total = this.formatNumber(this.stats.total);
 
     return `${free} / ${total}`;
