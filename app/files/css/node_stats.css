@@ -28,14 +28,17 @@
   margin: 0.2em;
 }
 
+.minimized .node-stats .meter.memory {
+  margin-left: 0.4em;
+}
+
 .minimized .node-stats .meter {
   display: inline-block;
-  width: 30%;
+  width: 28%;
 }
 
 .minimized .load-averages {
   display: inline-block;
-  width: 40%;
 }
 
 .minimized .load-averages .badge {

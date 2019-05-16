@@ -66,9 +66,14 @@
 }
 
 .node h2 {
-  font-size: 1.2em;
+  font-size: 1em;
   padding-left: 0.4em;
   padding-right: 0.4em;
+  width: calc(100% - 5.4em);
+}
+
+.maximized .node h2 {
+  font-size: 1.2em;
 }
 
 .node h3 {
@@ -78,18 +83,21 @@
 .node .hostname {
   font-family: monospace;
   display: inline-block;
+  text-transform: uppercase;
+  color: #ddd;
 }
 
-#nodes.maximized .node .hostname {
+.maximized .status {
+  position: absolute;
+  margin: 0.4em;
+}
+
+.maximized .node .hostname {
   text-align: center;
   padding: 0.2em;
   font-size: 1.0em;
-  color: #0b0;
-  background-color: #0c0c0c;
   margin: 0.4em auto;
-  width: 80%;
-  border: 2px solid #7d7d7d;
-  border-radius: 5px;
+  display: block;
 }
 
 .node .badge {
@@ -100,5 +108,3 @@
   padding: 0.2em;
   margin: 0.2em;
 }
-
-

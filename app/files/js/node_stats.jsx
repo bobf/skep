@@ -88,8 +88,17 @@ class NodeStats extends React.Component {
   }
 
   renderLoadAverage(index) {
+    const title = [
+      '1 Minute Load Average',
+      '10 Minutes Load Average',
+      '15 Minutes Load Average',
+    ][index];
+
     return (
-      <span className={'badge bg-' + this.loadLevel(index)}>
+      <span
+        title={title}
+        data-toggle={'tooltip'}
+        className={'badge bg-' + this.loadLevel(index)}>
         {numeral(this.load.averages[index]).format('0.00')}
       </span>
     );
