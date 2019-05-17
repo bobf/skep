@@ -17,6 +17,10 @@
   color: #999;
 }
 
+.service-name .badge {
+  margin-left: 0.4em;
+}
+
 .service span.title {
   text-transform: lowercase;
   font-family: monospace;

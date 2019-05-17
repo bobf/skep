@@ -57,6 +57,19 @@ class Service extends React.Component {
     );
   }
 
+  countBadge() {
+    const { tasks } = this.props.service;
+
+    return (
+      <span
+        title={`${tasks.length} replica(s)`}
+        className={'badge bg-primary'}
+        data-toggle={'tooltip'}>
+        {tasks.length}
+      </span>
+    );
+  }
+
   renderPortsCollapsed() {
     const { service } = this.props;
 
@@ -83,6 +96,7 @@ class Service extends React.Component {
         <th className={'service-name'}>
           {this.updateStatus()}
           {service.name}
+          {this.countBadge()}
         </th>
         <td className={'image'}>
           <span>{service.image.id}:{service.image.tag}</span>
