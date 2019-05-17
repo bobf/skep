@@ -86,6 +86,24 @@ class Service extends React.Component {
     );
   }
 
+  environment() {
+    const { environment, name } = this.props.service;
+    const env = [];
+    for (const [key, value] of Object.entries(environment)) {
+      env.push(
+        <div
+          key={`env-${name}-${key}`}
+          className={'keypair'}>
+          <span className={'key'}>{key}</span>
+          <span className={'syntax'}>{'='}</span>
+          <span className={'value'}>{value}</span>
+        </div>
+      );
+    }
+
+    return env;
+  }
+
   renderCollapsed() {
     const { service } = this.props;
 
@@ -111,7 +129,6 @@ class Service extends React.Component {
 
     return (
       <div className={'service'}>
-
         <h2>
           {this.updateStatus()}
           <span className={'title'}>{name}</span>
@@ -120,6 +137,10 @@ class Service extends React.Component {
           </span>
           {this.renderPortsExpanded()}
         </h2>
+
+        <div className={'environment'}>
+          {this.environment()}
+        </div>
 
         <div className={'tasks'}>
           {this.props.service.tasks.map(task => (

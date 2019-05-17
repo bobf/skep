@@ -1,3 +1,4 @@
+from skep.docker.environment import Environment
 from skep.docker.task import Task
 from skep.docker.mixins import ImageParser
 
@@ -13,8 +14,15 @@ class Service(ImageParser):
             "updating": self.updating(),
             "ports": self.ports(),
             "image": self.image(),
-            "tasks": self.tasks()
+            "tasks": self.tasks(),
+            "environment": self.environment()
         }
+
+    def environment(self):
+        attrs = self.service.attrs
+        env = attrs['Spec']['TaskTemplate']['ContainerSpec'].get('Env', [])
+        return Environment(env).serializable()
+
 
     def tasks(self):
         return list(filter(
