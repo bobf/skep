@@ -63,13 +63,44 @@ class Service extends React.Component {
     );
   }
 
+  runningCount() {
+    const { tasks } = this.props.service;
+    return tasks.filter(task => task.state === 'running').length;
+  }
+
+  level() {
+    const { tasks } = this.props.service;
+    const running = this.runningCount();
+    const total = tasks.length;
+
+    switch (running) {
+      case 0:
+        return 'danger'
+      case total:
+        return 'success'
+      default:
+        return 'warning'
+    }
+  }
+
+  statusSymbol() {
+    switch (this.level()) {
+      case 'danger':
+        return '';
+      case 'success':
+        return '✓';
+      case 'warning':
+        return '✗';
+    }
+  }
+
   countBadge() {
     const { tasks } = this.props.service;
 
     return (
       <span
-        title={`${tasks.length} replica(s)`}
-        className={'badge bg-primary'}
+        title={`${this.runningCount()} / ${tasks.length} replicas running ${this.statusSymbol()}`}
+        className={`badge bg-${this.level()}`}
         data-toggle={'tooltip'}>
         {tasks.length}
       </span>
