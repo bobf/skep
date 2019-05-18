@@ -62,7 +62,7 @@
 }
 
 .node.highlight {
-  border-color: #dd9;
+  box-shadow: 0px 0px 10px #dd9;
 }
 
 .node h2 {
