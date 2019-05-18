@@ -87,7 +87,7 @@ class Stack extends React.Component {
     const { manifest } = this.props;
 
     return [this.headerRow(), (
-      <tr>
+      <tr key={`service-row-${name}`}>
         <td colSpan={4}>
           <div className={'stack'}>
             <div className={'services'}>

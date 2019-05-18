@@ -1,4 +1,5 @@
 import Task from './task';
+import Environment from './environment';
 
 class Service extends React.Component {
   updateStatus() {
@@ -86,24 +87,6 @@ class Service extends React.Component {
     );
   }
 
-  environment() {
-    const { environment, name } = this.props.service;
-    const env = [];
-    for (const [key, value] of Object.entries(environment)) {
-      env.push(
-        <div
-          key={`env-${name}-${key}`}
-          className={'keypair'}>
-          <span className={'key'}>{key}</span>
-          <span className={'syntax'}>{'='}</span>
-          <span className={'value'}>{value}</span>
-        </div>
-      );
-    }
-
-    return env;
-  }
-
   renderCollapsed() {
     const { service } = this.props;
 
@@ -125,7 +108,7 @@ class Service extends React.Component {
   }
 
   renderExpanded() {
-    const { name, image } = this.props.service;
+    const { name, image, environment } = this.props.service;
 
     return (
       <div className={'service'}>
@@ -138,9 +121,7 @@ class Service extends React.Component {
           {this.renderPortsExpanded()}
         </h2>
 
-        <div className={'environment'}>
-          {this.environment()}
-        </div>
+        <Environment name={name} environment={environment} />
 
         <div className={'tasks'}>
           {this.props.service.tasks.map(task => (

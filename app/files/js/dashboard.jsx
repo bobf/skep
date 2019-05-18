@@ -154,7 +154,7 @@ class Dashboard extends React.Component {
                 {this.state.manifest.stacks.map(stack => (
                   <Stack
                     dashboard={this}
-                    key={'stack_' + stack.name}
+                    key={`stack-${stack.name}`}
                     stack={stack}
                     manifest={this.state.manifest}
                     collapsed={this.isCollapsed(stack.name)}

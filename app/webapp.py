@@ -39,7 +39,10 @@ def files(path):
 
 @application.route("/")
 def root():
-    return render_template('layout.html')
+    return render_template(
+        'layout.html',
+        env=os.environ.get('SKEP_ENV', 'production')
+    )
 
 @application.route("/swarm.json")
 def swarm():

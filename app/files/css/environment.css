@@ -1,0 +1,26 @@
+.environment {
+  font-family: monospace;
+  margin-left: 1em;
+}
+
+.environment table {
+  width: 100%;
+  margin: 1em 0;
+}
+
+.environment .keypair {
+  padding: 0.4em 1em;
+  border: 1px dotted rgba(132, 132, 132, 0.1);
+}
+
+.environment .key {
+  color: #ddd;
+}
+
+.environment .value {
+  color: #999;
+}
+
+.environment .syntax {
+  color: #555;
+}
