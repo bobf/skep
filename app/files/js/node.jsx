@@ -50,15 +50,13 @@ class Node extends React.Component {
 
   leaderBadge() {
     const { minimized } = this.props;
-    if (!this.leader()) {
-      return null;
-    }
+    const leader = this.leader();
     const label = minimized ? 'L' : 'Leader';
     return (
       <span
         title={minimized ? 'Leader' : ''}
         data-toggle={'tooltip'}
-        className={'badge badge-success'}>
+        className={`badge badge-success ${leader ? 'visible' : 'hidden'}`}>
         {label}
       </span>
     );
@@ -72,8 +70,8 @@ class Node extends React.Component {
         <h2 title={'Version: ' + node.version} className={'hostname'}>
           {node.hostname}
         </h2>
-        {this.roleBadge()}
         {this.leaderBadge()}
+        {this.roleBadge()}
 
         <NodeStats
           key={'node_' + node.id + '_stats'}

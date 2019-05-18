@@ -104,6 +104,14 @@
   margin: 0.2em;
 }
 
+.node .badge.visible {
+  visibility: visible;
+}
+
+.node .badge.hidden {
+  visibility: hidden;
+}
+
 .node .alert {
   padding: 0.2em;
   margin: 0.2em;
