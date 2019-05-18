@@ -2,6 +2,11 @@ import Task from './task';
 import Environment from './environment';
 
 class Service extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { highlight: false };
+  }
+
   updateStatus() {
     const { updated, updating } = this.props.service;
 
@@ -87,13 +92,34 @@ class Service extends React.Component {
     );
   }
 
+  highlightNodes(highlight) {
+    const $nodes = $(this.nodesSelector());
+
+    if (highlight) {
+      $nodes.addClass('highlight');
+      this.setState({ highlight: true });
+    } else {
+      $nodes.removeClass('highlight');
+      this.setState({ highlight: false });
+    }
+
+    return false;
+  }
+
+  nodesSelector() {
+    const { tasks } = this.props.service;
+    return tasks.map(task => `#node-${task.node_id}`).join(', ');
+  }
+
   renderCollapsed() {
     const { service } = this.props;
 
     return (
       <tr
+        onMouseEnter={() => this.highlightNodes(true)}
+        onMouseLeave={() => this.highlightNodes(false)}
         key={`service-collapsed-${service.name}`}
-        className={'service collapsed'}>
+        className={`service collapsed ${this.state.highlight ? 'highlight' : ''}`}>
         <th className={'service-name'}>
           {this.updateStatus()}
           {service.name}

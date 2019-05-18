@@ -8,7 +8,7 @@ class Task extends React.Component {
 
   node() {
     return this.props.manifest.nodes.find(
-      node => node.id == this.props.task.node_id
+      node => node.id === this.props.task.node_id
     );
   }
 

@@ -78,7 +78,7 @@ table.stacks thead th {
 .stacks th.service-name {
   font-family: monospace;
   text-transform: lowercase;
-  padding: 0.2em;
+  padding: 0.4em;
 }
 
 .collapsed .indent {
