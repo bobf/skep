@@ -1,10 +1,16 @@
 import Task from './task';
 import Environment from './environment';
 
+import * as Icon from 'react-feather';
+
 class Service extends React.Component {
   constructor(props) {
     super(props);
     this.state = { highlight: false };
+  }
+
+  highlight(highlight, className) {
+    this.setState({ highlight: highlight, highlightClass: className });
   }
 
   updateStatus() {
@@ -123,18 +129,62 @@ class Service extends React.Component {
     );
   }
 
+  highlightRelated(highlight) {
+    this.highlightNodes(highlight);
+    this.highlightNetworkedServices(highlight);
+    this.highlight(highlight);
+
+    return false;
+  }
+
   highlightNodes(highlight) {
     const $nodes = $(this.nodesSelector());
 
     if (highlight) {
+      // move to Node
       $nodes.addClass('highlight');
-      this.setState({ highlight: true });
     } else {
+      // move to Node
       $nodes.removeClass('highlight');
-      this.setState({ highlight: false });
     }
+  }
 
-    return false;
+  highlightNetworkedServices(highlight) {
+    const { stack } = this.props;
+    this.networkedServices().forEach(
+      service => service.highlight(highlight, 'networked')
+    );
+  }
+
+  name() {
+    const { name } = this.props.service;
+    return name;
+  }
+
+  networks() {
+    const { networks } = this.props.service;
+    return networks;
+  }
+
+  networkedServices() {
+    const { stack } = this.props;
+    return stack
+           .dashboard()
+           .stacks()
+           .map(stack => stack.services())
+           .flat()
+           .filter(service => this.isNetworkedService(service));
+  }
+
+  isNetworkedService(service) {
+    const { networks, name } = this.props.service;
+    if (service.name() === name) return false;
+
+    const networkIds = new Set(networks.map(network => network.id));
+    const serviceNetworkIds = service.networks().map(network => network.id);
+    const intersect = serviceNetworkIds.filter(id => networkIds.has(id));
+
+    return intersect.length > 0;
   }
 
   nodesSelector() {
@@ -144,14 +194,19 @@ class Service extends React.Component {
 
   renderCollapsed() {
     const { service } = this.props;
+    const { highlight } = this.state;
+    const highlightClass = highlight ? `highlight ${this.state.highlightClass}` : '';
 
     return (
       <tr
-        onMouseEnter={() => this.highlightNodes(true)}
-        onMouseLeave={() => this.highlightNodes(false)}
+        onMouseEnter={() => this.highlightRelated(true)}
+        onMouseLeave={() => this.highlightRelated(false)}
         key={`service-collapsed-${service.name}`}
-        className={`service collapsed ${this.state.highlight ? 'highlight' : ''}`}>
+        className={`service collapsed ${highlightClass}`}>
         <th className={'service-name'}>
+          <span className={'network-icon'}>
+            <Icon.Wifi size={'1.4em'} />
+          </span>
           {this.updateStatus()}
           {service.name}
           {this.countBadge()}
@@ -159,7 +214,9 @@ class Service extends React.Component {
         <td className={'image'}>
           <span>{service.image.id}:{service.image.tag}</span>
         </td>
-        <td className={'ports'}>{this.renderPortsCollapsed()}</td>
+        <td className={'ports'}>
+          {this.renderPortsCollapsed()}
+        </td>
      </tr>
     );
   }

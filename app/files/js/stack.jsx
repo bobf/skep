@@ -2,7 +2,17 @@ import Service from './service';
 import * as Icon from 'react-feather';
 
 class Stack extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { highlight: {} }
+    this._services = {};
+  }
+
   services() {
+    return Object.values(this._services).map(service => service.current);
+  }
+
+  sortedServices() {
     return this.props.stack.services.sort(
       (left, right) => {
         if (left.ports.length && !right.ports.length) return -1;
@@ -12,6 +22,11 @@ class Stack extends React.Component {
         return 0;
       }
     );
+  }
+
+  dashboard() {
+    const { dashboard } = this.props;
+    return dashboard;
   }
 
   expand() {
@@ -65,17 +80,30 @@ class Stack extends React.Component {
     );
   }
 
+  serviceRef(service) {
+    this._services[service.name] = this._services[service.name] || React.createRef();
+    return this._services[service.name];
+  }
+
+  renderService(service, collapsed) {
+    const { manifest } = this.props;
+    const ref = this.serviceRef(service);
+    return (
+      <Service
+        collapsed={collapsed}
+        ref={ref}
+        key={service.name}
+        service={service}
+        stack={this}
+        manifest={manifest}
+        highlight={this.state.highlight[service.name]}
+      />
+    );
+  }
+
   renderCollapsed() {
     const { name } = this.props.stack;
-    const services = this.services().map(
-      service => (
-        <Service
-          key={service.name}
-          collapsed={true}
-          service={service}
-        />
-      )
-    );
+    const services = this.sortedServices().map(service => this.renderService(service, true));
 
     services.unshift(this.headerRow());
 
@@ -91,14 +119,7 @@ class Stack extends React.Component {
         <td colSpan={4}>
           <div className={'stack'}>
             <div className={'services'}>
-              {this.services().map(service => (
-                <Service
-                  collapsed={false}
-                  key={service.name}
-                  service={service}
-                  manifest={manifest}
-                />
-              ))}
+              {this.sortedServices().map(service => this.renderService(service, false))}
             </div>
           </div>
         </td>

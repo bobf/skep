@@ -57,6 +57,23 @@ tr.service.highlight {
   background-color: rgba(240,240,102,0.1);
 }
 
+tr.service.highlight.networked {
+  background-color: rgba(45,80,180,0.2);
+}
+
+.service .network-icon {
+  visibility: hidden;
+  position: absolute;
+  left: 0.4em;
+  vertical-align: middle;
+  display: inline;
+}
+
+.service.networked .network-icon {
+  visibility: visible;
+  color: rgba(70,120,235,1.0);
+}
+
 .service .tag {
   font-family: monospace;
   padding-left: 0.2em;

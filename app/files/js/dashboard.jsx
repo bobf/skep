@@ -8,6 +8,7 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this._nodes = [];
+    this._stacks = {};
     this.state = {
       nodesMinimized: true,
       stacksMinimized: false,
@@ -19,6 +20,23 @@ class Dashboard extends React.Component {
     return this._nodes.find(
       node => node.hostname === hostname
     )
+  }
+
+  renderStack(stack) {
+    this._stacks[stack.name] = this._stacks[stack.name] || React.createRef();
+    return (
+      <Stack
+        dashboard={this}
+        ref={this._stacks[stack.name]}
+        key={`stack-${stack.name}`}
+        stack={stack}
+        manifest={this.state.manifest}
+        collapsed={this.isCollapsed(stack.name)} />
+    );
+  }
+
+  stacks() {
+    return Object.values(this._stacks).map(stack => stack.current);
   }
 
   nodes() {
@@ -151,15 +169,7 @@ class Dashboard extends React.Component {
           <div className={'section-content'}>
             <table className='stacks'>
               <tbody>
-                {this.state.manifest.stacks.map(stack => (
-                  <Stack
-                    dashboard={this}
-                    key={`stack-${stack.name}`}
-                    stack={stack}
-                    manifest={this.state.manifest}
-                    collapsed={this.isCollapsed(stack.name)}
-                  />
-                ))}
+                {this.state.manifest.stacks.map(stack => this.renderStack(stack))}
               </tbody>
             </table>
           </div>
