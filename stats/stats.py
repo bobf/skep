@@ -39,7 +39,7 @@ class StatRunner:
         try:
             resp = urllib.request.urlopen(request)
         except urllib.error.URLError as e:
-            self.log.warn(
+            self.log.warning(
                 'Could not publish stats: %s (%s)' % (self.opts['url'], e)
             )
         else:

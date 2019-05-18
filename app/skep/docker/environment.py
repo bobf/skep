@@ -11,7 +11,11 @@ class Environment:
         self.filters = [x.strip().lower() for x in filters.split(',')]
 
     def parse(self, env):
-        return dict(keypair.split('=') for keypair in env)
+        return dict(self.split(keypair) for keypair in env)
+
+    def split(self, keypair):
+        key, _, value = keypair.partition('=')
+        return (key, value)
 
     def sanitize(self, key, value):
         if not self.filter(key):

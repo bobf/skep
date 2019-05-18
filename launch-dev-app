@@ -1,3 +1,3 @@
 #!/bin/bash
 cd app
-FLASK_APP=controller.py FLASK_DEBUG=1 pipenv run python webapp.py
+SKEP_ENV=production FLASK_APP=controller.py FLASK_DEBUG=1 pipenv run python webapp.py
