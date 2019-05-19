@@ -3,6 +3,7 @@ import os
 
 import docker
 
+from skep.docker.network import Network
 from skep.docker.node import Node
 from skep.docker.service import Service
 from skep.docker.stack import Stack
@@ -20,12 +21,16 @@ class Swarm:
         return {
             "nodes": self.nodes(),
             "stacks": self.stacks(),
+            "networks": self.networks(),
             "swarm": self
         }
 
+    def networks(self):
+        return [Network(network) for network in self.client.networks.list()]
+
     def stacks(self):
         return [
-            Stack(name, list(Service(x) for x in services))
+            Stack(name, list(Service(x, swarm=self) for x in services))
             for name, services in self.grouped_services()
         ]
 

@@ -4,8 +4,9 @@ from skep.docker.network import Network
 from skep.docker.mixins import ImageParser
 
 class Service(ImageParser):
-    def __init__(self, service):
+    def __init__(self, service, swarm):
         self.service = service
+        self.swarm = swarm
 
     def attrs(self):
         attrs = self.service.attrs
@@ -28,7 +29,8 @@ class Service(ImageParser):
     def networks(self):
         attrs = self.service.attrs
         networks = attrs['Spec']['TaskTemplate'].get('Networks', [])
-        return [Network(id=network['Target']) for network in networks]
+        network_ids = [x['Target'] for x in networks]
+        return [x for x in self.swarm.networks() if x.id in network_ids]
 
     def tasks(self):
         return list(filter(

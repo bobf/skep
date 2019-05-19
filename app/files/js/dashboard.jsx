@@ -22,7 +22,7 @@ class Dashboard extends React.Component {
     )
   }
 
-  allServices() {
+  services() {
     return this.stacks().map(stack => stack.services()).flat();
   }
 

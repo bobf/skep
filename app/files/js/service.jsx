@@ -170,7 +170,7 @@ class Service extends React.Component {
     const { stack } = this.props;
     return stack
            .dashboard()
-           .allServices()
+           .services()
            .filter(service => this.isNetworkedService(service));
   }
 
@@ -194,7 +194,7 @@ class Service extends React.Component {
     const { highlight } = this.state;
     const { stack } = this.props;
     if (!highlight) {
-      stack.dashboard().allServices().map(
+      stack.dashboard().services().map(
         service => service.highlight(false)
       );
     }
