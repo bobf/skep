@@ -170,9 +170,7 @@ class Service extends React.Component {
     const { stack } = this.props;
     return stack
            .dashboard()
-           .stacks()
-           .map(stack => stack.services())
-           .flat()
+           .allServices()
            .filter(service => this.isNetworkedService(service));
   }
 
@@ -192,6 +190,20 @@ class Service extends React.Component {
     return tasks.map(task => `#node-${task.node_id}`).join(', ');
   }
 
+  toggle() {
+    const { highlight } = this.state;
+    const { stack } = this.props;
+    if (!highlight) {
+      stack.dashboard().allServices().map(
+        service => service.highlight(false)
+      );
+    }
+
+    this.highlight(!highlight);
+    this.highlightRelated(!highlight);
+    return false;
+  }
+
   renderCollapsed() {
     const { service } = this.props;
     const { highlight } = this.state;
@@ -199,8 +211,7 @@ class Service extends React.Component {
 
     return (
       <tr
-        onMouseEnter={() => this.highlightRelated(true)}
-        onMouseLeave={() => this.highlightRelated(false)}
+        onClick={() => this.toggle()}
         key={`service-collapsed-${service.name}`}
         className={`service collapsed ${highlightClass}`}>
         <th className={'service-name'}>

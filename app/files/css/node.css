@@ -34,31 +34,35 @@
   visibility: visible;
 }
 
-#nodes.minimized .node tr.memory th {
+.minimized .node {
+  margin-bottom: 0.2em;
+}
+
+.minimized .node tr.memory th {
   display: none;
 }
 
-#nodes.minimized .node tr.cpu th {
+.minimized .node tr.cpu th {
   display: none;
 }
 
-#nodes.minimized .node tr.load th {
+.minimized .node tr.load th {
   display: none;
 }
 
-#nodes.minimized .node tr.load td {
+.minimized .node tr.load td {
   display: none;
 }
 
-#nodes.minimized .node tr.disk-stats {
+.minimized .node tr.disk-stats {
   display: none;
 }
 
-#nodes.minimized .node tr.filesystem-stats {
+.minimized .node tr.filesystem-stats {
   display: none;
 }
 
-#nodes.minimized .node .hostname {
+.minimized .node .hostname {
 }
 
 .node.highlight {

@@ -22,6 +22,10 @@ class Dashboard extends React.Component {
     )
   }
 
+  allServices() {
+    return this.stacks().map(stack => stack.services()).flat();
+  }
+
   renderStack(stack) {
     this._stacks[stack.name] = this._stacks[stack.name] || React.createRef();
     return (

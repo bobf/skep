@@ -53,6 +53,10 @@
   color: #dd9;
 }
 
+tr.service {
+  cursor: pointer;
+}
+
 tr.service.highlight {
   background-color: rgba(240,240,102,0.1);
 }
