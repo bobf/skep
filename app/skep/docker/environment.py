@@ -18,10 +18,16 @@ class Environment:
         return (key, value)
 
     def sanitize(self, key, value):
+        value = self.sanitize_url(value)
+
         if not self.filter(key):
             return value
 
         return '*' * 10
+
+    def sanitize_url(self, url):
+        # TODO: Filter proto://user:pass@example.com/ passwords
+        return url
 
     def filter(self, key):
         normalized = key.strip().lower()

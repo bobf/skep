@@ -1,46 +1,95 @@
-function Environment(props) {
-  const { environment, name } = props;
-  const colCount = 2;
-  const rowCount = Math.ceil(Object.keys(environment).length / colCount);
-  const env = [];
-  let count = 0;
+import * as Icon from 'react-feather';
 
-  for (let i = 0; i < rowCount; i++) {
-    env.push([]);
+class Environment extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { collapsed: true };
   }
 
-  if (!env.length) {
+  expand() {
+    this.setState({ collapsed: false });
+    return false;
+  }
+
+  collapse() {
+    this.setState({ collapsed: true });
+    return false;
+  }
+
+  toggle() {
+    const { collapsed } = this.state;
+    collapsed ? this.expand() : this.collapse();
+    // REVIEW: This feels hacky but, without it, the tooltip does not disappear
+    // until the user manually takes focus away from the button.
+    $('.environment .btn').blur();
+    return false;
+  }
+
+  isEnvironmentEmpty() {
+    return this.valueCount() === 0;
+  }
+
+  valueCount() {
+    const { environment } = this.props;
+    return Object.keys(environment).length;
+  }
+
+
+  renderExpandButton(collapsed) {
+    const empty = this.isEnvironmentEmpty();
+    const className = empty ? 'btn-secondary disabled' : 'btn-primary';
+    return (
+      <button
+        title={empty ? 'Environment empty' : `${this.valueCount()} value(s)`}
+        data-toggle={'tooltip'}
+        className={`btn expand ${className}`}
+        onClick={() => this.toggle()}>
+        Environment
+        { empty ? (
+            <Icon.Slash className={'icon'} size={'1em'} />
+          ) : (
+            collapsed ? (
+              <Icon.ChevronDown className={'icon'} size={'1em'} />
+            ) : (
+              <Icon.ChevronUp className={'icon'} size={'1em'} />
+            )
+          )}
+      </button>
+    );
+  }
+
+  renderCollapsed() {
     return null;
   }
 
-  for (const [key, value] of Object.entries(environment)) {
-    env[count % rowCount].push(
-      <td
-        className={'keypair'}
-        key={`env-${name}-${key}`}>
-        <span className={'key'}>{key}</span>
-        <span className={'syntax'}>{'='}</span>
-        <span className={'value'}>{value}</span>
-      </td>
+  renderExpanded() {
+    const { environment, name } = this.props;
+    const rows = Object.keys(environment).sort().map(
+      key => (
+        <div key={`env-${name}-${key}`}>
+          <span className={'key'}>{key}</span>
+          <span className={'syntax'}>{'='}</span>
+          <span className={'value'}>{environment[key]}</span>
+        </div>
+      )
     );
-    count++;
+
+    return (
+      <div className={'keypairs'}>
+        {rows}
+      </div>
+    )
   }
 
-  return (
-    <div className={'environment'}>
-      <table>
-        <tbody>
-          {env.map(
-            (keypairs, index) => (
-              <tr key={`env-${name}-${index}`}>
-                {keypairs}
-              </tr>
-            )
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
+  render() {
+    const { collapsed } = this.state;
+    return (
+      <div className={'environment'}>
+        {this.renderExpandButton(collapsed)}
+        {collapsed ? this.renderCollapsed() : this.renderExpanded()}
+      </div>
+    );
+  }
 }
 
 export default Environment;

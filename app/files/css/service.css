@@ -81,6 +81,7 @@ tr.service.highlight.networked {
   background-color: #3d3f42;
   margin: 0.8em;
   padding: 0.2em;
+  margin-left: 1em;
 }
 
 .service .updated {

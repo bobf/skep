@@ -229,13 +229,13 @@ class Service extends React.Component {
         <h2>
           {this.updateStatus()}
           <span className={'title'}>{name}</span>
+          <Environment name={name} environment={environment} />
           <span className={'tag'}>
             {`[${image.id}:${image.tag}]`}
           </span>
+
           {this.renderPortsExpanded()}
         </h2>
-
-        <Environment name={name} environment={environment} />
 
         <div className={'tasks'}>
           {this.props.service.tasks.map(task => (
