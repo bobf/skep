@@ -142,10 +142,11 @@ class Service extends React.Component {
 
     if (highlight) {
       // move to Node
+      $('.node').removeClass('highlight');
       $nodes.addClass('highlight');
     } else {
       // move to Node
-      $nodes.removeClass('highlight');
+      $('.node').removeClass('highlight');
     }
   }
 
