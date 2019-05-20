@@ -35,7 +35,7 @@
 }
 
 .minimized .node {
-  margin-bottom: 0.2em;
+  margin-bottom: 1.2em 0;
 }
 
 .minimized .node tr.memory th {
