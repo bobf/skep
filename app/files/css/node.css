@@ -116,6 +116,10 @@
   visibility: hidden;
 }
 
+.maximized .node .badge.hidden {
+  display: none;
+}
+
 .node .alert {
   padding: 0.2em;
   margin: 0.2em;

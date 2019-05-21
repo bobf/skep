@@ -108,7 +108,7 @@ class Service extends React.Component {
         title={`${this.runningCount()} / ${tasks.length} replicas running ${this.statusSymbol()}`}
         className={`badge bg-${this.level()}`}
         data-toggle={'tooltip'}>
-        {tasks.length}
+        {this.runningCount()}
       </span>
     );
   }
