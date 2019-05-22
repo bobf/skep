@@ -50,7 +50,7 @@ class StatRunner:
     def stats(self):
         return {
             'hostname': self.opts['hostname'],
-            'network': self.network(),
+            'networks': self.networks(),
             'memory': self.memory(),
             'disks': self.disks(),
             'filesystems': self.filesystems(),
@@ -115,15 +115,15 @@ class StatRunner:
 
         return stats
 
-    def network(self):
-        stats = {}
+    def networks(self):
+        stats = []
         for network_interface in self.opts['network']:
             rx_bits, tx_bits = lm.net_stat.rx_tx_bits(network_interface)
-            stats[network_interface] = {
+            item = {
                 'rx': rx_bits,
-                'tx': tx_bits
+                'tx': tx_bits,
+                'interface': network_interface
             }
-        return stats
 
     def logger(self, kwargs):
         logger = logging.getLogger('skep:stats')

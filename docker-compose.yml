@@ -21,7 +21,7 @@ services:
       SKEP_HOST:
       DISKS: 'sda1'
       FILE_SYSTEMS: '/'
-      NETWORK_INTERFACES: 'eth0'
+      NETWORK_INTERFACES: 'en0'
       LOG_LEVEL: 'DEBUG'
 
     networks:

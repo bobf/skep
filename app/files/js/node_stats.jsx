@@ -1,6 +1,7 @@
 import DiskStats from './disk_stats';
 import FilesystemStats from './filesystem_stats';
 import MemoryStats from './memory_stats';
+import NetworkStats from './network_stats';
 import CPUStats from './cpu_stats';
 
 class NodeStats extends React.Component {
@@ -11,21 +12,20 @@ class NodeStats extends React.Component {
 
   initialize(props) {
     const { stats } = props;
-    const { memory, cpu, disks, filesystems, load } = (stats || {});
+    const { memory, cpu, disks, filesystems, load, networks } = (stats || {});
 
     this.memory = memory ? new MemoryStats(memory) : null;
     this.cpu = cpu ? new CPUStats(cpu) : null;
-    this.disks = this.diskStats(disks);
-    this.filesystems = this.filesystemStats(filesystems);
-    this.load = load;
+    this.networks = this.collection(networks, NetworkStats);
+    this.disks = this.collection(disks, DiskStats);
+    this.filesystems = this.collection(filesystems, FilesystemStats);
+    this.load = load; // Load is just an array; we don't abstract it.
   }
 
-  diskStats(disks) {
-    return (disks || []).map(disk => new DiskStats(disk));
-  }
+  collection(array, factory) {
+    if (!array) return [];
 
-  filesystemStats(filesystems) {
-    return (filesystems || []).map(filesystem => new FilesystemStats(filesystem));
+    return array.map(item => new factory(item));
   }
 
   progress(options) {
@@ -166,6 +166,20 @@ class NodeStats extends React.Component {
     });
   }
 
+  renderNetwork(network) {
+    return (
+      <tr className='network-stats'
+          key={`network-stats-${network.interface}`}>
+        <th>
+          {filesystem.path()}
+        </th>
+        <td>
+          {this.renderFilesystemUsage(filesystem)}
+        </td>
+      </tr>
+    );
+  }
+
   renderMinimized() {
     return (
       <div className={'node-stats'}>
@@ -213,6 +227,7 @@ class NodeStats extends React.Component {
             </tr>
             {this.disks.map(disk => this.renderDisk(disk))}
             {this.filesystems.map(filesystem => this.renderFilesystem(filesystem))}
+            {this.networks.map(network => this.renderNetwork(network))}
           </tbody>
         </table>
       </div>
