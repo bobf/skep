@@ -32,13 +32,9 @@
   margin-left: 0.4em;
 }
 
-.minimized .node-stats {
-  margin-bottom: 0.2em;
-}
-
 .minimized .node-stats .meter {
   display: inline-block;
-  width: 25%;
+  width: 28%;
 }
 
 .minimized .load-averages {
