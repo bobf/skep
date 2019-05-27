@@ -27,8 +27,6 @@ class Task extends React.Component {
   }
 
   nodeStats() {
-    const { containerID } = this.props.task;
-
     const node = this.node();
     if (!node) return {};
 

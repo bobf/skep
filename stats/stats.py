@@ -66,47 +66,13 @@ class StatRunner:
             'load': self.load()
         }
 
-    def container_stats(self, q, container_id):
-        def stats():
-            q.put(
-                (container_id,
-                 self.docker().containers.get(container_id).stats(stream=False))
-            )
-        return stats
+    def container_stats(self, container):
+        return self.docker().containers.get(container.id).stats(stream=False)
 
     def containers(self):
         params = { 'filters': { 'status': 'running' } }
         containers = self.docker().containers.list(**params)
-
-        q = queue.Queue()
-
-        threads = [self.create_thread(q, container) for container in containers]
-
-        for thread in threads:
-            thread.start()
-
-        for thread in threads:
-            thread.join()
-
-        containers = []
-
-        while True:
-            try:
-                container_id, stats = q.get(block=False)
-                stats['id'] = container_id
-                containers.append(stats)
-            except queue.Empty:
-                break
-
-        return containers
-
-    def create_thread(self, q, container):
-        return threading.Thread(
-            group=None,
-            target=self.container_stats(q, container.id),
-            name=container.name,
-            daemon=True
-        )
+        return [self.container_stats(container) for container in containers]
 
     def load(self):
         return {
