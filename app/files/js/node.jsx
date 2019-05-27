@@ -7,7 +7,7 @@ class Node extends React.Component {
   }
 
   hostname() {
-    const { hostname } = this.props;
+    const { hostname } = this.props.node;
     return hostname;
   }
 
@@ -71,7 +71,7 @@ class Node extends React.Component {
       <div id={`node-${this.props.node.id}`} className={'node'}>
         <span className={'status'}></span>
         <h2 title={'Version: ' + node.version} className={'hostname'}>
-          {node.hostname}
+          {this.hostname()}
         </h2>
         {this.leaderBadge()}
         {this.roleBadge()}

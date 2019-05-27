@@ -105,12 +105,12 @@ class Task extends React.Component {
 
     return (
       <span className={'task ' + (highlight ? 'highlight' : '')}>
-        <span
-          title={tooltip}
-          data-toggle={'tooltip'}
-          data-original-title={tooltip}
-          className={'border'}>
-          <Icon.Server size={'1em'} />
+        <span className={'border'}>
+          <Icon.Server
+            size={'1em'}
+            title={tooltip}
+            data-toggle={'tooltip'}
+            data-original-title={tooltip} />
           <div className={'badges'}>
             {this.renderState()}
             {this.renderMessage()}
