@@ -4,10 +4,12 @@ import json
 import logging
 import multiprocessing
 import os
+import queue
 import random
 import string
 import sys
 import shutil
+import threading
 import time
 import urllib.parse
 import urllib.request
@@ -15,12 +17,17 @@ from urllib.request import Request
 
 os.environ['LINUX_METRICS_ROOT_FS'] = os.environ.get('HOSTFS_PATH', '/hostfs')
 import linux_metrics as lm
+import docker
 
 class StatRunner:
     def __init__(self, **kwargs):
         self.opts = kwargs
         self.log = self.logger(kwargs)
         self.log.info('Launching StatRunner(%s)' % (kwargs,))
+        # Host Docker socket must be mounted in stats container here:
+
+    def docker(self):
+        return docker.DockerClient(base_url='unix://var/run/docker.sock')
 
     def run(self):
         while True:
@@ -50,6 +57,7 @@ class StatRunner:
     def stats(self):
         return {
             'hostname': self.opts['hostname'],
+            'containers': self.containers(),
             'network': self.network(),
             'memory': self.memory(),
             'disks': self.disks(),
@@ -57,6 +65,48 @@ class StatRunner:
             'cpu': self.cpu(),
             'load': self.load()
         }
+
+    def container_stats(self, q, container_id):
+        def stats():
+            q.put(
+                (container_id,
+                 self.docker().containers.get(container_id).stats(stream=False))
+            )
+        return stats
+
+    def containers(self):
+        params = { 'filters': { 'status': 'running' } }
+        containers = self.docker().containers.list(**params)
+
+        q = queue.Queue()
+
+        threads = [self.create_thread(q, container) for container in containers]
+
+        for thread in threads:
+            thread.start()
+
+        for thread in threads:
+            thread.join()
+
+        containers = []
+
+        while True:
+            try:
+                container_id, stats = q.get(block=False)
+                stats['id'] = container_id
+                containers.append(stats)
+            except queue.Empty:
+                break
+
+        return containers
+
+    def create_thread(self, q, container):
+        return threading.Thread(
+            group=None,
+            target=self.container_stats(q, container.id),
+            name=container.name,
+            daemon=True
+        )
 
     def load(self):
         return {
@@ -127,7 +177,7 @@ class StatRunner:
 
     def logger(self, kwargs):
         logger = logging.getLogger('skep:stats')
-        log_level = getattr(logging, kwargs['log_level'])
+        log_level = getattr(logging, kwargs['log_level'].upper())
         logger.setLevel(log_level)
         handler = logging.StreamHandler()
         handler.setLevel(log_level)

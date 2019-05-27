@@ -1,0 +1,24 @@
+.task-stats {
+  margin-top: 0.8em;
+}
+
+.task-stats .usage {
+  font-family: monospace;
+  margin-left: 0.2em;
+}
+
+.task-stats .progress {
+  display: inline-block;
+  width: calc(100% - 1.8em);
+  margin-left: 0.2em;
+  vertical-align: middle;
+  margin: 0.2em 0;
+}
+
+.task-stats .progress .label {
+  padding: 0.2em;
+}
+
+.task-stats .icon {
+  margin-right: 0.2em;
+}

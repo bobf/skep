@@ -10,6 +10,13 @@ $(function () {
 
   window.Skep = window.Skep || {};
 
+  Skep.thresholds = {
+    global: {
+      success: 50,
+      warning: 70
+    }
+  };
+
   socket.on('connect', function() {
     socket.emit('manifest');
   });
@@ -34,14 +41,17 @@ $(function () {
   socket.on('stats', function (json) {
     if (!Skep.dashboard) return;
 
-    var data = JSON.parse(json);
-    var node = Skep.dashboard.getNode(data.hostname)
+    const data = JSON.parse(json);
+    const node = Skep.dashboard.getNode(data.hostname)
     if (!node) {
       console.log('Could not find node for stats collection.', data);
       return;
     }
 
-    node.ref.current.setState({ stats: data });
+    const previous = node.ref.current.state && node.ref.current.stats().current;
+    const stats = { current: data, previous: previous || {} };
+    node.ref.current.setState({ stats: stats });
+
     $('#node-' + node.id).addClass('ping');
     setTimeout(function () {
       $('#node-' + node.id).removeClass('ping');

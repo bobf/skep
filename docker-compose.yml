@@ -11,11 +11,12 @@ services:
       - "./app:/skep:rw"
 
   stats:
-    image: skep/stats
+    image: skep/stats:dev
     volumes:
       - "/dev:/hostfs/dev:ro"
       - "/etc:/hostfs/etc:ro"
       - "/proc:/hostfs/proc:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     environment:
       SKEP_APP_URL: http://host.docker.internal:5000
       SKEP_HOST:

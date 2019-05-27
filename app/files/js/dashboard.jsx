@@ -43,7 +43,15 @@ class Dashboard extends React.Component {
     return Object.values(this._stacks).map(stack => stack.current);
   }
 
+  nodeComponents() {
+    return this.fullNodes().map(node => node.component);
+  }
+
   nodes() {
+    return this.fullNodes().map(node => node.ref.current);
+  }
+
+  fullNodes() {
     return this.state.manifest.nodes.map(
       node => this.findOrCreateNode(node)
     ).sort(
@@ -157,8 +165,8 @@ class Dashboard extends React.Component {
       <div id={'dashboard'}>
         <div className={'section minimized'} id={'nodes'}>
           <div className={'section-content'}>
-            {this.nodes().map(
-              node => node.component(this.state.nodesMinimized)
+            {this.nodeComponents().map(
+              component => component(this.state.nodesMinimized)
             )}
           </div>
         </div>

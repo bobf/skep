@@ -3,6 +3,7 @@ import os
 
 import docker
 
+from skep.docker.container import Container
 from skep.docker.network import Network
 from skep.docker.node import Node
 from skep.docker.service import Service
@@ -19,11 +20,18 @@ class Swarm:
     def manifest(self):
         self.client.swarm.reload()
         return {
+            "containers": self.containers(),
             "nodes": self.nodes(),
             "stacks": self.stacks(),
             "networks": self.networks(),
             "swarm": self
         }
+
+    def containers(self):
+        return [
+            Container(container) for
+            container in self.client.containers.list()
+        ]
 
     def networks(self):
         return [Network(network) for network in self.client.networks.list()]

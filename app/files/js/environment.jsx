@@ -38,9 +38,11 @@ class Environment extends React.Component {
   renderExpandButton(collapsed) {
     const empty = this.isEnvironmentEmpty();
     const className = empty ? 'btn-secondary disabled' : 'btn-primary';
+    const tooltip = empty ? 'Environment empty' : `${this.valueCount()} value(s)`;
     return (
       <button
-        title={empty ? 'Environment empty' : `${this.valueCount()} value(s)`}
+        title={tooltip}
+        data-original-title={tooltip}
         data-toggle={'tooltip'}
         className={`btn expand ${className}`}
         onClick={() => this.toggle()}>

@@ -3,13 +3,15 @@ import NodeStats from './node_stats';
 class Node extends React.Component {
   constructor(props) {
     super(props);
+    this.state = { stats: { previous: {}, current: {} } };
+  }
+
+  hostname() {
+    const { hostname } = this.props;
+    return hostname;
   }
 
   stats() {
-    if (!this.state || !this.state.stats) {
-      return null;
-    }
-
     return this.state.stats;
   }
 
@@ -32,15 +34,16 @@ class Node extends React.Component {
   roleBadge() {
     const { minimized } = this.props;
     const { role } = this.props.node;
-
     const label = {
       manager: { abbrev: 'M', full: 'Manager', level: 'primary' },
       worker: { abbrev: 'W', full: 'Worker', level: 'info' }
     }[role];
+    const tooltip = minimized ? label.full : '';
 
     return (
       <span
-        title={minimized ? label.full : ''}
+        title={tooltip}
+        data-original-title={tooltip}
         data-toggle={'tooltip'}
         className={`badge badge-${label.level}`}>
         {minimized ? label.abbrev : label.full}
@@ -76,7 +79,7 @@ class Node extends React.Component {
         <NodeStats
           key={'node_' + node.id + '_stats'}
           minimized={minimized}
-          stats={this.stats()}
+          stats={this.stats().current}
         />
       </div>
     );

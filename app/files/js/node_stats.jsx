@@ -37,6 +37,7 @@ class NodeStats extends React.Component {
       <div className={'progress position-relative ' + className}
            style={{ height: '2em' }}
            title={tooltip}
+           data-original-title={tooltip}
            data-toggle={tooltip ? 'tooltip' : null}>
         <div className={'progress-bar bg-' + level}
              style={{ width: percent }}>
@@ -76,11 +77,11 @@ class NodeStats extends React.Component {
   loadLevel(index) {
     const load = this.load.averages[index];
     const cores = this.load.cores;
-    const percent = 100 * (load / cores);
+    const percentage = 100 * (load / cores);
 
-    if (percent < 50) {
+    if (percentage < Skep.thresholds.global.success) {
       return 'success';
-    } else if (percent < 80) {
+    } else if (percentage < Skep.thresholds.global.warning) {
       return 'warning';
     } else {
       return 'danger';
@@ -221,6 +222,8 @@ class NodeStats extends React.Component {
 
   render() {
     const { minimized } = this.props;
+    const { stats } = this.props;
+    if (!stats) return null;
 
     this.initialize(this.props);
 

@@ -17,18 +17,22 @@ class Service extends React.Component {
     const { updated, updating } = this.props.service;
 
     if (updating) {
+      const tooltip = 'Update in progress';
       return (
         <span
-          title={'Update in progress'}
+          title={tooltip}
           className={'updating'}
+          data-original-title={tooltip}
           data-toggle={'tooltip'}>
         </span>
       );
     }
 
+    const tooltip = `Updated ${moment(updated).fromNow()}`;
     return (
       <span
-        title={`Updated ${moment(updated).fromNow()}`}
+        title={tooltip}
+        data-original-title={tooltip}
         data-toggle={'tooltip'}
         className={'updated'}>
         &#10003;
@@ -102,11 +106,13 @@ class Service extends React.Component {
 
   countBadge() {
     const { tasks } = this.props.service;
+    const tooltip = `${this.runningCount()} / ${tasks.length} replicas running ${this.statusSymbol()}`;
 
     return (
       <span
-        title={`${this.runningCount()} / ${tasks.length} replicas running ${this.statusSymbol()}`}
         className={`badge bg-${this.level()}`}
+        title={tooltip}
+        data-original-title={tooltip}
         data-toggle={'tooltip'}>
         {this.runningCount()}
       </span>
@@ -188,7 +194,7 @@ class Service extends React.Component {
 
   nodesSelector() {
     const { tasks } = this.props.service;
-    return tasks.map(task => `#node-${task.node_id}`).join(', ');
+    return tasks.map(task => `#node-${task.nodeID}`).join(', ');
   }
 
   toggle() {
@@ -235,6 +241,7 @@ class Service extends React.Component {
 
   renderExpanded() {
     const { name, image, environment } = this.props.service;
+    const { stack } = this.props;
 
     return (
       <div className={'service'}>
@@ -254,6 +261,7 @@ class Service extends React.Component {
             <Task
               key={task.id}
               task={task}
+              stack={stack}
               manifest={this.props.manifest}
             />
           ))}
