@@ -41,15 +41,25 @@ module.exports = {
             presets: ["@babel/env", "@babel/react"]
           }
         }
+      },
+
+      {
+        test: /\.scss$/,
+        resolve: {
+          extensions: ['.scss'],
+        },
+        use: [
+          "style-loader", // creates style nodes from JS strings
+          "css-loader", // translates CSS into CommonJS
+          "sass-loader" // compiles Sass to CSS, using Node Sass by default
+        ]
       }
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.scss'],
   },
   node: {
      fs: "empty"
   }
 };
-
-

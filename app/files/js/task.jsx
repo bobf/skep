@@ -27,8 +27,6 @@ class Task extends React.Component {
   }
 
   nodeStats() {
-    const { containerID } = this.props.task;
-
     const node = this.node();
     if (!node) return {};
 
@@ -49,6 +47,7 @@ class Task extends React.Component {
   }
 
   stats() {
+    console.log(nodeStats);
     const nodeStats = this.nodeStats();
     const current = this.containerStats(nodeStats.current);
     const previous = this.containerStats(nodeStats.previous);
