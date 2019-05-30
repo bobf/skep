@@ -47,7 +47,6 @@ class Task extends React.Component {
   }
 
   stats() {
-    console.log(nodeStats);
     const nodeStats = this.nodeStats();
     const current = this.containerStats(nodeStats.current);
     const previous = this.containerStats(nodeStats.previous);

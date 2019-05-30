@@ -18,7 +18,7 @@ class Dashboard extends React.Component {
 
   getNode(hostname) {
     return this._nodes.find(
-      node => node.hostname === hostname
+      node => node.hostname.toLowerCase() === hostname.toLowerCase()
     )
   }
 

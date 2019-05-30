@@ -5,6 +5,8 @@ import 'bootstrap';
 import Dashboard from './dashboard';
 
 $(function () {
+  if (typeof window === 'undefined') return;
+
   var socket = io.connect(
     location.protocol + '//' + document.domain + ':' + location.port
   );
