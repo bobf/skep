@@ -19,6 +19,11 @@ os.environ['LINUX_METRICS_ROOT_FS'] = os.environ.get('HOSTFS_PATH', '/hostfs')
 import linux_metrics as lm
 import docker
 
+if 'SKEP_SECRET' in os.environ:
+    AUTH = { 'Authorization': 'Token ' + os.environ['SKEP_SECRET'] }
+else:
+    AUTH = {}
+
 class StatRunner:
     def __init__(self, **kwargs):
         self.opts = kwargs
@@ -40,7 +45,7 @@ class StatRunner:
         request = Request(
             self.opts['url'],
             data=json.dumps(stats).encode('utf8'),
-            headers={ 'Content-Type': 'application/json' }
+            headers={ 'Content-Type': 'application/json', **AUTH }
         )
 
         try:

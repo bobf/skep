@@ -33,6 +33,8 @@ application.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev-key')
 application.json_encoder = DelegatingJSONEncoder
 socketio = SocketIO(application)
 
+SECRET = os.environ.get('SKEP_SECRET', None)
+
 @application.route('/files/<path:path>')
 def files(path):
     return send_from_directory('files', path)
@@ -50,12 +52,22 @@ def swarm():
 
 @application.route("/stats", methods=["POST"])
 def stats_create():
-    socketio.emit("stats", json.dumps(request.get_json()), broadcast=True)
-    return 'OK', 200
+    if authorize_request(request, SECRET):
+        socketio.emit("stats", json.dumps(request.get_json()), broadcast=True)
+        return 'OK', 200
+    return 'Unauthorized', 401
 
 @socketio.on("manifest")
 def handle_message():
     emit("manifest", json.dumps(Swarm().manifest(), cls=DelegatingJSONEncoder))
+
+def authorize_request(request, secret):
+    if secret is None:
+        return True
+    token = 'Token ' + secret
+    if token == request.headers.get('Authorization', None):
+        return True
+    return False
 
 if __name__ == "__main__":
     socketio.run(application)
