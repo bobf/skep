@@ -12,7 +12,7 @@ class Dashboard extends React.Component {
     this.state = {
       nodesMinimized: true,
       stacksMinimized: false,
-      collapsedStacks: []
+      collapsedStacks: null
     }
   }
 
@@ -153,7 +153,7 @@ class Dashboard extends React.Component {
   isCollapsed(stackName) {
     const { collapsedStacks } = this.state;
 
-    if (!collapsedStacks.length) return true;
+    if (collapsedStacks === null) return true;
 
     return collapsedStacks.includes(stackName);
   }
