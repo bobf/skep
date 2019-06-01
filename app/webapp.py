@@ -70,4 +70,4 @@ def authorize_request(request, secret):
     return False
 
 if __name__ == "__main__":
-    socketio.run(application)
+    socketio.run(application, host=os.environ.get('SKEP_LISTEN_HOST', '127.0.0.1'))

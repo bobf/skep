@@ -20,26 +20,20 @@ class Task extends React.Component {
     const nodes = dashboard.nodes();
 
     return nodes.find(
-      node => (node.stats().current.containers || []).find(
-        container => container.id === containerID
-      )
+      node => node.hasContainer(containerID)
     );
   }
 
   nodeStats() {
     const node = this.node();
     if (!node) return {};
-
     return node.stats();
   }
 
   containerStats(nodeStats) {
     const { containerID } = this.props.task;
-    const container = this.props.manifest.containers.find(
-      container => container.id === containerID
-    );
 
-    if (!container || !nodeStats) return null;
+    if (!nodeStats) return null;
 
     return (nodeStats.containers || []).find(
       container => container.id === containerID
