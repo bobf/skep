@@ -6,5 +6,6 @@ COPY Pipfile Pipfile.lock /skep/
 WORKDIR /skep
 RUN pipenv sync
 ADD build.tar .
-RUN NODE_ENV=production npm install && NODE_ENV=production node node_modules/webpack/bin/webpack.js
+RUN NODE_ENV=development npm install && NODE_ENV=production npx webpack
+
 CMD pipenv run gunicorn webapp -b 0.0.0.0:8080 -k eventlet --no-sendfile
