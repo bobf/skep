@@ -1,4 +1,40 @@
+$port-published: #9d9;
+$port-target: #dd9;
+
+$mount-button: #824747;
+
+$modal-background-color: #000000aa;
+
+$background-color: #222;
+$background-color-translucent: rgba(34, 34, 34, 0.9);
+
 .badge {
   color: #ddd;
   text-shadow: 0px 0px 5px #555;
+}
+
+.modal-wrapper {
+  display: none;
+}
+
+.modal-wrapper.modal {
+  display: block;
+  position: fixed;
+  z-index: 999999999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: $background-color-translucent;
+}
+
+.modal-content {
+  background-color: $modal-background-color;
+  margin: auto 30%;
+  border: 1px solid #888;
+  height: auto;
+  max-height: 50%;
+  overflow-y: scroll;
+  width: 80%;
 }

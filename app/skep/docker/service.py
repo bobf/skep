@@ -1,6 +1,7 @@
 from skep.docker.environment import Environment
 from skep.docker.task import Task
 from skep.docker.network import Network
+from skep.docker.mount import Mount
 from skep.docker.mixins import ImageParser
 
 class Service(ImageParser):
@@ -18,13 +19,19 @@ class Service(ImageParser):
             "image": self.image(),
             "tasks": self.tasks(),
             "networks": self.networks(),
-            "environment": self.environment()
+            "environment": self.environment(),
+            "mounts": self.mounts()
         }
 
     def environment(self):
         attrs = self.service.attrs
         env = attrs['Spec']['TaskTemplate']['ContainerSpec'].get('Env', [])
         return Environment(env)
+
+    def mounts(self):
+        attrs = self.service.attrs
+        mounts = attrs['Spec']['TaskTemplate']['ContainerSpec'].get('Mounts', [])
+        return [Mount(mount) for mount in mounts]
 
     def networks(self):
         attrs = self.service.attrs

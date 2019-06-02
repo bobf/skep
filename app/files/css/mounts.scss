@@ -1,0 +1,10 @@
+.mounts {
+  &.btn {
+    background-color: $mount-button;
+    border-color: $mount-button;
+  }
+
+  .read-only, .mount-type {
+    margin-left: 0.2em;
+  }
+}

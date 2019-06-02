@@ -1,5 +1,6 @@
 import Task from './task';
 import Environment from './environment';
+import Mounts from './mounts';
 
 import * as Icon from 'react-feather';
 
@@ -240,15 +241,17 @@ class Service extends React.Component {
   }
 
   renderExpanded() {
-    const { name, image, environment } = this.props.service;
+    const { name, image, environment, mounts } = this.props.service;
     const { stack } = this.props;
+    const dashboard = stack.dashboard();
 
     return (
       <div className={'service'}>
         <h2>
           {this.updateStatus()}
           <span className={'title'}>{name}</span>
-          <Environment name={name} environment={environment} />
+          <Environment name={name} dashboard={dashboard} environment={environment} />
+          <Mounts name={name} mounts={mounts} />
           <span className={'tag'}>
             {`[${image.id}:${image.tag}]`}
           </span>

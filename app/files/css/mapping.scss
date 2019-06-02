@@ -1,0 +1,54 @@
+.mapping-wrapper {
+  display: inline;
+}
+
+.mapping {
+  font-family: monospace;
+}
+
+.mapping table {
+  width: 100%;
+  margin: 1em 0;
+}
+
+.mapping .keypair {
+  padding: 0.4em 1em;
+  border: 1px dotted rgba(132, 132, 132, 0.1);
+}
+
+.mapping .key {
+  color: #38755d;
+}
+
+.mapping .value {
+  color: #999;
+}
+
+.mapping .syntax {
+  color: #00b7a8;
+}
+
+.mapping.btn {
+  margin-bottom: 0.4em;
+  font-family: sans-serif;
+  font-size: 0.7em;
+  padding: 0.2em 0.4em;
+  margin-left: 1em;
+  display: inline;
+}
+
+.mapping.btn .icon {
+  margin-left: 0.2em;
+}
+
+.mapping .keypairs {
+  padding: 2em;
+  margin: auto 30%;
+  font-size: 1em;
+  letter-spacing: 0.3px;
+  border: 2px solid #555;
+  width: 50%;
+  z-index: 9999;
+  box-shadow: 0px 0px 5px #555;
+  line-height: 1.6em;
+}

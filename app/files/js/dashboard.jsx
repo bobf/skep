@@ -12,7 +12,8 @@ class Dashboard extends React.Component {
     this.state = {
       nodesMinimized: true,
       stacksMinimized: false,
-      collapsedStacks: null
+      collapsedStacks: null,
+      obscured: false
     }
   }
 
@@ -162,7 +163,7 @@ class Dashboard extends React.Component {
     if (!this.state.manifest) return this.renderManifestMissing();
 
     return (
-      <div id={'dashboard'}>
+      <div className={this.state.obscured ? 'obscured' : ''} id={'dashboard'}>
         <div className={'section minimized'} id={'nodes'}>
           <div className={'section-content'}>
             {this.nodeComponents().map(

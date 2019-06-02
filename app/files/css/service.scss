@@ -37,20 +37,20 @@
 }
 
 .service .ports .published.arrow {
-  color: #393;
+  color: $port-published;
   margin-right: 0.4em;
 }
 
 .service .ports .target.arrow {
-  color: #993;
+  color: $port-target;
 }
 
 .service .ports .published {
-  color: #9d9;
+  color: $port-published;
 }
 
 .service .ports .target {
-  color: #dd9;
+  color: $port-target;
 }
 
 tr.service {
