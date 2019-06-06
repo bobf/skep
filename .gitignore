@@ -49,3 +49,5 @@ pyvenv.cfg
 .env
 
 TODO
+
+__pycache__

@@ -1,13 +1,14 @@
 class MemoryStats {
   constructor(stats) {
     this.stats = stats;
+    this.stats.unavailable = this.stats.total - this.stats.available;
   }
 
   label() {
-    const free = this.formatNumber(this.stats.total - this.free());
+    const available = this.formatNumber(this.stats.available);
     const total = this.formatNumber(this.stats.total);
 
-    return `${free} / ${total}`;
+    return `${available} / ${total}`;
   }
 
   level() {
@@ -23,11 +24,7 @@ class MemoryStats {
   }
 
   percent() {
-    return numeral(this.stats.used / this.stats.total).format('0.00%');
-  }
-
-  free() {
-    return this.stats.total - this.stats.used;
+    return numeral(this.unavailable / this.stats.total).format('0.00%');
   }
 
   formatNumber(number) {

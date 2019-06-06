@@ -19,6 +19,8 @@ os.environ['LINUX_METRICS_ROOT_FS'] = os.environ.get('HOSTFS_PATH', '/hostfs')
 import linux_metrics as lm
 import docker
 
+import stats.memory as memory
+
 if 'SKEP_SECRET' in os.environ:
     AUTH = { 'Authorization': 'Token ' + os.environ['SKEP_SECRET'] }
 else:
@@ -142,8 +144,7 @@ class StatRunner:
         }
 
     def memory(self):
-        used, total, _, _, _, _ = lm.mem_stat.mem_stats()
-        return { 'used': used, 'total': total }
+        return memory.stats()
 
     def disks(self):
         stats = []
