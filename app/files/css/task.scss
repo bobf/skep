@@ -8,7 +8,7 @@
 
 .task .badge {
   margin: 0.4em 0.2em;
-  text-shadow: 0px 0px 5px #555;
+  text-shadow: 0px 0px 5px $accent-dark;
   text-align: right;
   display: inline;
 }
@@ -25,7 +25,7 @@ span.task {
 
 .task .border {
   padding: 0.8em;
-  border: 1px solid #eee;
+  border: 1px solid $label-text-light;
   border-radius: 5px;
   margin: 1em;
   display: block;
@@ -34,4 +34,3 @@ span.task {
 .task.highlight {
   background-color: rgba(240,240,102,0.1);
 }
-

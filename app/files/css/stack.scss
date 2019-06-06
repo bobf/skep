@@ -16,17 +16,17 @@
 .stack.header th {
   font-size: 1.4em;
   font-family: monospace;
-  color: #555;
+  color: $accent-dark;
   margin: 0.4em 1em;
 }
 
 .stack.header th.name {
-  color: #eee;
+  color: $label-text-light;
   text-transform: uppercase;
 }
 
 div.stack {
-  border-top: 1px solid #ddd;
+  border-top: 1px solid $accent-dark;
   padding-top: 0.2em;
 }
 
@@ -44,16 +44,8 @@ table.stacks {
   border-collapse: separate;
 }
 
-table.stacks thead th {
-  text-align: left;
-  color: #aaa;
-  padding-left: 0.4em;
-  padding-bottom: 0.2em;
-}
-
 .collapsed.stack {
-  border-top: 1px solid #999;
-  background-color: #333;
+  background-color: $background-color-secondary;
 }
 
 .collapsed td.ports {
@@ -63,12 +55,12 @@ table.stacks thead th {
 }
 
 .collapsed .published {
-  color: #9d9;
+  color: $port-published;
   margin-right: 0.2em;
 }
 
 .collapsed .target {
-  color: #dd9;
+  color: $port-target;
 }
 
 .stacks th {
@@ -89,12 +81,17 @@ table.stacks thead th {
   padding: 0.4em;
 }
 
+.collapsed .image {
+  padding: 0.2em 0.6em;
+}
+
 .collapsed .image span {
   font-family: monospace;
-  background-color: #555;
+  background-color: $background-color-secondary;
+  color: $label-text-subheading;
   border-radius: 0.4em;
   margin: 0.2em;
-  text-shadow: 0px 0px 5px #555;
+  text-shadow: 0px 0px 5px $accent-dark;
   padding: 0.2em 0.4em;
 }
 
@@ -108,7 +105,7 @@ table.stacks thead th {
 }
 
 .collapsed .service .service-name {
-  color: #aaa;
+  color: $label-text-subheading;
   padding-left: 1em;
 }
 

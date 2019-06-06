@@ -11,21 +11,29 @@
   margin: 1em 0;
 }
 
+.mapping h2 {
+  font-size: 1.6em;
+}
+
+.mapping h3 {
+  font-size: 1.4em;
+}
+
 .mapping .keypair {
   padding: 0.4em 1em;
   border: 1px dotted rgba(132, 132, 132, 0.1);
 }
 
 .mapping .key {
-  color: #38755d;
+  color: $mapping-key;
 }
 
 .mapping .value {
-  color: #999;
+  color: $mapping-value;
 }
 
 .mapping .syntax {
-  color: #00b7a8;
+  color: $mapping-syntax;
 }
 
 .mapping.btn {
@@ -43,12 +51,11 @@
 
 .mapping .keypairs {
   padding: 2em;
-  margin: auto 30%;
   font-size: 1em;
   letter-spacing: 0.3px;
-  border: 2px solid #555;
+  border: 2px solid $accent-dark;
   width: 50%;
   z-index: 9999;
-  box-shadow: 0px 0px 5px #555;
+  box-shadow: 0px 0px 5px $accent-dark;
   line-height: 1.6em;
 }

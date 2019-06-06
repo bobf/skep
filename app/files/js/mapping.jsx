@@ -79,6 +79,7 @@ class Mapping extends React.Component {
   }
 
   renderExpanded() {
+    const { name } = this.props;
     const data = this.data();
     const { collapsed } = this.state;
     const modalClass = collapsed ? '' : 'modal';
@@ -88,9 +89,9 @@ class Mapping extends React.Component {
 
     return (
       <div
-        className={`modal-content keypairs ${modalClass}`}
-        style={{ top: this.state.modalTop }}>
-        <h2>{this.label()}</h2>
+        className={`modal-content keypairs ${modalClass}`}>
+        <h3>{this.label()}</h3>
+        <h2>{name}</h2>
         {rows}
       </div>
     )

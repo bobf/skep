@@ -10,8 +10,8 @@
 .node-stats .label {
   text-align: center;
   width: 100%;
-  color: #fff;
-  text-shadow: 0px 0px 5px #555;
+  color: $label-text-light;
+  text-shadow: 0px 0px 5px $accent-dark;
   padding: 0.2em;
 }
 
@@ -20,7 +20,7 @@
 }
 
 .disk-stats .badge {
-  color: #fff;
+  color: $label-text-light;
 }
 
 .node-stats .progress {

@@ -6,11 +6,31 @@ $mount-button: #824747;
 $modal-background-color: #000000aa;
 
 $background-color: #222;
+$background-color-secondary: #333;
 $background-color-translucent: rgba(34, 34, 34, 0.9);
 
+$status-light-healthy: #9d9;
+
+$highlight-select: #dd9;
+
+$accent-dark: #555;
+
+$label-text: #ddd;
+$label-text-secondary: #dedede;
+$label-text-subheading: #aaa;
+$label-text-light: #eee;
+$label-text-dark: #999;
+
+$updating: #dd4;
+$updated: #4d4;
+
+$mapping-key: #38755d;
+$mapping-syntax: #00b7a8;
+$mapping-value: #999;
+
 .badge {
-  color: #ddd;
-  text-shadow: 0px 0px 5px #555;
+  color: $label-text;
+  text-shadow: 0px 0px 5px $accent-dark;
 }
 
 .modal-wrapper {
@@ -31,10 +51,10 @@ $background-color-translucent: rgba(34, 34, 34, 0.9);
 
 .modal-content {
   background-color: $modal-background-color;
-  margin: auto 30%;
   border: 1px solid #888;
   height: auto;
-  max-height: 50%;
+  max-height: 60%;
   overflow-y: scroll;
   width: 80%;
+  margin: 5em auto;
 }
