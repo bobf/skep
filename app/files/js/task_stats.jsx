@@ -20,17 +20,25 @@ class TaskStats extends React.Component {
   }
 
   cpuUsage() {
-    return this.cpuTotalUsage() / this.cpuSystemTotalUsage();
+    // https://github.com/moby/moby/blob/eb131c5383db8cac633919f82abad86c99bffbe5/cli/command/container/stats_helpers.go#L175
+    return this.cpuTotalUsage() / this.cpuSystemTotalUsage() * this.cpuCount();
+  }
+
+  cpuCount() {
+    const { cpu_stats } = this.props.stats.current;
+    return cpu_stats.cpu_usage.percpu_usage.length;
   }
 
   cpuTotalUsage() {
-    const { cpu_stats } = this.props.stats.current;
-    return cpu_stats.cpu_usage.total_usage;
+    const { cpu_stats: current } = this.props.stats.current;
+    const { cpu_stats: previous } = this.props.stats.previous;
+    return current.cpu_usage.total_usage - previous.cpu_usage.total_usage;
   }
 
   cpuSystemTotalUsage() {
-    const { cpu_stats } = this.props.stats.current;
-    return cpu_stats.system_cpu_usage;
+    const { cpu_stats: current } = this.props.stats.current;
+    const { cpu_stats: previous } = this.props.stats.previous;
+    return current.system_cpu_usage - previous.system_cpu_usage;
   }
 
   memoryUsage() {
@@ -125,6 +133,9 @@ class TaskStats extends React.Component {
   }
 
   renderCpu() {
+    const { previous } = this.props.stats;
+    if (!Object.entries(previous).length) return null;
+
     const percentage = numeral(this.cpuUsage()).format('0.00%');
     const tooltip = `${percentage} of total system CPU usage`;
     const label = percentage;
