@@ -6,7 +6,7 @@ class CPUStats {
   }
 
   label() {
-    return this.percent();
+    return `<b>CPU</b><br/>${this.percent()}`;
   }
 
   level() {

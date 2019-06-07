@@ -5,10 +5,18 @@ class MemoryStats {
   }
 
   label() {
-    const available = this.formatNumber(this.stats.available);
-    const total = this.formatNumber(this.stats.total);
+    const labels = [
+      '<b>RAM</b>',
+      `Available: ${this.formatNumber(this.stats.available)}`,
+      `Total: ${this.formatNumber(this.stats.total)}`,
+      `Cache: ${this.formatNumber(this.stats.cached)}`,
+      `Active: ${this.formatNumber(this.stats.active)}`,
+      `Free: ${this.formatNumber(this.stats.free)}`,
+      `Swap (total): ${this.formatNumber(this.stats.swap_total)}`,
+      `Swap (free): ${this.formatNumber(this.stats.swap_free)}`
+    ];
 
-    return `${available} / ${total}`;
+    return labels.join('<br/>');
   }
 
   level() {

@@ -54,7 +54,12 @@ $mapping-value: #999;
   border: 1px solid #888;
   height: auto;
   max-height: 60%;
-  overflow-y: scroll;
   width: 80%;
   margin: 5em auto;
+
+  .viewport {
+    overflow-y: scroll;
+    border-bottom: 1px solid $accent-dark;
+    margin-bottom: 1em;
+  }
 }

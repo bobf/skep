@@ -90,9 +90,11 @@ class Mapping extends React.Component {
     return (
       <div
         className={`modal-content keypairs ${modalClass}`}>
-        <h3>{this.label()}</h3>
-        <h2>{name}</h2>
-        {rows}
+        <div className={'viewport'}>
+          <h3>{this.label()}</h3>
+          <h2>{name}</h2>
+          {rows}
+        </div>
       </div>
     )
   }

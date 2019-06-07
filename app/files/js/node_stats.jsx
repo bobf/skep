@@ -38,6 +38,7 @@ class NodeStats extends React.Component {
            style={{ height: '2em' }}
            title={tooltip}
            data-original-title={tooltip}
+           data-html={'true'}
            data-toggle={tooltip ? 'tooltip' : null}>
         <div className={'progress-bar bg-' + level}
              style={{ width: percent }}>
