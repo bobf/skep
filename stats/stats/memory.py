@@ -12,7 +12,6 @@ mapping = {
 
 def stats():
     lines = open(Path.proc_meminfo()).readlines()
-    print(lines)
     results = {}
     for key, value in mapping.items():
         for line in lines:
