@@ -8,4 +8,4 @@ RUN apk --update add python3 git wget \
  && git reset --hard origin/configurable-filesystem-root \
  && python3 setup.py install
 ADD build.tar /
-CMD python3 /stats.py
+CMD python3 app.py
