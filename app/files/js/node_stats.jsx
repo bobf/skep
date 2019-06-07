@@ -30,13 +30,12 @@ class NodeStats extends React.Component {
 
   progress(options) {
     const { minimized } = this.props;
-    const { percent, level, label, className } = options;
-    const tooltip = minimized ? label : null;
+    const { percent, level, label, className, tooltip } = options;
 
     return (
       <div className={'progress position-relative ' + className}
            style={{ height: '2em' }}
-           title={tooltip}
+           data-title={tooltip}
            data-original-title={tooltip}
            data-html={'true'}
            data-toggle={tooltip ? 'tooltip' : null}>
@@ -57,7 +56,7 @@ class NodeStats extends React.Component {
 
     return this.progress({
       percent: this.memory.percent(),
-      tooltip: minimized ? this.memory.label() : null,
+      tooltip: this.memory.tooltip(),
       label: this.memory.label(),
       level: this.memory.level(),
       className: 'memory'
@@ -69,6 +68,7 @@ class NodeStats extends React.Component {
 
     return this.progress({
       percent: this.cpu.percent(),
+      tooltip: this.cpu.tooltip(),
       label: this.cpu.label(),
       level: this.cpu.level(),
       className: 'cpu'

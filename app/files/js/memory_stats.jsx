@@ -5,6 +5,10 @@ class MemoryStats {
   }
 
   label() {
+    return `RAM: ${this.percent()}`;
+  }
+
+  tooltip() {
     const labels = [
       '<b>RAM</b>',
       `Available: ${this.formatNumber(this.stats.available)}`,
@@ -32,7 +36,7 @@ class MemoryStats {
   }
 
   percent() {
-    return numeral(this.unavailable / this.stats.total).format('0.00%');
+    return numeral(this.stats.unavailable / this.stats.total).format('0.00%');
   }
 
   formatNumber(number) {
