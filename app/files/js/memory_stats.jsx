@@ -20,7 +20,7 @@ class MemoryStats {
   }
 
   level() {
-    const percent = 100 * (this.stats.used / this.stats.total);
+    const percent = 100 * (this.stats.unavailable / this.stats.total);
 
     if (percent < 50) {
       return 'success';
