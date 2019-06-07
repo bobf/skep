@@ -21,7 +21,8 @@ class TaskStats extends React.Component {
 
   cpuUsage() {
     // https://github.com/moby/moby/blob/eb131c5383db8cac633919f82abad86c99bffbe5/cli/command/container/stats_helpers.go#L175
-    return this.cpuTotalUsage() / this.cpuSystemTotalUsage() * this.cpuCount();
+    const usage = this.cpuTotalUsage() / this.cpuSystemTotalUsage() * this.cpuCount();
+    return usage / 100;
   }
 
   cpuCount() {
