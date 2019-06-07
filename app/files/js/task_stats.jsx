@@ -20,14 +20,7 @@ class TaskStats extends React.Component {
   }
 
   cpuUsage() {
-    // https://github.com/moby/moby/blob/eb131c5383db8cac633919f82abad86c99bffbe5/cli/command/container/stats_helpers.go#L175
-    const usage = this.cpuTotalUsage() / this.cpuSystemTotalUsage() * this.cpuCount();
-    return usage / 100;
-  }
-
-  cpuCount() {
-    const { cpu_stats } = this.props.stats.current;
-    return cpu_stats.cpu_usage.percpu_usage.length;
+    return this.cpuTotalUsage() / this.cpuSystemTotalUsage();
   }
 
   cpuTotalUsage() {
@@ -93,7 +86,7 @@ class TaskStats extends React.Component {
     const percentage = usage * 100;
     if (percentage < Skep.thresholds.global.success) {
       return 'success';
-    } else if (usage < Skep.thresholds.global.warning) {
+    } else if (percentage < Skep.thresholds.global.warning) {
       return 'warning';
     } else {
       return 'danger';
@@ -137,13 +130,14 @@ class TaskStats extends React.Component {
     const { previous } = this.props.stats;
     if (!Object.entries(previous).length) return null;
 
-    const percentage = numeral(this.cpuUsage()).format('0.00%');
+    const usage = Math.min(this.cpuUsage(), 1);
+    const percentage = numeral(usage).format('0.00%');
     const tooltip = `${percentage} of total system CPU usage`;
     const label = percentage;
     return (
       <div className={'cpu'}>
         <Icon.Cpu size={'1em'} className={'icon'} />
-        {this.progress('CPU', this.cpuUsage(), tooltip, label)}
+        {this.progress('CPU', usage, tooltip, label)}
       </div>
     );
   }
