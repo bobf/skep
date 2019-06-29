@@ -29,10 +29,14 @@ The following environment variables are available on the `stats` service (i.e. t
 
 | Variable | Meaning | Example |
 |-|-|-|
-| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://skep:8080/` _(default/recommended)_ |
+| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
 | `DISKS` | Comma-separated list of disk devices to monitor (disk activity) | `sda,sdc` |
 | `FILE_SYSTEMS` | Comma-separated list of file systems to monitor (available space) | `/hostfs/root,/hostfs/backups` (see [file systems](#file-systems)) |
 | `NETWORK_INTERFACES` | Comma-separated list of network devices to monitor (traffic) **[not yet implemented]** | `eth0,eth3` |
+| `INTERVAL` | Time in seconds to wait between gathering metrics. | `5` |
+| `DURATION` | _Minimum_ time in seconds to monitor disk I/O etc. Will accumulate for multiple devices. | `10` |
+
+
 | `LOG_LEVEL` | By default, the agent only logs initial configuration on launch and errors. Set to `DEBUG` to log all statistics. | `INFO` _(default/recommended)_ |
 
 ## Deployment
@@ -64,7 +68,13 @@ For example, to monitor the root file system, the following configuration might 
 
 _Skep_ is comprised of an agent which should be run globally and a web server which must have one replica.
 
-The agent harvests system and container metrics which are sent to the web server and forwarded to the [_React_](https://reactjs.org/)-based front end.
+The agent periodically harvests system and container metrics which are sent to the web server and forwarded to the [_React_](https://reactjs.org/)-based front end.
+
+Agents use bind mounts to expose host metrics. The _Docker_ socket (`/var/run/docker.sock`) is used to monitor container metrics.
+
+The agent is written in _Python_ using the excellent [Docker SDK for Python](https://docker-py.readthedocs.io/en/stable/index.html).
+
+The web application is also written in _Python_ using the equally excellent [Flask](http://flask.pocoo.org/) web framework and [Flask-SocketIO](https://flask-socketio.readthedocs.io/en/latest/).
 
 The front end is read-only. No changes to a swarm can be made via the web application. A best-effort approach to filter sensitive data (e.g. passwords in environment configurations) is implemented using simple heuristics. Regardless, as with all similar systems, it is highly recommended that you run _Skep_ behind a firewall and/or an authentication layer.
 
@@ -74,13 +84,13 @@ The front end is read-only. No changes to a swarm can be made via the web applic
 
 View details of all tasks for each service including container metrics.
 
-![Dashboard](images/screenshots/002-stack-expanded.png)
+![Expanded stack](images/screenshots/002-stack-expanded.png)
 
 ### Mount Configuration
 
 Display all configured mount points for a given service.
 
-![Dashboard](images/screenshots/003-mounts.png)
+![Mount configuration](images/screenshots/003-mounts.png)
 
 ### Environment Configuration
 
@@ -88,7 +98,7 @@ Display all configured environment variables for a given service.
 
 _Values for keys containing "password", "key", etc. are replaced by asterisks._
 
-![Dashboard](images/screenshots/004-environment.png)
+![Environment configuration](images/screenshots/004-environment.png)
 
 ### Related Nodes and Services Highlighting
 
@@ -97,19 +107,25 @@ Click any service to highlight:
 * All services that share a network with the selected service
 * All nodes that are running a task belonging to the selected service
 
-![Dashboard](images/screenshots/005-node-network-highlight.png)
+![Related item highlighting](images/screenshots/005-node-network-highlight.png)
 
 ### Node View
 
 Expand the node view to see further details of a node including disk activity [**not shown in screenshot**], file system usage, etc.
 
-![Dashboard](images/screenshots/006-nodes.png)
+![Nodes](images/screenshots/006-nodes.png)
+
+### Service Update Tracking
+
+Monitor service updates to ensure deployments run cleanly:
+
+![Service update](images/screenshots/007-service-update-tracking.gif)
 
 ### Flashing Lights
 
 Enjoy looking at the flashing lights telling you that your nodes are alive and well.
 
-![Dashboard](images/screenshots/007-flashing-lights.gif)
+![Flashing lights](images/screenshots/008-flashing-lights.gif)
 
 ## License
 
