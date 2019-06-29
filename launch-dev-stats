@@ -5,5 +5,6 @@ export SKEP_SECRET=abc123
 export HOSTFS_PATH=../linux-metrics/linux_metrics/test_filesystem/
 export LOG_LEVEL=debug
 export SKEP_HOST=LINUXKIT-025000000001
+export FILE_SYSTEMS=/
 
 ../bin/python app.py

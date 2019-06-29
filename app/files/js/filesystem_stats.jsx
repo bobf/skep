@@ -16,11 +16,11 @@ class FilesystemStats {
   }
 
   level() {
-    const percent = 100 * (this.available() / this.stats.total);
+    const percentage = 100 * (this.available() / this.stats.total);
 
-    if (percent < 60) {
+    if (percentage < Skep.thresholds.global.success) {
       return 'success';
-    } else if (percent < 80) {
+    } else if (percentage < Skep.thresholds.global.warning) {
       return 'warning';
     } else {
       return 'danger';

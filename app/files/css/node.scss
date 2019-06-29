@@ -95,6 +95,15 @@
   float: right;
 }
 
+.node {
+  .icon.disks {
+    float: right;
+    position: absolute;
+    height: 1.2rem;
+    width: 1.2rem;
+  }
+}
+
 .maximized .status {
   position: absolute;
   margin: 0.4em;

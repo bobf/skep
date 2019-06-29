@@ -1,3 +1,6 @@
+import * as Icon from 'react-feather';
+
+import FilesystemStats from './filesystem_stats';
 import NodeStats from './node_stats';
 
 class Node extends React.Component {
@@ -72,6 +75,39 @@ class Node extends React.Component {
     );
   }
 
+  diskStatus() {
+    const stats = this.stats().current;
+    const { filesystems } = this.stats().current;
+    if (!filesystems) return null;
+    const levels = filesystems.map(
+      filesystem => new FilesystemStats(filesystems).level()
+    );
+    const danger = levels.find(level => level === 'danger');
+    const warning = levels.find(level => level === 'warning');
+    const success = levels.find(level => level === 'success');
+    const reducedLevel = danger || warning || success;
+    const tooltip = this.diskStatusMessage(reducedLevel);
+
+    return (
+      <Icon.HardDrive
+        className={`icon disks text-${reducedLevel}`}
+        title={tooltip}
+        data-original-title={tooltip}
+        data-toggle={'tooltip'}
+      />
+    );
+  }
+
+  diskStatusMessage(level) {
+    const warnPrefix = 'One or more monitored filesystems are over';
+    const okPrefix = 'All monitored filesystems are less than';
+    return {
+      danger: `${warnPrefix} ${Skep.thresholds.global.warning}% full`,
+      warning: `${warnPrefix} ${Skep.thresholds.global.success}% full`,
+      success: `${okPrefix} ${Skep.thresholds.global.success}% full`
+    }[level];
+  }
+
   render() {
     const { minimized, node } = this.props;
     return (
@@ -82,6 +118,7 @@ class Node extends React.Component {
         </h2>
         {this.leaderBadge()}
         {this.roleBadge()}
+        {this.diskStatus()}
 
         <NodeStats
           key={'node_' + node.id + '_stats'}
