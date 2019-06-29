@@ -37,7 +37,7 @@ The following environment variables are available on the `stats` service (i.e. t
 
 ## Deployment
 
-_Skep_ can be deployed just like any typical [https://docs.docker.com/engine/reference/commandline/stack_deploy/](stack):
+Deploy _Skep_ as a [Docker Stack](https://docs.docker.com/engine/reference/commandline/stack_deploy/):
 ```bash
 docker stack deploy -c docker-compose.yml skep
 ```
