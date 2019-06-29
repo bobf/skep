@@ -13,6 +13,18 @@
   margin-top: 0.8em;
 }
 
+.stack.button {
+  margin: 2rem;
+  padding: 2rem;
+}
+
+.stack {
+  .icon.expand {
+    height: 1.2rem;
+    width: 1.2rem;
+  }
+}
+
 .stack.header th {
   font-size: 1.4em;
   font-family: monospace;
@@ -21,6 +33,7 @@
 }
 
 .stack.header th.name {
+  padding: 0.5rem;
   color: $label-text-light;
   text-transform: uppercase;
 }
@@ -33,7 +46,6 @@ div.stack {
 button.stack {
   padding: 0.2em 0.4em;
   text-transform: uppercase;
-  margin: 1em;
   font-size: 0.2em;
   float: left;
 }
@@ -96,8 +108,9 @@ table.stacks {
 }
 
 .stack span.name {
-  padding-top: 0.3em;
   display: inline-grid;
+  margin-left: 0.5rem;
+  font-size: 1rem;
 }
 
 .collapsed th.name {

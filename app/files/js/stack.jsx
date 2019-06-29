@@ -51,7 +51,7 @@ class Stack extends React.Component {
     const { name } = this.props.stack;
     const { collapsed } = this.props;
     const callback = collapsed ? () => this.expand() : () => this.collapse();
-    const icon = collapsed ? <Icon.Eye size={'3em'} /> : <Icon.EyeOff size={'3em'} />
+    const icon = collapsed ? <Icon.Eye className={'icon expand'} /> : <Icon.EyeOff className={'icon expand'} />
     return (
       <button
         type={'button'}

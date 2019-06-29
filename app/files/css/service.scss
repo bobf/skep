@@ -4,7 +4,7 @@
 }
 
 .service h2 {
-  font-size: 1.2em;
+  font-size: 1rem;
   color: $label-text-dark;
 }
 
@@ -17,6 +17,7 @@
 }
 
 .service span.title {
+  font-size: 1rem;
   text-transform: lowercase;
   font-family: monospace;
 }

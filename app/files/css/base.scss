@@ -28,6 +28,10 @@ $mapping-key: #38755d;
 $mapping-syntax: #00b7a8;
 $mapping-value: #999;
 
+html {
+  font-size: 14px;
+}
+
 .badge {
   color: $label-text;
   text-shadow: 0px 0px 5px $accent-dark;
