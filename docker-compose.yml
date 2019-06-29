@@ -22,7 +22,7 @@ services:
     environment:
       SKEP_APP_URL: http://app:8080
       SKEP_HOST:
-      DISKS: 'sda1'
+      DISKS:
       FILE_SYSTEMS: '/'
       NETWORK_INTERFACES: 'eth0'
       LOG_LEVEL: 'INFO'
