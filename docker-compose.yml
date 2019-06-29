@@ -9,24 +9,30 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./app:/skep:rw"
+    deploy:
+      mode: replicated
+      replicas: 1
 
   stats:
-    image: skep/stats:dev
+    image: skep/stats
     volumes:
       - "/dev:/hostfs/dev:ro"
       - "/etc:/hostfs/etc:ro"
       - "/proc:/hostfs/proc:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     environment:
-      SKEP_APP_URL: http://host.docker.internal:5000
+      SKEP_APP_URL: http://app:8080
       SKEP_HOST:
       DISKS: 'sda1'
       FILE_SYSTEMS: '/'
       NETWORK_INTERFACES: 'eth0'
-      LOG_LEVEL: 'DEBUG'
+      LOG_LEVEL: 'INFO'
 
     networks:
       - skep
+
+    deploy:
+      mode: global
 
 networks:
   skep: {}
