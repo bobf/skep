@@ -121,12 +121,8 @@
   margin: 0.2em;
 }
 
-.node .badge.visible {
-  visibility: visible;
-}
-
 .node .badge.hidden {
-  visibility: hidden;
+  display: none;
 }
 
 .maximized .node .badge.hidden {
