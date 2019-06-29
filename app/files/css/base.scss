@@ -37,6 +37,10 @@ html {
   text-shadow: 0px 0px 5px $accent-dark;
 }
 
+.badge.dense {
+  margin: 0;
+}
+
 .modal-wrapper {
   display: none;
 }

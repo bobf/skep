@@ -126,20 +126,22 @@ class NodeStats extends React.Component {
           {disk.name()}
         </th>
         <td>
-          <span className={'label'}>Q:</span>
-          <span alt={'I/O Queue'} className={`badge bg-${disk.queueLevel()}`}>
-            {disk.stats.io.ops}
-          </span>
+          <div className={'metrics'}>
+            <span className={'label'}>Q:</span>
+            <span alt={'I/O Queue'} className={`badge dense bg-${disk.queueLevel()}`}>
+              {disk.stats.io.ops}
+            </span>
 
-          <span className={'label'}>R:</span>
-          <span alt={'Reads'} className={`badge bg-${disk.readsLevel()}`}>
-            {disk.stats.io.tps.reads}
-          </span>
+            <span className={'label'}>R:</span>
+            <span alt={'Reads'} className={`badge dense bg-${disk.readsLevel()}`}>
+              {disk.stats.io.tps.reads}
+            </span>
 
-          <span className={'label'}>W:</span>
-          <span alt={'Writes'} className={`badge bg-${disk.writesLevel()}`}>
-            {disk.stats.io.tps.writes}
-          </span>
+            <span className={'label'}>W:</span>
+            <span alt={'Writes'} className={`badge dense bg-${disk.writesLevel()}`}>
+              {disk.stats.io.tps.writes}
+            </span>
+          </div>
         </td>
       </tr>
     );

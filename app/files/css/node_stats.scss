@@ -23,6 +23,10 @@
   color: $label-text-light;
 }
 
+.disk-stats .metrics {
+  white-space: nowrap;
+}
+
 .node-stats .progress {
   padding: 0.2em;
   margin: 0.2em;
