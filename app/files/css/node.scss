@@ -91,6 +91,10 @@
   color: $label-text;
 }
 
+.role.badge, .leader.badge {
+  float: right;
+}
+
 .maximized .status {
   position: absolute;
   margin: 0.4em;

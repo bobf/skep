@@ -52,7 +52,7 @@ class Node extends React.Component {
         title={tooltip}
         data-original-title={tooltip}
         data-toggle={'tooltip'}
-        className={`badge badge-${label.level}`}>
+        className={`badge badge-${label.level} role`}>
         {minimized ? label.abbrev : label.full}
       </span>
     );
@@ -66,7 +66,7 @@ class Node extends React.Component {
       <span
         title={minimized ? 'Leader' : ''}
         data-toggle={'tooltip'}
-        className={`badge badge-success ${leader ? 'visible' : 'hidden'}`}>
+        className={`badge badge-success ${leader ? 'visible' : 'hidden'} leader`}>
         {label}
       </span>
     );
