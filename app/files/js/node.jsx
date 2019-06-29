@@ -80,7 +80,7 @@ class Node extends React.Component {
     const { filesystems } = this.stats().current;
     if (!filesystems) return null;
     const levels = filesystems.map(
-      filesystem => new FilesystemStats(filesystems).level()
+      filesystem => new FilesystemStats(filesystem).level()
     );
     const danger = levels.find(level => level === 'danger');
     const warning = levels.find(level => level === 'warning');
