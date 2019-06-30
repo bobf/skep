@@ -35,8 +35,6 @@ The following environment variables are available on the `stats` service (i.e. t
 | `NETWORK_INTERFACES` | Comma-separated list of network devices to monitor (traffic) **[not yet implemented]** | `eth0,eth3` |
 | `INTERVAL` | Time in seconds to wait between gathering metrics. | `5` |
 | `DURATION` | _Minimum_ time in seconds to monitor disk I/O etc. Will accumulate for multiple devices. | `10` |
-
-
 | `LOG_LEVEL` | By default, the agent only logs initial configuration on launch and errors. Set to `DEBUG` to log all statistics. | `INFO` _(default/recommended)_ |
 
 ## Deployment
