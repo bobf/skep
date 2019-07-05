@@ -8,6 +8,13 @@
   font-size: 0.9em;
 }
 
+.node {
+  .icon.disks {
+    height: 1.2rem;
+    width: 1.2rem;
+  }
+}
+
 .node-stats .label {
   text-align: center;
   width: 100%;
@@ -34,7 +41,7 @@
 }
 
 .minimized .node-stats .meter.memory {
-  margin-left: 0.4em;
+  margin-left: 0.2em;
 }
 
 .minimized .node-stats {
@@ -43,7 +50,7 @@
 
 .minimized .node-stats .meter {
   display: inline-block;
-  width: 24%;
+  width: 22%;
 }
 
 .minimized .load-averages {
@@ -51,13 +58,15 @@
 }
 
 .minimized .load-averages .badge {
-  display: inline;
+  display: inline-block;
+  width: 33%;
 }
 
 
 .minimized .node-stats .progress {
 }
 
-.minimized .node-stats .progress .label {
-  visibility: hidden;
+.minimized .node-stats .progress .label .icon {
+  width: 1.3em;
+  height: 1.3em;
 }

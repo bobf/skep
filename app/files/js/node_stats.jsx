@@ -1,3 +1,5 @@
+import * as Icon from 'react-feather';
+
 import DiskStats from './disk_stats';
 import FilesystemStats from './filesystem_stats';
 import MemoryStats from './memory_stats';
@@ -57,7 +59,7 @@ class NodeStats extends React.Component {
     return this.progress({
       percent: this.memory.percent(),
       tooltip: this.memory.tooltip(),
-      label: this.memory.label(),
+      label: minimized ? 'RAM' : this.memory.label(),
       level: this.memory.level(),
       className: 'memory'
     });
@@ -66,10 +68,12 @@ class NodeStats extends React.Component {
   renderCPU() {
     if (!this.cpu) return null;
 
+    const { minimized } = this.props;
+
     return this.progress({
       percent: this.cpu.percent(),
       tooltip: this.cpu.tooltip(),
-      label: this.cpu.label(),
+      label: minimized ? 'CPU' : this.cpu.label(),
       level: this.cpu.level(),
       className: 'cpu'
     });
@@ -173,6 +177,7 @@ class NodeStats extends React.Component {
   renderMinimized() {
     return (
       <div className={'node-stats'}>
+        {this.diskStatus()}
         <div className={'meter memory'}>
           {this.renderMemory()}
         </div>
@@ -189,6 +194,7 @@ class NodeStats extends React.Component {
   renderMaximized() {
     return (
       <div className={'node-stats'}>
+        {this.diskStatus()}
         <table>
           <tbody>
             <tr className={'memory'}>
@@ -221,6 +227,39 @@ class NodeStats extends React.Component {
         </table>
       </div>
     );
+  }
+
+  diskStatus() {
+    const { stats } = this.props;
+    const { filesystems } = this.props.stats;
+    if (!filesystems) return null;
+    const levels = filesystems.map(
+      filesystem => new FilesystemStats(filesystem).level()
+    );
+    const danger = levels.find(level => level === 'danger');
+    const warning = levels.find(level => level === 'warning');
+    const success = levels.find(level => level === 'success');
+    const reducedLevel = danger || warning || success;
+    const tooltip = this.diskStatusMessage(reducedLevel);
+
+    return (
+      <Icon.HardDrive
+        className={`icon disks text-${reducedLevel}`}
+        title={tooltip}
+        data-original-title={tooltip}
+        data-toggle={'tooltip'}
+      />
+    );
+  }
+
+  diskStatusMessage(level) {
+    const warnPrefix = 'One or more monitored filesystems are over';
+    const okPrefix = 'All monitored filesystems are less than';
+    return {
+      danger: `${warnPrefix} ${Skep.thresholds.global.warning}% full`,
+      warning: `${warnPrefix} ${Skep.thresholds.global.success}% full`,
+      success: `${okPrefix} ${Skep.thresholds.global.success}% full`
+    }[level];
   }
 
   render() {

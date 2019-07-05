@@ -13,6 +13,9 @@ class Service(ImageParser):
         attrs = self.service.attrs
         return {
             "name": attrs['Spec']['Name'],
+            "mode": self.mode(),
+            "global": 'Global' in attrs['Spec']['Mode'],
+            "replicas": self.replicas(),
             "updated": attrs['UpdatedAt'],
             "updating": self.updating(),
             "ports": self.ports(),
@@ -38,6 +41,22 @@ class Service(ImageParser):
         networks = attrs['Spec']['TaskTemplate'].get('Networks', [])
         network_ids = [x['Target'] for x in networks]
         return [x for x in self.swarm.networks() if x.id in network_ids]
+
+    def mode(self):
+        attrs = self.service.attrs
+
+        if 'Global' in attrs['Spec']['Mode']:
+            return 'global'
+
+        if 'Replicated' in attrs['Spec']['Mode']:
+            return 'replicated'
+
+    def replicas(self):
+        attrs = self.service.attrs
+        if 'Global' in attrs['Spec']['Mode']:
+            return None
+
+        return attrs['Spec']['Mode']['Replicated']['Replicas']
 
     def tasks(self):
         return list(filter(

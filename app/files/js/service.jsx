@@ -14,6 +14,16 @@ class Service extends React.Component {
     this.setState({ highlight: highlight, highlightClass: className });
   }
 
+  replicas() {
+    const { replicas } = this.props.service;
+    const { dashboard } = this.props.stack;
+
+    if (replicas !== null) return replicas;
+
+    // Global service
+    return Skep.dashboard.nodes().length;
+  }
+
   updateStatus() {
     const { updated, updating } = this.props.service;
 
@@ -82,7 +92,7 @@ class Service extends React.Component {
   level() {
     const { tasks } = this.props.service;
     const running = this.runningCount();
-    const total = tasks.length;
+    const total = this.replicas();
 
     switch (running) {
       case 0:
@@ -107,12 +117,13 @@ class Service extends React.Component {
 
   countBadge() {
     const { tasks } = this.props.service;
-    const tooltip = `${this.runningCount()} / ${tasks.length} replicas running ${this.statusSymbol()}`;
+    const tooltip = `${this.runningCount()} / ${this.replicas()} <em>replicas running</em> ${this.statusSymbol()}`;
 
     return (
       <span
         className={`badge bg-${this.level()}`}
         title={tooltip}
+        data-html={'true'}
         data-original-title={tooltip}
         data-toggle={'tooltip'}>
         {this.runningCount()}
@@ -218,6 +229,31 @@ class Service extends React.Component {
     return false;
   }
 
+  modeIcon(mode) {
+    switch (mode) {
+      case 'global':
+        return Icon.Globe;
+      case 'replicated':
+        return Icon.Copy;
+    }
+  }
+
+  renderMode() {
+    const { mode } = this.props.service;
+    const icon = this.modeIcon(mode);
+    const title = `Deployment mode: <em>${mode}</em>`;
+
+    return React.createElement(
+      icon,
+      {
+        title: title,
+        'data-toggle': 'tooltip',
+        'data-html': 'true',
+        className: 'mode-icon'
+      }
+    );
+  }
+
   renderCollapsed() {
     const { service } = this.props;
     const { highlight } = this.state;
@@ -232,12 +268,13 @@ class Service extends React.Component {
           <span className={'network-icon'}>
             <Icon.Wifi size={'1.4em'} />
           </span>
-          {this.updateStatus()}
-          {service.name}
           {this.countBadge()}
+          {this.renderMode()}
+          {service.name}
         </th>
-        <td className={'image'}>
-          <span>{service.image.id}:{service.image.tag}</span>
+        <td>
+          <span className={'image-id'}>{service.image.id}:{service.image.tag}</span>
+          {this.updateStatus()}
         </td>
         <td className={'ports'}>
           {this.renderPortsCollapsed()}

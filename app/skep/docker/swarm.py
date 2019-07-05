@@ -44,8 +44,8 @@ class Swarm:
 
     def grouped_services(self):
         return itertools.groupby(
-            sorted(self.client.services.list(), key=self.by_stack),
-            key=self.by_stack
+            sorted(self.client.services.list(), key=self.stack_key),
+            key=self.stack_label
         )
 
     def nodes(self):
@@ -62,5 +62,14 @@ class Swarm:
     def serializable(self):
         return self.attrs()
 
-    def by_stack(self, obj):
-        return obj.attrs['Spec']['Labels']['com.docker.stack.namespace']
+    def stack_key(self, obj):
+        return obj.attrs['Spec']['Labels'].get(
+            'com.docker.stack.namespace',
+            '~'
+        )
+
+    def stack_label(self, obj):
+        return obj.attrs['Spec']['Labels'].get(
+            'com.docker.stack.namespace',
+            '[services]'
+        )

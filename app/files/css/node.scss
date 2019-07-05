@@ -8,11 +8,12 @@
 
 .node {
   border: 1px solid $background-color-secondary;
-  padding: 0.2em;
+  padding: 0.4em;
   border-radius: 15px;
   box-shadow: 0px 0px 5px $accent-dark;
   margin-bottom: 1em;
   width: 18em;
+  white-space: nowrap;
 }
 
 #nodes.maximized .node {
@@ -24,14 +25,34 @@
   width: 1em;
   height: 1em;
   display: inline-block;
-  background-color: $status-light-healthy;
   border-radius: 1em;
   vertical-align: middle;
   visibility: hidden;
 }
 
-.node.ping .status {
-  visibility: visible;
+.node.ping {
+  background-color: $background-color;
+  box-shadow: 0px 0px 5px #19ab57;
+  animation: Ping 1.2s ease infinite;
+
+  @keyframes Ping {
+    0% {
+      background-color: $background-color;
+    }
+
+    15% {
+      background-color: $status-light-healthy;
+    }
+
+    60% {
+      box-shadow: 0px 0px 5px $background-color;
+    }
+
+    100% {
+      box-shadow: 0px 0px 5px inherit;
+      background-color: $background-color;
+    }
+  }
 }
 
 .minimized .node {
@@ -63,6 +84,7 @@
 }
 
 .minimized .node .hostname {
+  font-size: 0.9em;
 }
 
 .node.highlight {
@@ -73,7 +95,7 @@
   font-size: 1rem;
   padding-left: 0.4em;
   padding-right: 0.4em;
-  width: calc(100% - 5.4em);
+  clear: both;
 }
 
 .maximized .node h2 {
@@ -93,15 +115,6 @@
 
 .role.badge, .leader.badge {
   float: right;
-}
-
-.node {
-  .icon.disks {
-    float: right;
-    position: absolute;
-    height: 1.2rem;
-    width: 1.2rem;
-  }
 }
 
 .maximized .status {

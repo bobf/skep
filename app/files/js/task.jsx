@@ -9,8 +9,11 @@ class Task extends React.Component {
   }
 
   tooltip() {
-    const slot = `<strong>Slot:</strong> ${this.slot()}`;
     const host = `<strong>Host:</strong> ${this.hostname()}`;
+
+    if (!this.slot()) return host;
+
+    const slot = `<strong>Slot:</strong> ${this.slot()}`;
 
     return `${slot}<br/>${host}`;
   }

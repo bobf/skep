@@ -13,7 +13,7 @@
 }
 
 .service-name .badge {
-  margin-left: 0.4em;
+  margin-right: 0.4em;
 }
 
 .service span.title {
@@ -61,6 +61,13 @@ tr.service.highlight.networked {
   background-color: rgba(45,80,180,0.2);
 }
 
+.service .mode-icon {
+  height: 1em;
+  width: 1em;
+  margin-right: 0.2em;
+  opacity: 1;
+}
+
 .service .network-icon {
   visibility: hidden;
   position: absolute;
@@ -86,14 +93,12 @@ tr.service.highlight.networked {
 
 .service .updated {
   color: $updated;
-  float: left;
   margin-right: 0.4em;
 }
 
 /* https://loading.io/css/ */
 
 .service .updating {
-  float: left;
   display: inline-block;
   top: 0.4em;
   content: " ";

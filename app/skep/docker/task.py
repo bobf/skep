@@ -14,7 +14,7 @@ class Task(ImageParser):
         attrs = self.task
         return {
             "id": attrs["ID"],
-            "slot": attrs["Slot"],
+            "slot": attrs.get("Slot", None),
             "containerID": self.container_id(),
             "nodeID": attrs["NodeID"],
             "message": attrs["Status"]["Message"],

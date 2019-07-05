@@ -9,7 +9,8 @@ $background-color: #222;
 $background-color-secondary: #333;
 $background-color-translucent: rgba(34, 34, 34, 0.9);
 
-$status-light-healthy: #9d9;
+$status-light-healthy: #252;
+$status-light-healthy-shadow: rgba(0, 0, 34, 0.7);
 
 $highlight-select: #dd9;
 
@@ -39,6 +40,14 @@ html {
 
 .badge.dense {
   margin: 0 !important;
+}
+
+.tooltip {
+  color: $label-text-light !important;
+
+  em {
+    color: $label-text-dark !important;
+  }
 }
 
 .modal-wrapper {
