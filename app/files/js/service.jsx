@@ -212,7 +212,9 @@ class Service extends React.Component {
   tasks() {
     const { tasks } = this.props.service;
 
-    return tasks.sort((a, b) => a.slot() - b.slot());
+    return tasks.sort(
+      (a, b) => (a && a.slot() || 0) - (b && b.slot() || 0)
+    );
   }
 
   toggle() {
