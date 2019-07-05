@@ -24,8 +24,9 @@ class Mapping extends React.Component {
     return false;
   }
 
-  toggle() {
+  toggle(ev) {
     if (this.isEmpty()) return false;
+    if (ev.target.closest('.modal-content')) return false;
 
     const { collapsed } = this.state;
     collapsed ? this.expand() : this.collapse();
@@ -59,7 +60,7 @@ class Mapping extends React.Component {
         data-toggle={'tooltip'}
         id={this.buttonID()}
         className={`btn expand mapping ${className} ${this.label().toLowerCase()}`}
-        onClick={() => this.toggle()}>
+        onClick={(ev) => this.toggle(ev)}>
         {this.label()}
         { empty ? (
             <Icon.Slash className={'icon'} size={'1.2em'} />
@@ -105,7 +106,7 @@ class Mapping extends React.Component {
       <div className={'mapping-wrapper'}>
         {this.renderExpandButton(collapsed)}
         <div
-          onClick={() => this.toggle()}
+          onClick={(ev) => this.toggle(ev)}
           className={this.className()}>
           {collapsed ? this.renderCollapsed() : this.renderExpanded()}
         </div>
