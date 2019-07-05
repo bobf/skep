@@ -198,6 +198,12 @@ class Service extends React.Component {
     return tasks.map(task => `#node-${task.nodeID}`).join(', ');
   }
 
+  tasks() {
+    const { tasks } = this.props.service;
+
+    return tasks.sort((a, b) => a.slot() - b.slot());
+  }
+
   toggle() {
     const { highlight } = this.state;
     const { stack } = this.props;
@@ -260,7 +266,7 @@ class Service extends React.Component {
         </h2>
 
         <div className={'tasks'}>
-          {this.props.service.tasks.map(task => (
+          {this.tasks().map(task => (
             <Task
               key={task.id}
               task={task}

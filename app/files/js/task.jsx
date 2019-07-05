@@ -8,9 +8,22 @@ class Task extends React.Component {
     this.state = {};
   }
 
+  tooltip() {
+    const slot = `<strong>Slot:</strong> ${this.slot()}`;
+    const host = `<strong>Host:</strong> ${this.hostname()}`;
+
+    return `${slot}<br/>${host}`;
+  }
+
   hostname() {
     const node = this.node();
-    return node && node.hostname();
+    return node && node.hostname() || "[waiting]";
+  }
+
+  slot() {
+    const { slot } = this.props.task;
+
+    return slot;
   }
 
   node() {
@@ -93,7 +106,7 @@ class Task extends React.Component {
 
   render() {
     const { highlight } = this.state;
-    const tooltip = this.hostname();
+    const tooltip = this.tooltip();
 
     return (
       <span className={'task ' + (highlight ? 'highlight' : '')}>
@@ -102,6 +115,7 @@ class Task extends React.Component {
             size={'1em'}
             title={tooltip}
             data-toggle={'tooltip'}
+            data-html={'true'}
             data-original-title={tooltip} />
           <div className={'badges'}>
             {this.renderState()}
