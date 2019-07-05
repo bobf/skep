@@ -13,13 +13,14 @@ You may find _Skep_ to be a useful addition to your toolbox along with projects 
 * [SwarmProm](https://github.com/stefanprodan/swarmprom)
 * [swarm-dashboard](https://github.com/charypar/swarm-dashboard)
 * [docker-swarm-visualizer](https://github.com/dockersamples/docker-swarm-visualizer)
+* [portainer.io](https://www.portainer.io/)
+* [Consul](https://www.consul.io/)
 
 _Skep_ attempts to satisfy the following design objectives:
 
 * Simple configuration and quick deployment
 * Low resource footprint
 * Reactive and clean user interface
-
 
 ## Configuration
 
@@ -47,7 +48,7 @@ docker stack deploy -c docker-compose.yml skep
 <a name="file-systems"></a>
 ## File Systems
 
-To monitor a file system it must be mounted into the agent as a [_Docker_ bind mount](https://docs.docker.com/storage/bind-mounts/). The `FILE_SYSTEMS` environment variable should refer to the **destination** of the bind mount.
+To monitor a file system it must be mounted into the agent as a [_Docker_ bind mount](https://docs.docker.com/storage/bind-mounts/). The `FILE_SYSTEMS` environment variable should refer to the **destination** of the bind mount. _Skep_ uses the base path `/hostfs` for mounting host file systems but any valid path is acceptable.
 
 For example, to monitor the root file system, the following configuration might be used:
 
