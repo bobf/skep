@@ -11,9 +11,9 @@ class Task extends React.Component {
   tooltip() {
     const host = `<strong>Host:</strong> ${this.hostname()}`;
 
-    if (!this.slot()) return host;
+    if (!this.slotID()) return host;
 
-    const slot = `<strong>Slot:</strong> ${this.slot()}`;
+    const slot = `<strong>Slot:</strong> ${this.slotID()}`;
 
     return `${slot}<br/>${host}`;
   }
@@ -23,7 +23,7 @@ class Task extends React.Component {
     return node && node.hostname() || "[waiting]";
   }
 
-  slot() {
+  slotID() {
     const { slot } = this.props.task;
 
     return slot;

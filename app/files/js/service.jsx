@@ -213,7 +213,7 @@ class Service extends React.Component {
     const { tasks } = this.props.service;
 
     return tasks.sort(
-      (a, b) => (a && a.slot() || 0) - (b && b.slot() || 0)
+      (a, b) => (a.slotID && a.slotID() || 0) - (b.slotID && b.slotID() || 0)
     );
   }
 
