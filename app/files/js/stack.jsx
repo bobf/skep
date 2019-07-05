@@ -15,8 +15,6 @@ class Stack extends React.Component {
   sortedServices() {
     return this.props.stack.services.sort(
       (left, right) => {
-        if (left.ports.length && !right.ports.length) return -1;
-        if (!left.ports.length && right.ports.length) return 1;
         if (left.name < right.name) return -1;
         if (left.name > right.name) return 1;
         return 0;
