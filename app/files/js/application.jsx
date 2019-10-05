@@ -58,7 +58,7 @@ $(function () {
     $('#node-' + node.id).addClass('ping');
     setTimeout(function () {
       $('#node-' + node.id).removeClass('ping');
-    }, 1200);
+    }, 500);
   });
 
   $('body').tooltip({

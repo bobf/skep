@@ -30,29 +30,14 @@
   visibility: hidden;
 }
 
-.node.ping {
+.node {
   background-color: $background-color;
-  box-shadow: 0px 0px 5px #19ab57;
-  animation: Ping 1.2s ease infinite;
+  transition: background-color 0.8s ease;
+}
 
-  @keyframes Ping {
-    0% {
-      background-color: $background-color;
-    }
-
-    15% {
-      background-color: $status-light-healthy;
-    }
-
-    60% {
-      box-shadow: 0px 0px 5px $background-color;
-    }
-
-    100% {
-      box-shadow: 0px 0px 5px inherit;
-      background-color: $background-color;
-    }
-  }
+.node.ping {
+  background-color: $status-light-healthy;
+  transition: background-color 0.4s ease;
 }
 
 .minimized .node {
