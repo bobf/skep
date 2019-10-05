@@ -6,6 +6,7 @@ import multiprocessing
 import os
 import queue
 import random
+import pprint
 import string
 import sys
 import shutil
@@ -43,7 +44,7 @@ class StatRunner:
 
     def ping(self):
         stats = self.stats()
-        self.log.debug(str(stats))
+        self.log.debug(pprint.pformat(stats))
         request = Request(
             self.opts['url'],
             data=json.dumps(stats).encode('utf8'),
@@ -174,7 +175,13 @@ class StatRunner:
     def network(self):
         stats = {}
         for network_interface in self.opts['network']:
-            rx_bits, tx_bits = lm.net_stat.rx_tx_bits(network_interface)
+            try:
+                rx_bits, tx_bits = lm.net_stat.rx_tx_bits(network_interface)
+            except lm.NetError:
+                message = "Unknown network interface: {interface}"
+                self.log.warning(message.format(interface=network_interface))
+                continue
+
             stats[network_interface] = {
                 'rx': rx_bits,
                 'tx': tx_bits
