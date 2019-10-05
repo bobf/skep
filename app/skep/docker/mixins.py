@@ -3,7 +3,10 @@ class ImageParser:
         if spec is None:
             return {}
 
-        image, _, __ = spec.rpartition('@')
-        id, ___, tag = image.rpartition(':')
+        if '@' not in spec:
+            id, _, tag = spec.partition(':')
+        else:
+            image, _, __ = spec.rpartition('@')
+            id, ___, tag = image.rpartition(':')
 
         return { 'id': id, 'tag': tag }
