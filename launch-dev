@@ -1,0 +1,4 @@
+#!/bin/bash
+./launch-dev-app &
+./launch-dev-stats &
+./launch-dev-assets

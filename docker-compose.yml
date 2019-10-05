@@ -11,6 +11,9 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+    environment:
+      SERVICE_URL_TEMPLATE:
+      IMAGE_URL_TEMPLATE: https://hub.docker.com/r/{organization}/{repository}
 
   stats:
     image: skep/stats

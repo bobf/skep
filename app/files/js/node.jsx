@@ -18,8 +18,12 @@ class Node extends React.Component {
     return this.state.stats;
   }
 
+  containers() {
+    return this.stats().current.containers;
+  }
+
   hasContainer(containerID) {
-    const containers = this.stats().current.containers;
+    const containers = this.containers();
     if (!containers) return false;
     const IDs = containers.map(container => container.id);
     return IDs.includes(containerID);

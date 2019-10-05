@@ -4,6 +4,7 @@ import DiskStats from './disk_stats';
 import FilesystemStats from './filesystem_stats';
 import MemoryStats from './memory_stats';
 import CPUStats from './cpu_stats';
+import NetworkStats from './network_stats';
 
 class NodeStats extends React.Component {
   constructor(props) {
@@ -13,10 +14,11 @@ class NodeStats extends React.Component {
 
   initialize(props) {
     const { stats } = props;
-    const { memory, cpu, disks, filesystems, load } = (stats || {});
+    const { memory, cpu, networks, disks, filesystems, load } = (stats || {});
 
     this.memory = memory ? new MemoryStats(memory) : null;
     this.cpu = cpu ? new CPUStats(cpu) : null;
+    this.networks = networks ? new NetworkStats (networks) : null;
     this.disks = this.diskStats(disks);
     this.filesystems = this.filesystemStats(filesystems);
     this.load = load;

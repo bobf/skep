@@ -1,3 +1,11 @@
 #!/bin/bash
 cd app
-SKEP_SECRET=abc123 SKEP_ENV=development FLASK_APP=controller.py FLASK_DEBUG=1 SKEP_LISTEN_HOST=0.0.0.0 pipenv run python webapp.py
+export SERVICE_URL_TEMPLATE='https://github.com/bobf/{name}'
+export IMAGE_URL_TEMPLATE='https://hub.docker.com/r/{organization}/{repository}'
+export SKEP_SECRET=abc123
+export SKEP_ENV=development
+export FLASK_APP=controller.py
+export FLASK_DEBUG=1
+export SKEP_LISTEN_HOST=0.0.0.0
+pipenv run python webapp.py
+

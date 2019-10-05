@@ -217,7 +217,9 @@ class Service extends React.Component {
     );
   }
 
-  toggle() {
+  toggle(ev) {
+    if (ev.target.tagName === 'A') return false;
+
     const { highlight } = this.state;
     const { stack } = this.props;
     if (!highlight) {
@@ -256,6 +258,61 @@ class Service extends React.Component {
     );
   }
 
+  nameLink() {
+    const { service } = this.props;
+
+    if (!service.name_url) return (
+      <span className={'service-name'}>
+        {service.name}
+      </span>
+    );
+
+    return (
+      <a className={'service-name'} href={service.name_url} target={'_blank'}>
+        {service.name}
+      </a>
+    );
+  }
+
+  imageLabel() {
+    const { organization, repository, tag } = this.props.service.image;
+    return (
+      <span className={'image-label'}>
+        <span className={'organization'}>
+          {'organization'}
+        </span>
+        <span className={'punctuation'}>
+          {'/'}
+        </span>
+        <span className={'repository'}>
+          {repository}
+        </span>
+        <span className={'punctuation'}>
+          {':'}
+        </span>
+        <span className={'tag'}>
+          {tag}
+        </span>
+      </span>
+    );
+  }
+
+  imageLink() {
+    const { image_url: imageURL } = this.props.service;
+
+    if (!imageURL) return (
+      <span className={'image'}>
+        {this.imageLabel()}
+      </span>
+    );
+
+    return (
+      <a className={'image'} href={imageURL} target={'_blank'}>
+        {this.imageLabel()}
+      </a>
+    );
+  }
+
   renderCollapsed() {
     const { service } = this.props;
     const { highlight } = this.state;
@@ -263,19 +320,21 @@ class Service extends React.Component {
 
     return (
       <tr
-        onClick={() => this.toggle()}
+        onClick={(ev) => this.toggle(ev)}
         key={`service-collapsed-${service.name}`}
         className={`service collapsed ${highlightClass}`}>
-        <th className={'service-name'}>
+        <th className={'service-title'}>
           <span className={'network-icon'}>
             <Icon.Wifi size={'1.4em'} />
           </span>
           {this.countBadge()}
           {this.renderMode()}
-          {service.name}
+          <span>
+            {this.nameLink()}
+          </span>
         </th>
         <td>
-          <span className={'image-id'}>{service.image.id}:{service.image.tag}</span>
+          <span className={'image-id'}>{this.imageLink()}</span>
           {this.updateStatus()}
         </td>
         <td className={'ports'}>
@@ -294,13 +353,11 @@ class Service extends React.Component {
       <div className={'service'}>
         <h2>
           {this.updateStatus()}
-          <span className={'title'}>{name}</span>
+          <span className={'title'}>{this.nameLink()}</span>
           <Environment name={name} dashboard={dashboard} environment={environment} />
           <Mounts name={name} mounts={mounts} />
-          <span className={'tag'}>
-            {`[${image.id}:${image.tag}]`}
-          </span>
 
+          {this.imageLink()}
           {this.renderPortsExpanded()}
         </h2>
 

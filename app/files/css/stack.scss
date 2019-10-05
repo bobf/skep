@@ -80,9 +80,7 @@ table.stacks {
   font-size: 1.2em;
 }
 
-.stacks th.service-name {
-  font-family: monospace;
-  text-transform: lowercase;
+.stacks th.service-title {
   padding: 0.4em;
 }
 
@@ -92,20 +90,6 @@ table.stacks {
 
 .collapsed .image td {
   padding: 0.4em;
-}
-
-.collapsed .image {
-  padding: 0.2em 0.6em;
-}
-
-.collapsed .image-id {
-  font-family: monospace;
-  background-color: $background-color-secondary;
-  color: $label-text-subheading;
-  border-radius: 0.4em;
-  margin: 0.2em;
-  text-shadow: 0px 0px 5px $accent-dark;
-  padding: 0.2em 0.4em;
 }
 
 .stack span.name {

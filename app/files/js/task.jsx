@@ -14,12 +14,27 @@ class Task extends React.Component {
     if (!this.slotID()) return host;
 
     const slot = `<strong>Slot:</strong> ${this.slotID()}`;
+    const name = `<strong>Container:</strong> ${this.containerName()}`;
 
-    return `${slot}<br/>${host}`;
+    return `<div class="task-tooltip">${slot}<br/>${host}<br/>${name}</div>`;
+  }
+
+  containerName() {
+    const { containerID } = this.props.task;
+    const node = this.node();
+
+    if (!node) return "[waiting]";
+
+    const taskContainer = node.containers().find(
+      container => container.id === containerID
+    );
+
+    return taskContainer && taskContainer.name;
   }
 
   hostname() {
     const node = this.node();
+
     return node && node.hostname() || "[waiting]";
   }
 

@@ -1,3 +1,5 @@
+import os
+
 from skep.docker.environment import Environment
 from skep.docker.task import Task
 from skep.docker.network import Network
@@ -12,7 +14,7 @@ class Service(ImageParser):
     def attrs(self):
         attrs = self.service.attrs
         return {
-            "name": attrs['Spec']['Name'],
+            "name": self.name(),
             "mode": self.mode(),
             "global": 'Global' in attrs['Spec']['Mode'],
             "replicas": self.replicas(),
@@ -23,8 +25,18 @@ class Service(ImageParser):
             "tasks": self.tasks(),
             "networks": self.networks(),
             "environment": self.environment(),
-            "mounts": self.mounts()
+            "mounts": self.mounts(),
+            "name_url": self.name_url(),
+            "image_url": self.image_url()
         }
+
+    def id(self):
+        attrs = self.service.attrs
+        return attrs['ID']
+
+    def name(self):
+        attrs = self.service.attrs
+        return attrs['Spec']['Name']
 
     def environment(self):
         attrs = self.service.attrs
@@ -84,3 +96,23 @@ class Service(ImageParser):
 
     def serializable(self):
         return self.attrs()
+
+    def name_url(self):
+        if 'SERVICE_URL_TEMPLATE' not in os.environ:
+            return None
+
+        return os.environ['SERVICE_URL_TEMPLATE'].format(
+            name=self.name(),
+            id=self.id()
+        )
+
+    def image_url(self):
+        if 'IMAGE_URL_TEMPLATE' not in os.environ:
+            return None
+
+        image = self.image()
+
+        if not image:
+            return None
+
+        return os.environ['IMAGE_URL_TEMPLATE'].format(**self.image())

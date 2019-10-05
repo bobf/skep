@@ -8,12 +8,23 @@
   color: $label-text-dark;
 }
 
-.service-name {
+.service-name, a.service-name, a.image {
   color: $label-text-dark;
+  text-transform: lowercase;
+  font-family: monospace;
 }
 
-.service-name .badge {
-  margin-right: 0.4em;
+a.service-name:hover, a.image:hover {
+  text-decoration: none;
+  color: $url-hover-color;
+
+  span {
+    color: $url-hover-color;
+  }
+
+  .punctuation {
+    color: $label-text-dark;
+  }
 }
 
 .service span.title {
@@ -62,9 +73,11 @@ tr.service.highlight.networked {
 }
 
 .service .mode-icon {
+  color: $label-text-dark;
   height: 1em;
   width: 1em;
-  margin-right: 0.2em;
+  margin-right: 0.4em;
+  margin-left: 0.4em;
   opacity: 1;
 }
 
@@ -81,14 +94,16 @@ tr.service.highlight.networked {
   color: rgba(70,120,235,1.0);
 }
 
-.service .tag {
-  font-family: monospace;
-  padding-left: 0.2em;
-  background-color: $background-color-secondary;
-  color: $label-text-subheading;
-  margin: 0.8em;
-  padding: 0.2em;
-  margin-left: 1em;
+.service {
+  .image-label {
+    font-family: monospace;
+    background-color: $background-color-secondary;
+    color: $label-text-subheading;
+    border-radius: 0.4em;
+    margin: 0.2em;
+    text-shadow: 0px 0px 5px $accent-dark;
+    padding: 0.2em 0.4em;
+  }
 }
 
 .service .updated {
