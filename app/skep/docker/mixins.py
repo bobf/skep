@@ -4,9 +4,10 @@ class ImageParser:
             return {}
 
         if '@' not in spec:
+            digest = None
             organization_repository, _, tag = spec.partition(':')
         else:
-            image, _, __ = spec.rpartition('@')
+            image, _, digest = spec.rpartition('@')
             organization_repository, ___, tag = image.rpartition(':')
 
         if '/' in organization_repository:
@@ -18,5 +19,6 @@ class ImageParser:
         return {
             'organization': organization,
             'repository': repository,
-            'tag': tag
+            'tag': tag,
+            'digest': digest
         }

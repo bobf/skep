@@ -39,13 +39,36 @@ a.service-name:hover, a.image:hover {
   margin-top: 0.4em;
 }
 
+.service .ports .punctuation {
+  color: $accent-dark;
+}
+
 .service .ports .arrow {
   margin-right: 0.2em;
 }
 
-.service .ports .published.arrow {
-  color: $port-published;
-  margin-right: 0.4em;
+td.ports {
+  text-align: right;
+  padding-right: 0.2em;
+}
+
+.service-title {
+  width: 50%;
+}
+
+.collapsed .service .ports {
+  .published {
+    color: $port-published;
+  }
+
+  .target {
+    color: $port-target;
+  }
+
+  .published.arrow {
+    color: $port-published;
+    margin-right: 0.4em;
+  }
 }
 
 .service .ports .target.arrow {

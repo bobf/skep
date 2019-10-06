@@ -35,6 +35,16 @@ span.task {
   background-color: rgba(240,240,102,0.1);
 }
 
+.tooltip {
+  max-width: 500px;
+}
+
+.tooltip-inner {
+  max-width: 500px;
+}
+
 .task-tooltip {
   text-align: left;
+  width: auto;
+  white-space: nowrap;
 }

@@ -9,8 +9,13 @@
   table-layout: fixed;
 }
 
-.services {
+.collapsed .services {
   margin-top: 0.8em;
+}
+
+.expanded .services {
+  padding-top: 1em;
+  background-color: $background-color-highlight;
 }
 
 .stack.button {
@@ -36,9 +41,14 @@
   padding: 0.5rem;
   color: $label-text-light;
   text-transform: uppercase;
+
 }
 
-div.stack {
+.expanded th.name {
+  background-color: $highlight-select-accent;
+}
+
+tr.collapsed div.stack {
   border-top: 1px solid $accent-dark;
   padding-top: 0.2em;
 }
@@ -54,7 +64,7 @@ table.stacks {
   width: 100%;
   margin-left: 0.4em;
   border-spacing: 0 0.4em;
-  border-collapse: separate;
+  border-collapse: collapse;
 }
 
 .collapsed.stack {
@@ -65,15 +75,6 @@ table.stacks {
   font-family: monospace;
   font-size: 1.2em;
   margin: 0 0.2em;
-}
-
-.collapsed .published {
-  color: $port-published;
-  margin-right: 0.2em;
-}
-
-.collapsed .target {
-  color: $port-target;
 }
 
 .stacks th {

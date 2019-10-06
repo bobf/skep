@@ -67,7 +67,7 @@ class Service extends React.Component {
             {mapping.published}
           </span>
           <span className={'published arrow'}>
-            &#8615;
+            &#8613;
           </span>
           <span
             data-toggle={'tooltip'}
@@ -77,7 +77,7 @@ class Service extends React.Component {
             {mapping.target}
           </span>
           <span className={'target arrow'}>
-            &#8613;
+            &#8615;
           </span>
         </div>
       )
@@ -138,9 +138,19 @@ class Service extends React.Component {
       <span
         className={'ports'}
         key={`ports-${service.name}-${mapping.published}-${mapping.target}`}>
-        <span className={'published'}>{mapping.published}</span>
-        {':'}
-        <span className={'target'}>{mapping.target}</span>
+        <span
+          data-toggle={'tooltip'}
+          title={'Published Port'}
+          className={'published'}>
+          {mapping.published}
+        </span>
+        <span className={'punctuation'}>
+          {':'}
+        </span>
+        <span
+          data-toggle={'tooltip'}
+          title={'Target Port'}
+          className={'target'}>{mapping.target}</span>
         {idx + 1 < service.ports.length ? <br /> : null}
       </span>
       )
@@ -279,7 +289,7 @@ class Service extends React.Component {
     return (
       <span className={'image-label'}>
         <span className={'organization'}>
-          {'organization'}
+          {organization}
         </span>
         <span className={'punctuation'}>
           {'/'}

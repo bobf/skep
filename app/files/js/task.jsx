@@ -15,8 +15,9 @@ class Task extends React.Component {
 
     const slot = `<strong>Slot:</strong> ${this.slotID()}`;
     const name = `<strong>Container:</strong> ${this.containerName()}`;
-
-    return `<div class="task-tooltip">${slot}<br/>${host}<br/>${name}</div>`;
+    const digest = `<strong>Digest:</strong> ${this.digest()}`;
+    const content = [host, slot, name, digest].join('<br/>');
+    return `<div class="task-tooltip">${content}</div>`;
   }
 
   containerName() {
@@ -36,6 +37,12 @@ class Task extends React.Component {
     const node = this.node();
 
     return node && node.hostname() || "[waiting]";
+  }
+
+  digest() {
+    const { digest } = this.props.task.image;
+
+    return digest;
   }
 
   slotID() {
@@ -133,6 +140,7 @@ class Task extends React.Component {
             size={'1em'}
             title={tooltip}
             data-toggle={'tooltip'}
+            data-container={'body'}
             data-html={'true'}
             data-original-title={tooltip} />
           <div className={'badges'}>
