@@ -221,9 +221,10 @@ class Service extends React.Component {
 
   tasks() {
     const { tasks } = this.props.service;
+    const sortBy = (task) => (task.when && moment(task.when) || Infinity);
 
     return tasks.sort(
-      (a, b) => (a.slotID && a.slotID() || 0) - (b.slotID && b.slotID() || 0)
+      (a, b) => (sortBy(a) - sortBy(b))
     );
   }
 

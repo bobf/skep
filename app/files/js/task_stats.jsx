@@ -128,7 +128,15 @@ class TaskStats extends React.Component {
 
   renderCpu() {
     const { previous } = this.props.stats;
-    if (!Object.entries(previous).length) return null;
+
+    if (!Object.entries(previous).length) {
+      return (
+        <div className={'cpu'}>
+          <Icon.Cpu size={'1em'} className={'icon'} />
+          {this.progress('CPU', 0, 'Waiting for metrics', 'waiting')}
+        </div>
+      );
+    }
 
     const usage = Math.min(this.cpuUsage(), 1);
     const percentage = numeral(usage).format('0.00%');

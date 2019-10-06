@@ -71,10 +71,17 @@ class Service(ImageParser):
         return attrs['Spec']['Mode']['Replicated']['Replicas']
 
     def tasks(self):
-        return list(filter(
+        tasks = list(filter(
             lambda x: x.desired_state() == 'running',
             [Task(x) for x in self.service.tasks()]
         ))
+
+        replicas = self.replicas()
+
+        if replicas is not None and len(tasks) < replicas:
+            tasks = [Task({}) for x in range(replicas - len(tasks))] + tasks
+
+        return tasks
 
     def ports(self):
         mappings = []

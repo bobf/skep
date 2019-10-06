@@ -1,3 +1,6 @@
+import string
+import random
+
 from skep.docker.mixins import ImageParser
 
 class Task(ImageParser):
@@ -5,12 +8,22 @@ class Task(ImageParser):
         self.task = task
 
     def desired_state(self):
+        if not self.task:
+            return None
+
         return self.task['DesiredState']
 
     def container_id(self):
+        if not self.task:
+            return None
+
         return self.task.get('Status', {}).get('ContainerStatus', {}).get('ContainerID', None)
 
     def attrs(self):
+        if not self.task:
+            id = "".join(random.choice(string.ascii_lowercase) for _ in range(8))
+            return { "id": id, "state": "loading", "message": "loading" }
+
         attrs = self.task
         return {
             "id": attrs["ID"],

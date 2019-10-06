@@ -51,6 +51,12 @@ class Task extends React.Component {
     return slot;
   }
 
+  when() {
+    const { when } = this.props.task;
+
+    return moment(when);
+  }
+
   node() {
     const { containerID } = this.props.task;
     const { stack } = this.props;
@@ -115,9 +121,9 @@ class Task extends React.Component {
     );
   }
 
-  renderMessage () {
+  renderMessage() {
     const { message, when } = this.props.task;
-    const tooltip = moment(when).fromNow();
+    const tooltip = this.when().fromNow();
     return (
       <div
         title={tooltip}
