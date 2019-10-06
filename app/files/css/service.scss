@@ -92,8 +92,27 @@ tr.service:hover {
   background-opacity: 0.1;
 }
 
-tr.service.highlight {
-  background-color: rgba(240,240,102,0.1);
+tr.service.updating {
+  animation: pulse 3s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: $background-color-translucent;
+  }
+
+  50% {
+    background-color: $background-color-updating;
+  }
+
+  100% {
+    background-color: $background-color-translucent;
+  }
+}
+
+tr.service.selected {
+  box-shadow: 3px 0px 0px $highlight-select;
+  background-color: $highlight-select-background;
 }
 
 tr.service.highlight.networked {

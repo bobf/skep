@@ -83,6 +83,7 @@ class Node extends React.Component {
     const { minimized, node } = this.props;
     return (
       <div id={`node-${this.props.node.id}`} className={'node'}>
+        <Icon.Power className={'light'} size={'1em'} />
         <h2 title={'Version: ' + node.version} className={'hostname'}>
           {this.hostname()}
         </h2>

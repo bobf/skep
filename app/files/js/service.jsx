@@ -160,7 +160,7 @@ class Service extends React.Component {
   highlightRelated(highlight) {
     this.highlightNodes(highlight);
     this.highlightNetworkedServices(highlight);
-    this.highlight(highlight);
+    this.highlight(highlight, 'selected');
 
     return false;
   }
@@ -238,7 +238,6 @@ class Service extends React.Component {
       );
     }
 
-    this.highlight(!highlight);
     this.highlightRelated(!highlight);
     return false;
   }
@@ -324,19 +323,25 @@ class Service extends React.Component {
   }
 
   renderCollapsed() {
-    const { name, environment, mounts } = this.props.service;
+    const { name, environment, mounts, updating } = this.props.service;
     const { stack, service } = this.props;
     const { highlight } = this.state;
     const highlightClass = highlight ? `highlight ${this.state.highlightClass}` : '';
+    const updatingClass = updating ? 'updating' : '';
     const dashboard = stack.dashboard();
+    const networkTooltip = 'Reachable via a Docker network';
 
     return (
       <tr
         onClick={(ev) => this.toggle(ev)}
         key={`service-collapsed-${service.name}`}
-        className={`service collapsed ${highlightClass}`}>
+        className={`service collapsed ${highlightClass} ${updatingClass}`}>
         <th className={'service-title'}>
-          <span className={'network-icon'}>
+          <span
+            className={'network-icon'}
+            title={networkTooltip}
+            data-original-title={networkTooltip}
+            data-toggle={'tooltip'}>
             <Icon.Wifi size={'1.4em'} />
           </span>
           {this.countBadge()}
@@ -359,12 +364,12 @@ class Service extends React.Component {
   }
 
   renderExpanded() {
-    const { name, image, environment, mounts } = this.props.service;
+    const { name, image, environment, mounts, updating } = this.props.service;
     const { stack } = this.props;
     const dashboard = stack.dashboard();
 
     return (
-      <div className={'service'}>
+      <div className={'service ' + (updating ? 'updating' : '')}>
         <h2>
           {this.updateStatus()}
           <span className={'title'}>{this.nameLink()}</span>
