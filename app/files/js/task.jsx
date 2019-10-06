@@ -135,7 +135,7 @@ class Task extends React.Component {
 
     return (
       <span className={'task ' + (highlight ? 'highlight' : '')}>
-        <span className={'border'}>
+        <span className={'box'}>
           <Icon.Server
             size={'1em'}
             title={tooltip}

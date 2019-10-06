@@ -23,12 +23,14 @@ span.task {
   display: inline-table;
 }
 
-.task .border {
+.task .box {
   padding: 0.8em;
   border: 1px solid $label-text-light;
   border-radius: 5px;
   margin: 1em;
   display: block;
+  // Do not pulse background if parent service is updating
+  background-color: $background-color-highlight;
 }
 
 .task.highlight {

@@ -92,7 +92,7 @@ tr.service:hover {
   background-opacity: 0.1;
 }
 
-tr.service.updating {
+.service.updating {
   animation: pulse 3s infinite;
 }
 
@@ -117,6 +117,10 @@ tr.service.selected {
 
 tr.service.highlight.networked {
   background-color: rgba(45,80,180,0.2);
+}
+
+.expanded div.service {
+  padding-top: 0.6em;
 }
 
 .service .mode-icon {

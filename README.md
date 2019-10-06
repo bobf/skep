@@ -81,6 +81,7 @@ The following environment variables are available:
 
 | Variable | Meaning | Example |
 |-|-|-|
+| `SKEP_SECRET` | Set this to an appropriately complex token to verify agent updates. It is **highly recommended** that you enable this feature. (The same value must be set for the agent service).  | `averylongandcomplexsecret` |
 | `SERVICE_URL_TEMPLATE` | URL template for service names | See [URL templating](#url-templating) |
 | `IMAGE_URL_TEMPLATE` | URL template for image names | See [URL templating](#url-templating) |
 
@@ -89,6 +90,7 @@ The following environment variables are available:
 | Variable | Meaning | Example |
 |-|-|-|
 | `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
+| `SKEP_SECRET` | If provided, will use to authenticate with front end web app when reporting statistics (the same value must be set for the web app service) | `averylongandcomplexsecret` |
 | `DISKS` | Comma-separated list of disk devices to monitor (disk activity) | `sda,sdc` |
 | `FILE_SYSTEMS` | Comma-separated list of file systems to monitor (available space) | `/hostfs/root,/hostfs/backups` (see [file systems](#file-systems)) |
 | `NETWORK_INTERFACES` | Comma-separated list of network devices to monitor (traffic) **[not yet implemented]** | `eth0,eth3` |
