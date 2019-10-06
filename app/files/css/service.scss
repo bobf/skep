@@ -64,6 +64,11 @@ tr.service {
   cursor: pointer;
 }
 
+tr.service:hover {
+  background-color: $background-color-highlight;
+  background-opacity: 0.1;
+}
+
 tr.service.highlight {
   background-color: rgba(240,240,102,0.1);
 }

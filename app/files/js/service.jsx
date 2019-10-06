@@ -218,7 +218,7 @@ class Service extends React.Component {
   }
 
   toggle(ev) {
-    if (ev.target.tagName === 'A') return false;
+    if (['A', 'SPAN'].includes(ev.target.tagName)) return false;
 
     const { highlight } = this.state;
     const { stack } = this.props;
