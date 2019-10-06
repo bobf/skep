@@ -49,28 +49,60 @@ class Mapping extends React.Component {
     return Object.keys(this.data()).length;
   }
 
+  formattedLabel() {
+    const { compact } = this.props;
+
+    if (compact) return this.label().substr(0, 1);
+
+    return this.label();
+  }
+
+  icon(empty, collapsed) {
+    const { compact } = this.props;
+
+    if (compact) return null;
+
+    if (empty) {
+      return (
+        <Icon.Slash className={'icon'} size={'1.2em'} />
+      );
+    }
+
+    if (collapsed) {
+      return (
+        <Icon.Eye className={'icon'} size={'1.2em'} />
+      );
+    }
+
+    return (
+      <Icon.Eye className={'icon'} size={'1.2em'} />
+    );
+  }
+
+  tooltip() {
+    if (this.isEmpty()) {
+      return `<b>${this.label()}</b><br/>(empty)`
+    } else {
+      return `<b>${this.label()}</b><br/>${this.valueCount()} value(s)`;
+    }
+  }
+
   renderExpandButton(collapsed) {
     const empty = this.isEmpty();
+    const tooltip = this.tooltip();
     const className = empty ? 'btn-secondary disabled' : 'btn-primary';
-    const tooltip = empty ? `${this.label()} empty` : `${this.valueCount()} value(s)`;
+
     return (
       <button
         title={tooltip}
         data-original-title={tooltip}
         data-toggle={'tooltip'}
+        data-html={'true'}
         id={this.buttonID()}
         className={`btn expand mapping ${className} ${this.label().toLowerCase()}`}
         onClick={(ev) => this.toggle(ev)}>
-        {this.label()}
-        { empty ? (
-            <Icon.Slash className={'icon'} size={'1.2em'} />
-          ) : (
-            collapsed ? (
-              <Icon.Eye className={'icon'} size={'1.2em'} />
-            ) : (
-              <Icon.Eye className={'icon'} size={'1.2em'} />
-            )
-          )}
+        {this.formattedLabel()}
+        {this.icon(empty, collapsed)}
       </button>
     );
   }
@@ -102,8 +134,9 @@ class Mapping extends React.Component {
 
   render() {
     const { collapsed } = this.state;
+    const { compact } = this.props;
     return (
-      <div className={'mapping-wrapper'}>
+      <div className={'mapping-wrapper ' + (compact ? 'compact' : '')}>
         {this.renderExpandButton(collapsed)}
         <div
           onClick={(ev) => this.toggle(ev)}

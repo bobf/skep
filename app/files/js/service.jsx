@@ -314,9 +314,11 @@ class Service extends React.Component {
   }
 
   renderCollapsed() {
-    const { service } = this.props;
+    const { name, environment, mounts } = this.props.service;
+    const { stack, service } = this.props;
     const { highlight } = this.state;
     const highlightClass = highlight ? `highlight ${this.state.highlightClass}` : '';
+    const dashboard = stack.dashboard();
 
     return (
       <tr
@@ -334,6 +336,8 @@ class Service extends React.Component {
           </span>
         </th>
         <td>
+          <Environment compact={true} name={name} dashboard={dashboard} environment={environment} />
+          <Mounts compact={true} name={name} mounts={mounts} />
           <span className={'image-id'}>{this.imageLink()}</span>
           {this.updateStatus()}
         </td>
