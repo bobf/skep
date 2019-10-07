@@ -10,7 +10,7 @@ docker = "*"
 flask = "*"
 flask-socketio = "*"
 werkzeug = "*"
-eventlet = "*"
+tornado = "*"
 gunicorn = "*"
 
 [requires]
