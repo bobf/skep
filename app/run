@@ -1,0 +1,6 @@
+#!/bin/sh
+. /assets.sh
+pipenv run gunicorn webapp --workers ${WEB_WORKERS:-8} \
+                           -b 0.0.0.0:8080 \
+                           -k eventlet \
+                           --no-sendfile

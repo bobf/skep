@@ -82,6 +82,7 @@ The following environment variables are available:
 | Variable | Meaning | Example |
 |-|-|-|
 | `SKEP_SECRET` | Set this to an appropriately complex token to verify agent updates. It is **highly recommended** that you enable this feature. (The same value must be set for the agent service).  | `averylongandcomplexsecret` |
+| `WEB_WORKERS` | Number of web server worker processes to launch _(default: 8)_ | `4` |
 | `SERVICE_URL_TEMPLATE` | URL template for service names | See [URL templating](#url-templating) |
 | `IMAGE_URL_TEMPLATE` | URL template for image names | See [URL templating](#url-templating) |
 

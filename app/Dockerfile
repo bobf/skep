@@ -15,9 +15,4 @@ RUN NODE_ENV=development npm install \
  && echo "export JS_MD5='${JS_MD5}'; export CSS_MD5='${CSS_MD5}';" > /assets.sh \
  && echo "Assets compiled:" \
  && cat /assets.sh
-
-
-CMD . /assets.sh && pipenv run gunicorn webapp \
-                                        -b 0.0.0.0:8080 \
-                                        -k eventlet \
-                                        --no-sendfile
+CMD app/run

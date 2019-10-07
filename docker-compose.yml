@@ -14,6 +14,7 @@ services:
     environment:
       SERVICE_URL_TEMPLATE:
       IMAGE_URL_TEMPLATE: https://hub.docker.com/r/{organization}/{repository}
+      WEB_WORKERS:
 
   stats:
     image: skep/stats
