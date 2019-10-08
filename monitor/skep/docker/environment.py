@@ -1,4 +1,5 @@
 import os
+import re
 
 class Environment:
     def __init__(self, env):
@@ -26,8 +27,11 @@ class Environment:
         return '*' * 10
 
     def sanitize_url(self, url):
-        # TODO: Filter proto://user:pass@example.com/ passwords
-        return url
+        # e.g. DATABASE_URL=user:password@host/database
+        #   becomes:
+        #      DATABASE_URL=user:********@host/database
+        #
+        return re.sub('(^.*?://[^:]+:).*?(@.*$)', r'\1********\2', url)
 
     def filter(self, key):
         normalized = key.strip().lower()
