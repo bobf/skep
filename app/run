@@ -1,6 +1,6 @@
 #!/bin/sh
 . /assets.sh
-pipenv run gunicorn webapp --workers ${WEB_CONCURRENCY:-8} \
-                           -b 0.0.0.0:8081 \
-                           -k tornado \
-                           --no-sendfile
+pipenv run gunicorn webapp -b 0.0.0.0:8080 \
+                           --workers 1 \
+                           --no-sendfile \
+                           --worker-class eventlet

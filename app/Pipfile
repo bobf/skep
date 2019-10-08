@@ -10,8 +10,7 @@ docker = "*"
 flask = "*"
 flask-socketio = "*"
 werkzeug = "*"
-tornado = "*"
-gunicorn = "*"
+eventlet = "*"
 
 [requires]
 python_version = "3.7"
