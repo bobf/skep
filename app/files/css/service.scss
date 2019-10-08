@@ -87,9 +87,19 @@ tr.service {
   cursor: pointer;
 }
 
+tr.service {
+  .mapping.btn {
+    visibility: hidden;
+  }
+}
+
 tr.service:hover {
   background-color: $background-color-highlight;
   background-opacity: 0.1;
+
+  .mapping.btn {
+    visibility: visible;
+  }
 }
 
 .service.updating {
