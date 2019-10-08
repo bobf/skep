@@ -10,6 +10,7 @@ services:
       mode: replicated
       replicas: 1
     environment:
+      SKEP_SECRET:
       SERVICE_URL_TEMPLATE:
       IMAGE_URL_TEMPLATE: https://hub.docker.com/r/{organization}/{repository}
 
@@ -25,6 +26,7 @@ services:
       - "/proc:/hostfs/proc:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     environment:
+      SKEP_SECRET:
       SKEP_APP_URL: http://app:8080
       DISKS:
       FILE_SYSTEMS:
@@ -46,9 +48,8 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     environment:
+      SKEP_SECRET:
       SKEP_APP_URL: http://app:8080
-      SERVICE_URL_TEMPLATE:
-      IMAGE_URL_TEMPLATE: https://hub.docker.com/r/{organization}/{repository}
 
 networks:
   skep: {}

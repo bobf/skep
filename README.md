@@ -81,10 +81,17 @@ The following environment variables are available:
 
 | Variable | Meaning | Example |
 |-|-|-|
-| `SKEP_SECRET` | Set this to an appropriately complex token to verify agent updates. It is **highly recommended** that you enable this feature. (The same value must be set for the agent service).  | `averylongandcomplexsecret` |
-| `WEB_CONCURRENCY` | Number of web server worker processes to launch _(default: 8)_ | `4` |
+| `SKEP_SECRET` | Set this to an appropriately complex token to verify agent updates. It is **highly recommended** that you enable this feature. (The same value must be set for the _agent_ and _monitor_ services).  | `averylongandcomplexsecret` |
 | `SERVICE_URL_TEMPLATE` | URL template for service names | See [URL templating](#url-templating) |
 | `IMAGE_URL_TEMPLATE` | URL template for image names | See [URL templating](#url-templating) |
+
+### Monitor
+
+| `SKEP_SECRET` | If provided, will use to authenticate with front end web app when reporting statistics (the same value must be set for the web app service) | `averylongandcomplexsecret` |
+| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
+| `LOG_LEVEL` | By default, the monitor only logs initial configuration on launch and errors. Set to `DEBUG` to log all statistics. | `INFO` _(default/recommended)_ |
+| `COLLECT_INTERVAL` | Time in seconds to wait between gathering metrics. | `5` |
+| `SAMPLE_DURATION` | _Minimum_ time in seconds to monitor disk I/O etc. Will accumulate for multiple devices. | `10` |
 
 ### Agent
 
@@ -98,6 +105,7 @@ The following environment variables are available:
 | `COLLECT_INTERVAL` | Time in seconds to wait between gathering metrics. | `5` |
 | `SAMPLE_DURATION` | _Minimum_ time in seconds to monitor disk I/O etc. Will accumulate for multiple devices. | `10` |
 | `LOG_LEVEL` | By default, the agent only logs initial configuration on launch and errors. Set to `DEBUG` to log all statistics. | `INFO` _(default/recommended)_ |
+| `SKEP_HOST` | Set to `docker-desktop` when running on Docker Desktop for Mac | `docker-desktop` |
 
 ## Deployment
 
@@ -154,13 +162,19 @@ IMAGE_URL_TEMPLATE=https://hub.docker.com/r/{organization}/{repository}
 
 ## Architecture
 
-_Skep_ is comprised of an agent which should be run globally and a web server which must have exactly one replica.
+_Skep_ is comprised of three services:
+
+* An agent which is deployed globally (i.e. to all _Swarm_ nodes);
+* A monitor which must be deployed to one manager node;
+* A web app that can be deployed to any node but must also have only one replica.
+
+See [docker-compose.yml](docker-compose.yml) for example configuration.
 
 The agent periodically harvests system and container metrics which are sent to the web server and forwarded to the [_React_](https://reactjs.org/)-based front end.
 
-Agents use bind mounts to expose host metrics. The _Docker_ socket (`/var/run/docker.sock`) is used to monitor container metrics.
+Agents use bind mounts to access metrics from the host system (`/proc`, `/etc/`, and `/dev` are mounted). Agents also gather statistics about containers running on each host by mounting the `/var/run/docker.sock`.
 
-The agent is written in _Python_ using the excellent [Docker SDK for Python](https://docker-py.readthedocs.io/en/stable/index.html).
+The agent and monitor are written in _Python_ using the excellent [Docker SDK for Python](https://docker-py.readthedocs.io/en/stable/index.html).
 
 The web application is also written in _Python_ using the equally excellent [Flask](http://flask.pocoo.org/) web framework and [Flask-SocketIO](https://flask-socketio.readthedocs.io/en/latest/).
 
