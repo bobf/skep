@@ -6,12 +6,8 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-docker = "*"
 flask = "*"
-flask-socketio = "*"
-werkzeug = "*"
-eventlet = "*"
-gunicorn = "*"
+docker = "*"
 
 [requires]
 python_version = "3.7"

@@ -24,10 +24,6 @@ $(function () {
     socket.emit('manifest');
   });
 
-  setInterval(function () {
-    socket.emit('manifest');
-  }, 5000);
-
   socket.on('manifest', function(data) {
     var manifest = JSON.parse(data);
 

@@ -7,5 +7,4 @@ export SKEP_ENV=development
 export FLASK_APP=controller.py
 export FLASK_DEBUG=1
 export SKEP_LISTEN_HOST=0.0.0.0
-pipenv run python webapp.py
-
+pipenv run python app.py

@@ -34,7 +34,8 @@
 *.swo
 
 app/.build
-stats/.build
+agent/.build
+monitor/.build
 
 app/node_modules
 app/files/bundle.js

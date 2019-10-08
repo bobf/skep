@@ -1,6 +1,6 @@
 #!/bin/sh
 . /assets.sh
-pipenv run gunicorn webapp -b 0.0.0.0:8080 \
-                           --workers 1 \
-                           --no-sendfile \
-                           --worker-class eventlet
+pipenv run gunicorn app -b 0.0.0.0:8080 \
+                        --workers 1 \
+                        --no-sendfile \
+                        --worker-class eventlet

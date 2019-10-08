@@ -32,9 +32,9 @@ class StatRunner:
         self.opts = kwargs
         self.log = self.logger(kwargs)
         self.log.info('Launching StatRunner(%s)' % (kwargs,))
-        # Host Docker socket must be mounted in stats container here:
 
     def docker(self):
+        # Host Docker socket must be mounted in agent containers here:
         return docker.DockerClient(base_url='unix://var/run/docker.sock')
 
     def run(self):
@@ -189,7 +189,7 @@ class StatRunner:
         return stats
 
     def logger(self, kwargs):
-        logger = logging.getLogger('skep:stats')
+        logger = logging.getLogger('skep:agent')
         log_level = getattr(logging, kwargs['log_level'].upper())
         logger.setLevel(log_level)
         handler = logging.StreamHandler()
@@ -226,7 +226,7 @@ if __name__ == '__main__':
         network=list(
             filter(None, os.environ.get('NETWORK_INTERFACES', '').split(','))
         ),
-        interval=int(os.environ.get('INTERVAL', '5')),
-        duration=int(os.environ.get('DURATION', '1')),
+        interval=int(os.environ.get('COLLECT_INTERVAL', '5')),
+        duration=int(os.environ.get('SAMPLE_DURATION', '1')),
         log_level=os.environ.get('LOG_LEVEL', 'INFO')
     ).run()

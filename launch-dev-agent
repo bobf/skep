@@ -1,5 +1,5 @@
 #!/bin/bash
-cd stats
+cd agent
 export SKEP_APP_URL=http://localhost:5000/
 export SKEP_SECRET=abc123
 export HOSTFS_PATH=../linux-metrics/linux_metrics/test_filesystem/

@@ -5,7 +5,13 @@ from flask import Flask, jsonify, render_template, request, send_from_directory
 from flask.json import JSONEncoder
 from flask_socketio import SocketIO, emit
 
-from skep.docker.swarm import Swarm
+application = Flask(
+    __name__,
+    template_folder=os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        'templates'
+    )
+)
 
 class DelegatingJSONEncoder(JSONEncoder):
     def default(self, obj):
@@ -20,14 +26,6 @@ class DelegatingJSONEncoder(JSONEncoder):
             return obj.serializable()
         except AttributeError:
             return obj
-
-application = Flask(
-    __name__,
-    template_folder=os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
-        'templates'
-    )
-)
 
 application.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev-key')
 application.json_encoder = DelegatingJSONEncoder
@@ -48,10 +46,6 @@ def root():
         js_md5=os.environ.get('JS_MD5', '')
     )
 
-@application.route("/swarm.json")
-def swarm():
-    return jsonify(Swarm().manifest())
-
 @application.route("/stats", methods=["POST"])
 def stats_create():
     if authorize_request(request, SECRET):
@@ -59,9 +53,12 @@ def stats_create():
         return 'OK', 200
     return 'Unauthorized', 401
 
-@socketio.on("manifest")
-def handle_message():
-    emit("manifest", json.dumps(Swarm().manifest(), cls=DelegatingJSONEncoder))
+@application.route("/manifest", methods=["POST"])
+def manifest_create():
+    if authorize_request(request, SECRET):
+        socketio.emit("manifest", json.dumps(request.get_json()), broadcast=True)
+        return 'OK', 200
+    return 'Unauthorized', 401
 
 def authorize_request(request, secret):
     if secret is None:

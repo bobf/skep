@@ -6,18 +6,19 @@ services:
       - skep
     ports:
       - "8080:8080"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     deploy:
       mode: replicated
       replicas: 1
     environment:
       SERVICE_URL_TEMPLATE:
       IMAGE_URL_TEMPLATE: https://hub.docker.com/r/{organization}/{repository}
-      WEB_CONCURRENCY:
 
-  stats:
-    image: skep/stats
+  agent:
+    image: skep/agent
+    networks:
+      - skep
+    deploy:
+      mode: global
     volumes:
       - "/dev:/hostfs/dev:ro"
       - "/etc:/hostfs/etc:ro"
@@ -28,14 +29,26 @@ services:
       DISKS:
       FILE_SYSTEMS:
       NETWORK_INTERFACES:
+      COLLECT_INTERVAL:
+      SAMPLE_DURATION:
       LOG_LEVEL:
       SKEP_HOST:
 
+  monitor:
+    image: skep/monitor
     networks:
       - skep
-
     deploy:
-      mode: global
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    environment:
+      SKEP_APP_URL: http://app:8080
+      SERVICE_URL_TEMPLATE:
+      IMAGE_URL_TEMPLATE: https://hub.docker.com/r/{organization}/{repository}
 
 networks:
   skep: {}
