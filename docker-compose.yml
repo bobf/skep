@@ -11,8 +11,6 @@ services:
       replicas: 1
     environment:
       SKEP_SECRET:
-      SERVICE_URL_TEMPLATE:
-      IMAGE_URL_TEMPLATE: https://hub.docker.com/r/{organization}/{repository}
 
   agent:
     image: skep/agent
@@ -50,6 +48,8 @@ services:
     environment:
       SKEP_SECRET:
       SKEP_APP_URL: http://app:8080
+      SERVICE_URL_TEMPLATE:
+      IMAGE_URL_TEMPLATE: https://hub.docker.com/r/{organization}/{repository}
 
 networks:
   skep: {}

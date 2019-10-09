@@ -82,13 +82,13 @@ The following environment variables are available:
 | Variable | Meaning | Example |
 |-|-|-|
 | `SKEP_SECRET` | Set this to an appropriately complex token to verify agent updates. It is **highly recommended** that you enable this feature. (The same value must be set for the _agent_ and _monitor_ services).  | `averylongandcomplexsecret` |
-| `SERVICE_URL_TEMPLATE` | URL template for service names | See [URL templating](#url-templating) |
-| `IMAGE_URL_TEMPLATE` | URL template for image names | See [URL templating](#url-templating) |
 
 ### Monitor
 
 | `SKEP_SECRET` | If provided, will use to authenticate with front end web app when reporting statistics (the same value must be set for the web app service) | `averylongandcomplexsecret` |
 | `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
+| `SERVICE_URL_TEMPLATE` | URL template for service names | See [URL templating](#url-templating) |
+| `IMAGE_URL_TEMPLATE` | URL template for image names | See [URL templating](#url-templating) |
 | `LOG_LEVEL` | By default, the monitor only logs initial configuration on launch and errors. Set to `DEBUG` to log all statistics. | `INFO` _(default/recommended)_ |
 | `COLLECT_INTERVAL` | Time in seconds to wait between gathering metrics. | `5` |
 | `SAMPLE_DURATION` | _Minimum_ time in seconds to monitor disk I/O etc. Will accumulate for multiple devices. | `10` |
