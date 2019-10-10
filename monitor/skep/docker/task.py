@@ -20,7 +20,7 @@ class Task(ImageParser):
         return self.task.get('Status', {}).get('ContainerStatus', {}).get('ContainerID', None)
 
     def image(self):
-        self.parse_image(attrs['Spec']['ContainerSpec'].get('Image', None))
+        self.parse_image(self.task['Spec']['ContainerSpec'].get('Image', None))
 
     def attrs(self):
         if not self.task:
