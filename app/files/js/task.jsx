@@ -40,7 +40,7 @@ class Task extends React.Component {
   }
 
   digest() {
-    if (!this.props.task) {
+    if (!this.props.task.image) {
       return null;
     }
 
