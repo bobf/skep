@@ -19,6 +19,9 @@ class Task(ImageParser):
 
         return self.task.get('Status', {}).get('ContainerStatus', {}).get('ContainerID', None)
 
+    def image(self):
+        self.parse_image(attrs['Spec']['ContainerSpec'].get('Image', None))
+
     def attrs(self):
         if not self.task:
             id = "".join(random.choice(string.ascii_lowercase) for _ in range(8))
@@ -34,9 +37,7 @@ class Task(ImageParser):
             "when": attrs["Status"]["Timestamp"],
             "state": attrs["Status"]["State"],
             "environment": attrs['Spec']['ContainerSpec'].get('Env', []),
-            "image": self.parse_image(
-                attrs['Spec']['ContainerSpec'].get('Image', None)
-            )
+            "image": self.image()
         }
 
     def serializable(self):

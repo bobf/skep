@@ -24,29 +24,62 @@ class Service extends React.Component {
     return Skep.dashboard.nodes().length;
   }
 
+  imageMismatch() {
+    const { image } = this.props.service;
+
+    return this.tasks().some(
+      task => task.image ? task.image.digest !== image.digest : false
+    );
+  }
+
+  shortDigest() {
+    const { image } = this.props.service;
+
+    if (image && image.digest) {
+      return image.digest.substring(0, 16);
+    }
+
+    return '[unknown]';
+  }
+
   updateStatus() {
-    const { updated, updating } = this.props.service;
+    const { updated, updating, image } = this.props.service;
 
     if (updating) {
-      const tooltip = 'Update in progress';
+      const updateTooltip = 'Update in progress';
       return (
         <span
-          title={tooltip}
-          className={'updating'}
-          data-original-title={tooltip}
+          title={updateTooltip}
+          className={'service-icon updating'}
+          data-original-title={updateTooltip}
           data-toggle={'tooltip'}>
         </span>
       );
     }
 
-    const tooltip = `Updated ${moment(updated).fromNow()}`;
+    if (this.imageMismatch()) {
+      const warnTooltip = 'Tasks are running inconsistent images. Compare task details for more information.';
+        return (
+          <span
+            title={warnTooltip}
+            className={'service-icon text-warning update-warning'}
+            data-toggle={'tooltip'}
+            data-original-title={warnTooltip}>
+            <Icon.AlertTriangle className={'icon'} size={'1.2em'} />
+          </span>
+        );
+    }
+
+    const updatedTooltip = (`Updated ${moment(updated).fromNow()}, ` +
+                            `verified image digests: <b>${this.shortDigest()}</b>`);
     return (
       <span
-        title={tooltip}
-        data-original-title={tooltip}
+        title={updatedTooltip}
+        className={'service-icon text-success'}
         data-toggle={'tooltip'}
-        className={'updated'}>
-        &#10003;
+        data-html={'true'}
+        data-original-title={updatedTooltip}>
+        <Icon.CheckCircle className={'icon'} size={'1.2em'} />
       </span>
     );
   }

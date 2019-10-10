@@ -133,6 +133,10 @@ tr.service.highlight.networked {
   padding-top: 0.6em;
 }
 
+.expanded .service-icon {
+  margin-right: 0.4em;
+}
+
 .service .mode-icon {
   color: $label-text-dark;
   height: 1em;
@@ -168,8 +172,11 @@ tr.service.highlight.networked {
 }
 
 .service .updated {
-  color: $updated;
   margin-right: 0.4em;
+}
+
+.service-updated-tooltip {
+  text-align: left;
 }
 
 /* https://loading.io/css/ */
