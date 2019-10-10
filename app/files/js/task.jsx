@@ -40,6 +40,10 @@ class Task extends React.Component {
   }
 
   digest() {
+    if (!this.props.task) {
+      return null;
+    }
+
     const { digest } = this.props.task.image;
 
     return digest;

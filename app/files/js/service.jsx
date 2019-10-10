@@ -28,7 +28,7 @@ class Service extends React.Component {
     const { image } = this.props.service;
 
     return this.tasks().some(
-      task => task.image ? task.image.digest !== image.digest : false
+      task => task.image && image ? task.image.digest !== image.digest : false
     );
   }
 
