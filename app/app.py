@@ -1,10 +1,13 @@
 import json
 import os
+import urllib.parse
+from urllib.request import Request
+import secrets
 
-from flask import Flask, jsonify, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, jsonify
 from flask_socketio import SocketIO, emit
 
-from skep.delegating_json_encoder import DelegatingJSONEncoder
+from skep.json import DelegatingJSONEncoder
 
 application = Flask(
     __name__,
@@ -14,7 +17,11 @@ application = Flask(
     )
 )
 
-application.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev-key')
+if os.environ.get('FLASK_SECRET_KEY', None):
+    application.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
+else:
+    application.config['SECRET_KEY'] = secrets.token_hex(32)
+
 application.json_encoder = DelegatingJSONEncoder
 socketio = SocketIO(application)
 cache = {}
@@ -41,11 +48,34 @@ def handle_init():
 
     socketio.emit('manifest', cache['manifest'])
 
+@socketio.on('chart_request')
+def handle_chart_request(params):
+    url = os.environ['SKEP_CALCULATOR_URL']
+    params['sid'] = request.sid
+    calculator_request = Request(
+        urllib.parse.urljoin(url, 'chart'),
+        data=json.dumps(params).encode('utf8'),
+        headers={'Content-Type': 'application/json'}
+    )
+
+    response = urllib.request.urlopen(calculator_request)
+
+@application.route("/chart_response", methods=["POST"])
+def chart_response_create():
+    data = request.get_json()
+    sid = data.pop('sid')
+
+    print('RESPONSE')
+    socketio.emit('chart_response', data, room=sid)
+
+    return 'OK', 200
+
 @application.route("/stats", methods=["POST"])
 def stats_create():
     if authorize_request(request, SECRET):
         socketio.emit("stats", json.dumps(request.get_json()), broadcast=True)
         return 'OK', 200
+
     return 'Unauthorized', 401
 
 @application.route("/manifest", methods=["POST"])
@@ -55,6 +85,7 @@ def manifest_create():
         cache['manifest'] = manifest
         socketio.emit("manifest", manifest, broadcast=True)
         return 'OK', 200
+
     return 'Unauthorized', 401
 
 def authorize_request(request, secret):

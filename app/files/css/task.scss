@@ -1,26 +1,80 @@
-.task h3 {
-  font-family: monospace;
-  text-align: center;
-  display: inline-block;
-  padding: 0.2em 1em;
-  font-size: 1.0em;
+.task {
+  width: 12em;
 }
 
 .task .badge {
-  margin: 0.4em 0.2em;
   text-shadow: 0px 0px 5px $accent-dark;
-  text-align: right;
-  display: inline;
+  text-align: center;
+  display: block;
+  margin: 0.4em 0;
 }
 
-.badges {
-  display: inline-block;
+.task .badges {
   vertical-align: middle;
-  margin-left: 0.4em;
+  margin-left: 1.4em;
+  margin-bottom: 1em;
+  margin-top: -0.6em;
+  opacity: 0.8;
+}
+
+.task .info-icons {
+  float: left;
+  text-align: left;
+  position: absolute;
+  margin-left: -0.6em;
+  margin-top: -0.4em;
 }
 
 span.task {
   display: inline-table;
+}
+
+.task .icon {
+  margin: 0 0.2em;
+  height: 1.2em;
+  width: 1.2em;
+}
+
+.task .icon.chart-button {
+  margin-top: 0.2em;
+}
+
+.task .chart {
+  position: fixed;
+}
+
+.task .chart.loading {
+  padding: 0.8em 1.2em;
+}
+
+.task .chart .close-icon {
+  visibility: hidden;
+  text-align: right;
+  padding: 0.3em;
+  width: 100%;
+  display: block;
+}
+
+.task .chart:hover .close-icon {
+  visibility: visible;
+}
+
+.task .icon.chart-button:hover {
+  cursor: pointer;
+  color: $url-hover-color;
+  background-color: $button-background-hover-color;
+}
+
+.task .chart:hover {
+  background-color: $modal-background-hover-color;
+  border-color: #824747;
+  cursor: pointer;
+}
+
+.task .chart {
+  position: fixed;
+  background-color: #222222f0;
+  width: auto;
 }
 
 .task .box {
@@ -31,7 +85,7 @@ span.task {
   display: block;
   // Do not pulse background if parent service is updating
   background-color: $background-color-highlight;
-  height: 9.6em;
+  height: 10.4em;
 }
 
 .task.highlight {

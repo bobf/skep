@@ -11,7 +11,7 @@ import urllib.request
 from urllib.request import Request
 
 from skep.docker.swarm import Swarm
-from skep.delegating_json_encoder import DelegatingJSONEncoder
+from skep.json import DelegatingJSONEncoder
 
 if 'SKEP_SECRET' in os.environ:
     AUTH = { 'Authorization': 'Token ' + os.environ['SKEP_SECRET'] }
@@ -29,26 +29,40 @@ class Monitor:
             self.ping()
             time.sleep(self.opts['interval'])
 
-    def ping(self):
+    def request(self, url, data):
+        headers = headers={ 'Content-Type': 'application/json', **AUTH }
         manifest = Swarm().manifest()
-        self.log.debug(pprint.pformat(manifest))
         data = json.dumps(manifest, cls=DelegatingJSONEncoder).encode('utf8')
-        request = Request(
-            self.opts['url'],
-            data=data,
-            headers={ 'Content-Type': 'application/json', **AUTH }
+
+        return Request(url, data=data, headers=headers)
+
+    def url(self, type):
+        return urllib.parse.urljoin(
+            self.opts['{type}_url'.format(type=type)],
+            '/manifest'
         )
 
+    def publish(self, type, data):
+        url = self.url(type)
+        request = self.request(url, data)
+
         try:
-            resp = urllib.request.urlopen(request)
+            response = urllib.request.urlopen(request)
         except urllib.error.URLError as e:
             self.log.warning(
-                'Could not publish stats: %s (%s)' % (self.opts['url'], e)
+                'Could not publish stats: %s (%s)' % (url, e)
             )
         else:
             self.log.debug(
-                'Published stats: %s %s' % (resp.getcode(), resp.read())
+                'Published stats: %s [%s] %s' % (
+                    url, response.getcode(), response.read()
+                )
             )
+
+    def ping(self):
+        manifest = Swarm().manifest()
+        data = json.dumps(manifest, cls=DelegatingJSONEncoder).encode('utf8')
+        self.publish('app', data)
 
     def logger(self, kwargs):
         logger = logging.getLogger('skep:monitor')
@@ -61,7 +75,8 @@ class Monitor:
 
 if __name__ == '__main__':
     Monitor(
-        url=urllib.parse.urljoin(os.environ['SKEP_APP_URL'], '/manifest'),
+        app_url=os.environ['SKEP_APP_URL'],
+        calculator_url=os.environ['SKEP_CALCULATOR_URL'],
         interval=int(os.environ.get('COLLECT_INTERVAL', '5')),
         duration=int(os.environ.get('SAMPLE_DURATION', '1')),
         log_level=os.environ.get('LOG_LEVEL', 'INFO')

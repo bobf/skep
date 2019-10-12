@@ -1,11 +1,13 @@
 import * as Icon from 'react-feather';
 
 import TaskStats from './task_stats';
+import TaskChart from './task_chart';
 
 class Task extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { chartData: null, chartClosed: true };
+    this.chartRef = React.createRef();
   }
 
   tooltip() {
@@ -115,6 +117,26 @@ class Task extends React.Component {
     }
   }
 
+  loadChart() {
+    const that = this;
+    const token = Skep.token();
+    const { containerID } = this.props.task;
+    const params = {
+      chartType: 'container',
+      requestID: token,
+      params: { containerID: containerID }
+    };
+
+    Skep.socket.emit('chart_request', params);
+    Skep.chartCallbacks[token] = function (data) {
+      that.setState({ chartData: data, chartClosed: false });
+    };
+  }
+
+  closeChart() {
+    this.setState({ chartData: null, chartClosed: true });
+  }
+
   renderState() {
     const { state } = this.props.task;
 
@@ -139,20 +161,42 @@ class Task extends React.Component {
     );
   }
 
+  renderChart() {
+    const { chartData, chartClosed } = this.state;
+
+    if (!chartData || chartClosed) {
+      return null;
+    }
+
+    return (
+      <TaskChart data={chartData} closeCallback={() => this.closeChart()} />
+    );
+  }
+
   render() {
     const { highlight } = this.state;
     const tooltip = this.tooltip();
 
     return (
       <span className={'task ' + (highlight ? 'highlight' : '')}>
+        {this.renderChart()}
         <span className={'box'}>
-          <Icon.Server
-            size={'1em'}
-            title={tooltip}
-            data-toggle={'tooltip'}
-            data-container={'body'}
-            data-html={'true'}
-            data-original-title={tooltip} />
+          <div className={'info-icons'}>
+            <Icon.Info
+              title={tooltip}
+              className={'icon info'}
+              data-toggle={'tooltip'}
+              data-container={'body'}
+              data-html={'true'}
+              data-original-title={tooltip} />
+            <br />
+            <Icon.Activity
+              title={'Load chart data'}
+              data-toggle={'tooltip'}
+              onClick={() => this.loadChart()}
+              className={'icon chart-button'}
+            />
+          </div>
           <div className={'badges'}>
             {this.renderState()}
             {this.renderMessage()}

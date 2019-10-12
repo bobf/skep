@@ -14,6 +14,7 @@ class Service(ImageParser):
     def attrs(self):
         attrs = self.service.attrs
         return {
+            "id": self.id(),
             "name": self.name(),
             "mode": self.mode(),
             "global": 'Global' in attrs['Spec']['Mode'],

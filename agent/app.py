@@ -31,7 +31,7 @@ class StatRunner:
     def __init__(self, **kwargs):
         self.opts = kwargs
         self.log = self.logger(kwargs)
-        self.log.info('Launching StatRunner(%s)' % (kwargs,))
+        self.log.info('Launching SapptatRunner(%s)' % (kwargs,))
 
     def docker(self):
         # Host Docker socket must be mounted in agent containers here:
@@ -42,25 +42,39 @@ class StatRunner:
             self.ping()
             time.sleep(self.opts['interval'])
 
-    def ping(self):
-        stats = self.stats()
-        self.log.debug(pprint.pformat(stats))
-        request = Request(
-            self.opts['url'],
-            data=json.dumps(stats).encode('utf8'),
-            headers={ 'Content-Type': 'application/json', **AUTH }
+    def url(self, type):
+        return urllib.parse.urljoin(
+            self.opts['{type}_url'.format(type=type)],
+            '/stats'
         )
 
+    def publish(self, type, stats):
+        url = self.url(type)
+        data = json.dumps(stats).encode('utf8')
+        request = self.request(url, data)
+
         try:
-            resp = urllib.request.urlopen(request)
+            response = urllib.request.urlopen(request)
         except urllib.error.URLError as e:
             self.log.warning(
-                'Could not publish stats: %s (%s)' % (self.opts['url'], e)
+                'Could not publish stats: %s (%s)' % (url, e)
             )
         else:
             self.log.debug(
-                'Published stats: %s %s' % (resp.getcode(), resp.read())
+                'Published stats: %s %s' % (response.getcode(), response.read())
             )
+
+    def request(self, url, data):
+        headers = { 'Content-Type': 'application/json', **AUTH }
+
+        return Request(url, data=data, headers=headers)
+
+    def ping(self):
+        stats = self.stats()
+        stats['tstamp'] = time.time()
+        self.log.debug(pprint.pformat(stats))
+        self.publish('app', stats)
+        self.publish('calculator', stats)
 
     def stats(self):
         return {
@@ -216,7 +230,8 @@ def hostname():
 if __name__ == '__main__':
     StatRunner(
         hostname=hostname(),
-        url=urllib.parse.urljoin(os.environ['SKEP_APP_URL'], '/stats'),
+        app_url=os.environ['SKEP_APP_URL'],
+        calculator_url=os.environ['SKEP_CALCULATOR_URL'],
         disks=list(
             filter(None, os.environ.get('DISKS', '').split(','))
         ),

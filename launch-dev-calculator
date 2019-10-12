@@ -1,9 +1,12 @@
 #!/bin/bash
-cd app
+cd calculator
+export SKEP_APP_URL=http://localhost:5000/
 export SKEP_SECRET=abc123
 export SKEP_ENV=development
 export FLASK_APP=controller.py
 export FLASK_DEBUG=1
 export SKEP_LISTEN_HOST=0.0.0.0
-export SKEP_CALCULATOR_URL=http://localhost:5040/
+export SKEP_CALCULATOR_PORT=5040
+export SKEP_CALCULATOR_DB_PATH=/tmp/calculator.db
+export LOG_LEVEL=debug
 pipenv run python app.py
