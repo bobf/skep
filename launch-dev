@@ -1,4 +1,6 @@
 #!/bin/bash
-./launch-dev-app &
-./launch-dev-stats &
-./launch-dev-assets
+tmux -L skep-dev new-session -d './launch-dev-app'
+tmux -L skep-dev split-window -v './launch-dev-assets'
+tmux -L skep-dev split-window -v './launch-dev-monitor'
+tmux -L skep-dev split-window -v './launch-dev-agent'
+tmux -L skep-dev attach-session -d

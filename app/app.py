@@ -2,8 +2,9 @@ import json
 import os
 
 from flask import Flask, jsonify, render_template, request, send_from_directory
-from flask.json import JSONEncoder
 from flask_socketio import SocketIO, emit
+
+from skep.delegating_json_encoder import DelegatingJSONEncoder
 
 application = Flask(
     __name__,
@@ -12,20 +13,6 @@ application = Flask(
         'templates'
     )
 )
-
-class DelegatingJSONEncoder(JSONEncoder):
-    def default(self, obj):
-        return self.serialize(obj)
-
-    def serialize(self, obj):
-        if isinstance(obj, dict):
-            return dict((k, self.serialize(v)) for k, v in obj)
-        if isinstance(obj, list):
-            return [self.serialize(x) for x in obj]
-        try:
-            return obj.serializable()
-        except AttributeError:
-            return obj
 
 application.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev-key')
 application.json_encoder = DelegatingJSONEncoder

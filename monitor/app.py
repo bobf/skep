@@ -10,28 +10,13 @@ import urllib.parse
 import urllib.request
 from urllib.request import Request
 
-from flask.json import JSONEncoder
-
 from skep.docker.swarm import Swarm
+from skep.delegating_json_encoder import DelegatingJSONEncoder
 
 if 'SKEP_SECRET' in os.environ:
     AUTH = { 'Authorization': 'Token ' + os.environ['SKEP_SECRET'] }
 else:
     AUTH = {}
-
-class DelegatingJSONEncoder(JSONEncoder):
-    def default(self, obj):
-        return self.serialize(obj)
-
-    def serialize(self, obj):
-        if isinstance(obj, dict):
-            return dict((k, self.serialize(v)) for k, v in obj)
-        if isinstance(obj, list):
-            return [self.serialize(x) for x in obj]
-        try:
-            return obj.serializable()
-        except AttributeError:
-            return obj
 
 class Monitor:
     def __init__(self, **kwargs):
