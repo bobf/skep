@@ -190,7 +190,7 @@ class Task extends React.Component {
               data-html={'true'}
               data-original-title={tooltip} />
             <br />
-            <Icon.Activity
+            <Icon.BarChart2
               title={'Load chart data'}
               data-toggle={'tooltip'}
               onClick={() => this.loadChart()}
