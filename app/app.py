@@ -30,6 +30,7 @@ class DelegatingJSONEncoder(JSONEncoder):
 application.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev-key')
 application.json_encoder = DelegatingJSONEncoder
 socketio = SocketIO(application)
+cache = {}
 
 SECRET = os.environ.get('SKEP_SECRET', None)
 
@@ -46,6 +47,13 @@ def root():
         js_md5=os.environ.get('JS_MD5', '')
     )
 
+@socketio.on('init')
+def handle_init():
+    if 'manifest' not in cache:
+        return
+
+    socketio.emit('manifest', cache['manifest'])
+
 @application.route("/stats", methods=["POST"])
 def stats_create():
     if authorize_request(request, SECRET):
@@ -56,16 +64,21 @@ def stats_create():
 @application.route("/manifest", methods=["POST"])
 def manifest_create():
     if authorize_request(request, SECRET):
-        socketio.emit("manifest", json.dumps(request.get_json()), broadcast=True)
+        manifest = json.dumps(request.get_json())
+        cache['manifest'] = manifest
+        socketio.emit("manifest", manifest, broadcast=True)
         return 'OK', 200
     return 'Unauthorized', 401
 
 def authorize_request(request, secret):
     if secret is None:
         return True
+
     token = 'Token ' + secret
+
     if token == request.headers.get('Authorization', None):
         return True
+
     return False
 
 if __name__ == "__main__":

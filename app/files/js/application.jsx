@@ -21,7 +21,7 @@ $(function () {
   };
 
   socket.on('connect', function() {
-    socket.emit('manifest');
+    socket.emit('init');
   });
 
   socket.on('manifest', function(data) {
