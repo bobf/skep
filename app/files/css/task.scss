@@ -3,7 +3,6 @@
 }
 
 .task .badge {
-  text-shadow: 0px 0px 5px $accent-dark;
   text-align: center;
   display: block;
   margin: 0.4em 0;
@@ -47,9 +46,15 @@ span.task {
   padding: 0.8em 1.2em;
 }
 
+.task .chart .header h5 {
+  margin-left: 1em;
+  color: $label-text;
+}
+
 .task .chart .close-icon {
   visibility: hidden;
   text-align: right;
+  float: right;
   padding: 0.3em;
   width: 100%;
   display: block;

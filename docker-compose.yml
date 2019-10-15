@@ -11,6 +11,7 @@ services:
       replicas: 1
     environment:
       SKEP_SECRET:
+      SKEP_CALCULATOR_URL: http://calculator:8080/
 
   agent:
     image: skep/agent
@@ -26,6 +27,7 @@ services:
     environment:
       SKEP_SECRET:
       SKEP_APP_URL: http://app:8080
+      SKEP_CALCULATOR_URL: http://calculator:8080/
       DISKS:
       FILE_SYSTEMS:
       NETWORK_INTERFACES:
@@ -60,6 +62,7 @@ services:
     environment:
       SKEP_SECRET:
       SKEP_APP_URL: http://app:8080
+      SKEP_CALCULATOR_URL: http://calculator:8080/
       SERVICE_URL_TEMPLATE:
       IMAGE_URL_TEMPLATE: https://hub.docker.com/r/{organization}/{repository}
 

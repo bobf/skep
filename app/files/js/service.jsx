@@ -70,7 +70,7 @@ class Service extends React.Component {
         );
     }
 
-    const updatedTooltip = (`Updated ${moment(updated).fromNow()}, ` +
+    const updatedTooltip = (`Updated <b>${moment(updated).fromNow()}</b>, ` +
                             `verified image digests: <b>${this.shortDigest()}</b>`);
     return (
       <span

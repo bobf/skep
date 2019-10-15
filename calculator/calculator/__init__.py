@@ -2,7 +2,6 @@ import os
 import sqlite3
 
 def create_database(db_path):
-    return
     try:
         os.remove(db_path)
     except FileNotFoundError:

@@ -36,11 +36,15 @@ class ContainerStat(Base):
         return container['cpu_stats']['system_cpu_usage']
 
     def disk_ops(self, container):
-        return [
+        ops = [
             x['value']
             for x in container['blkio_stats']['io_service_bytes_recursive']
             if x['op'] == 'Total'
-        ][0]
+        ]
+        if not ops:
+            return None
+
+        return ops[0]
 
     def network_bytes(self, container):
         return sum(

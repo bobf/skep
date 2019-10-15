@@ -15,4 +15,5 @@ RUN NODE_ENV=development npm install \
  && echo "export JS_MD5='${JS_MD5}'; export CSS_MD5='${CSS_MD5}';" > /assets.sh \
  && echo "Assets compiled:" \
  && cat /assets.sh
+COPY ./skep/ /skep/skep
 CMD ./run

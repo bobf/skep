@@ -22,7 +22,7 @@ class Container:
 
 
     def build_chart(self):
-        if 'containerID' not in self.data:
+        if not self.data or 'containerID' not in self.data:
             return ['Time', 'CPU', 'RAM']
 
         now = time.time()

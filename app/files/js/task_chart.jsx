@@ -27,8 +27,11 @@ class TaskChart extends React.Component {
 
     return (
       <div onClick={closeCallback} className={'modal-content chart'} style={style}>
-        <div className={'close-icon'}>
-          <Icon.XCircle className={'text-danger'} />
+        <div className={'header'}>
+          <div className={'close-icon'}>
+            <Icon.XCircle className={'text-danger'} />
+          </div>
+          <h5>Container Resource Usage</h5>
         </div>
         <Chart
           width={'30em'}
@@ -37,7 +40,7 @@ class TaskChart extends React.Component {
           loader={this.loader()}
           data={chart}
           options={{
-            title: 'Container Resource Usage',
+            title: '',
             titleTextStyle: { color: '#dedede', fontWeight: 'bold' },
             backgroundColor: 'transparent',
             legend: {
