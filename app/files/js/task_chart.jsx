@@ -27,7 +27,7 @@ class TaskChart extends React.Component {
     return (
       <Chart
         width={'60em'}
-        height={'20em'}
+        height={'30em'}
         chartType={'AreaChart'}
         data={chart}
         options={{
@@ -56,7 +56,7 @@ class TaskChart extends React.Component {
               format: 'short',
               textStyle: { color: '#999' },
               titleTextStyle: { color: '#eee' },
-              title: 'Bytes'
+              title: 'Bytes per second'
             }
           },
           hAxis: {

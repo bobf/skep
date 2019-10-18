@@ -1,6 +1,7 @@
 import Task from './task';
 import Environment from './environment';
 import Mounts from './mounts';
+import Messages from './messages';
 
 import * as Icon from 'react-feather';
 
@@ -32,6 +33,14 @@ class Service extends React.Component {
     );
   }
 
+  unknownDigest() {
+    const { image } = this.props.service;
+
+    if (image && image.digest) return false;
+
+    return true;
+  }
+
   shortDigest() {
     const { image } = this.props.service;
 
@@ -40,6 +49,18 @@ class Service extends React.Component {
     }
 
     return '[unknown]';
+  }
+
+  imageWarning(message) {
+    return (
+      <span
+        title={message}
+        className={'service-icon text-warning update-warning'}
+        data-toggle={'tooltip'}
+        data-original-title={message}>
+        <Icon.AlertTriangle className={'icon'} size={'1.2em'} />
+      </span>
+    );
   }
 
   updateStatus() {
@@ -58,16 +79,9 @@ class Service extends React.Component {
     }
 
     if (this.imageMismatch()) {
-      const warnTooltip = 'Tasks are running inconsistent images. Compare task details for more information.';
-        return (
-          <span
-            title={warnTooltip}
-            className={'service-icon text-warning update-warning'}
-            data-toggle={'tooltip'}
-            data-original-title={warnTooltip}>
-            <Icon.AlertTriangle className={'icon'} size={'1.2em'} />
-          </span>
-        );
+      return this.imageWarning(Messages.service.inconsistentImages);
+    } else if (this.unknownDigest()) {
+      return this.imageWarning(Messages.service.unknownDigest);
     }
 
     const updatedTooltip = (`Updated <em>${moment(updated).fromNow()}</em>, ` +

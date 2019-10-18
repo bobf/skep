@@ -116,6 +116,14 @@ class Node extends React.Component {
     this.setState({ chartData: null, chartClosed: true });
   }
 
+  cores() {
+    const stats = this.stats().current;
+    if (!stats.load) return 1;
+
+    const { cores } = stats.load;
+    return cores;
+  }
+
   renderChart() {
     const { chartData, chartClosed } = this.state;
 
@@ -124,7 +132,7 @@ class Node extends React.Component {
     }
 
     return (
-      <NodeChart data={chartData} closeCallback={() => this.closeChart()} />
+      <NodeChart cores={this.cores()} data={chartData} closeCallback={() => this.closeChart()} />
     );
   }
 

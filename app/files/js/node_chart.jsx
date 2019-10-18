@@ -20,6 +20,15 @@ class NodeChart extends React.Component {
     );
   }
 
+  maxLoad() {
+    const { chart } = this.props.data;
+    const { cores } = this.props;
+    // First row is chart header. Last column is `Load`.
+    const maxLoad = chart.slice(1).reduce((val, row) => val + row[-1], 0);
+
+    return Math.max(cores, maxLoad);
+  }
+
   chart() {
     const { chart, period } = this.props.data;
     const periodHuman = moment.duration(period, 'seconds').humanize(false);
@@ -27,7 +36,7 @@ class NodeChart extends React.Component {
     return (
       <Chart
         width={'60em'}
-        height={'20em'}
+        height={'30em'}
         chartType={'AreaChart'}
         data={chart}
         options={{
@@ -52,6 +61,7 @@ class NodeChart extends React.Component {
             },
             1: {
               minValue: 1,
+              maxValue: this.maxLoad(),
               format: '',
               textStyle: { color: '#999' },
               titleTextStyle: { color: '#eee' },
