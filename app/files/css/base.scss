@@ -3,8 +3,8 @@ $port-target: #999;
 
 $mount-button: #824747;
 
-$modal-background-color: #000000aa;
-$modal-background-hover-color: #222222f8;
+$modal-background-color: #00000099;
+$modal-background-hover-color: #000000aa;
 
 $url-hover-color: #3798db99;
 $button-background-hover-color: #374f5a33;
@@ -20,7 +20,8 @@ $highlight-select: #bf9208d1;
 $highlight-select-background: rgba(240,240,102,0.1);
 $highlight-select-accent: #375a7e55;
 
-$accent-dark: #555;
+$outline-dark: #555;
+$accent-dark: #375a7e;
 
 $label-text: #ddd;
 $label-text-secondary: #dedede;
@@ -57,27 +58,34 @@ html {
 .modal-wrapper.modal {
   display: block;
   position: fixed;
+  cursor: pointer;
   z-index: 999999999;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   overflow: auto;
-  margin-left: 20em;
   background-color: $background-color-translucent;
 }
 
 .modal-content {
+  cursor: initial;
   background-color: $modal-background-color;
   border: 1px solid #888;
   height: auto;
   max-height: 60%;
   width: 80%;
   margin: 5em auto;
+  border: 2px solid $outline-dark;
+  box-shadow: 0px 0px 5px $outline-dark;
 
   .viewport {
     overflow-y: scroll;
-    border-bottom: 1px solid $accent-dark;
+    border-bottom: 1px solid $outline-dark;
     margin-bottom: 1em;
   }
+}
+
+.modal-content:hover {
+  background-color: $modal-background-hover-color;
 }

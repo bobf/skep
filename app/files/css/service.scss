@@ -40,7 +40,7 @@ a.service-name:hover, a.image:hover {
 }
 
 .service .ports .punctuation {
-  color: $accent-dark;
+  color: $outline-dark;
 }
 
 .service .ports .arrow {
@@ -166,7 +166,7 @@ tr.service.highlight.networked {
     color: $label-text-subheading;
     border-radius: 0.4em;
     margin: 0.2em;
-    text-shadow: 0px 0px 5px $accent-dark;
+    text-shadow: 0px 0px 5px $outline-dark;
     padding: 0.2em 0.4em;
   }
 }

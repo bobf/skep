@@ -70,8 +70,8 @@ class Service extends React.Component {
         );
     }
 
-    const updatedTooltip = (`Updated <b>${moment(updated).fromNow()}</b>, ` +
-                            `verified image digests: <b>${this.shortDigest()}</b>`);
+    const updatedTooltip = (`Updated <em>${moment(updated).fromNow()}</em>, ` +
+                            `verified image digests: <em>${this.shortDigest()}</em>`);
     return (
       <span
         title={updatedTooltip}
@@ -150,7 +150,7 @@ class Service extends React.Component {
 
   countBadge() {
     const { tasks } = this.props.service;
-    const tooltip = `${this.runningCount()} / ${this.replicas()} <em>replicas running</em> ${this.statusSymbol()}`;
+    const tooltip = `<em>${this.runningCount()} / ${this.replicas()}</em> replicas running <em>${this.statusSymbol()}</em>`;
 
     return (
       <span

@@ -1,9 +1,11 @@
+import dateutil.parser
 import sqlite3
 
 from calculator.orm.base import Base
 
 class ContainerStat(Base):
     def save(self, data, tstamp):
+        self.period = self.period(data)
         db, cursor = self.connect()
         self.save_container(tstamp, data, cursor)
         db.commit()
@@ -51,3 +53,8 @@ class ContainerStat(Base):
             network['rx_bytes'] + network['tx_bytes']
             for network in container['networks'].values()
         )
+
+    def period(self, data):
+        start = dateutil.parser.parse(data['preread'])
+        end = dateutil.parser.parse(data['read'])
+        return (end - start).total_seconds()

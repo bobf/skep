@@ -36,50 +36,59 @@ span.task {
 
 .task .icon.chart-button {
   margin-top: 0.2em;
+  cursor: pointer;
 }
 
 .task .chart {
-  position: fixed;
+  z-index: 9999999999;
+  width: 62em;
+  min-height: 30em;
 }
 
-.task .chart.loading {
-  padding: 0.8em 1.2em;
+.task .chart .loading {
+  height: 100%;
+  font-size: 1em;
+  font-style: oblique;
+  text-align: center;
+}
+
+.task .chart .header {
+  padding: 1em;
 }
 
 .task .chart .header h5 {
-  margin-left: 1em;
   color: $label-text;
+  text-align: center;
 }
 
 .task .chart .close-icon {
+  display: block;
   visibility: hidden;
   text-align: right;
   float: right;
   padding: 0.3em;
   width: 100%;
-  display: block;
+}
+
+.task .chart .close-button {
+  cursor: pointer;
+  color: $outline-dark;
 }
 
 .task .chart:hover .close-icon {
   visibility: visible;
 }
 
-.task .icon.chart-button:hover {
-  cursor: pointer;
+.task .chart-content {
+  padding: 1em;
+}
+
+.task .close-button:hover {
   color: $url-hover-color;
-  background-color: $button-background-hover-color;
 }
 
-.task .chart:hover {
+.task .chart.ready:hover {
   background-color: $modal-background-hover-color;
-  border-color: #824747;
-  cursor: pointer;
-}
-
-.task .chart {
-  position: fixed;
-  background-color: #222222f0;
-  width: auto;
 }
 
 .task .box {

@@ -24,3 +24,9 @@ def create_database(db_path):
          cpu real,
          system_cpu real,
          ram real)''')
+
+    database.execute('''CREATE INDEX containers_container_id_idx
+        ON containers(container_id)''')
+
+    database.execute('''CREATE INDEX nodes_node_id_idx
+        ON nodes(node_id)''')

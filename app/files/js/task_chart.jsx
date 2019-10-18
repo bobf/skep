@@ -6,65 +6,91 @@ class TaskChart extends React.Component {
     super(props);
   }
 
+  close(ev, callback) {
+    if (ev.target.closest('.modal-content')) return false;
+
+    return callback();
+  }
+
   loader() {
     return (
-      <div className={'chart loading'}>
-        Loading Chart
+      <div className={'loading'}>
+        Loading...
       </div>
     );
   }
 
-  render() {
+  chart() {
     const { chart, period } = this.props.data;
-    const { closeCallback } = this.props;
     const periodHuman = moment.duration(period, 'seconds').humanize(false);
-    const style = {
-      zIndex: 9999999999,
-      position: 'absolute',
-      display: 'flex',
-      maxWidth: 900
-    };
 
     return (
-      <div onClick={closeCallback} className={'modal-content chart'} style={style}>
-        <div className={'header'}>
-          <div className={'close-icon'}>
-            <Icon.XCircle className={'text-danger'} />
-          </div>
-          <h5>Container Resource Usage</h5>
-        </div>
-        <Chart
-          width={'30em'}
-          height={'20em'}
-          chartType={'AreaChart'}
-          loader={this.loader()}
-          data={chart}
-          options={{
-            title: '',
-            titleTextStyle: { color: '#dedede', fontWeight: 'bold' },
-            backgroundColor: 'transparent',
-            legend: {
-              textStyle: {
-                color: '#999'
-              }
-            },
-            hAxis: {
-              textPosition: 'none',
-              title: `Period: ${periodHuman}`,
-              titleTextStyle: { color: '#eee' },
-              baselineColor: '#999',
-              gridlines: {
-                color: '#999'
-              },
-            },
-            vAxis: {
+      <Chart
+        width={'60em'}
+        height={'20em'}
+        chartType={'AreaChart'}
+        data={chart}
+        options={{
+          title: '',
+          titleTextStyle: { color: '#dedede', fontWeight: 'bold' },
+          backgroundColor: 'transparent',
+          legend: {
+            textStyle: {
+              color: '#999'
+            }
+          },
+          series: {
+            0: { targetAxisIndex: 0 },
+            1: { targetAxisIndex: 0 },
+            2: { targetAxisIndex: 1 },
+            3: { targetAxisIndex: 1 }
+          },
+          vAxes: {
+            0: {
               minValue: 1,
               format: 'percent',
               textStyle: { color: '#999' }
             },
-            chartArea: { width: '50%', height: '70%' },
-          }}
-        />
+            1: {
+              minValue: 1,
+              format: 'short',
+              textStyle: { color: '#999' },
+              titleTextStyle: { color: '#eee' },
+              title: 'Bytes'
+            }
+          },
+          hAxis: {
+            textPosition: 'none',
+            title: `Period: ${periodHuman}`,
+            titleTextStyle: { color: '#eee' },
+            baselineColor: '#999',
+            gridlines: {
+              color: '#555'
+            },
+          },
+          chartArea: { width: '85%', height: '70%' }
+        }}
+      />
+    );
+  }
+
+  render() {
+    const { chart } = this.props.data || {};
+    const { closeCallback } = this.props;
+    const className = chart ? 'ready' : 'loading';
+
+    return (
+      <div onClick={(ev) => this.close(ev, closeCallback)} className={'modal-wrapper modal'}>
+        <div className={`modal-content chart ${className}`}>
+          <div className={'viewport'}>
+            <div className={'header'}>
+              <h5>Container Resource Usage</h5>
+            </div>
+          </div>
+          <div className={'chart-content'}>
+            {chart ? this.chart() : this.loader()}
+          </div>
+        </div>
       </div>
     );
   }

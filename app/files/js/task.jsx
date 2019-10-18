@@ -127,9 +127,10 @@ class Task extends React.Component {
       params: { containerID: containerID }
     };
 
+    this.setState({ chartClosed: false });
     Skep.socket.emit('chart_request', params);
     Skep.chartCallbacks[token] = function (data) {
-      that.setState({ chartData: data, chartClosed: false });
+      that.setState({ chartData: data });
     };
   }
 
@@ -164,7 +165,7 @@ class Task extends React.Component {
   renderChart() {
     const { chartData, chartClosed } = this.state;
 
-    if (!chartData || chartClosed) {
+    if (chartClosed) {
       return null;
     }
 
@@ -191,7 +192,7 @@ class Task extends React.Component {
               data-original-title={tooltip} />
             <br />
             <Icon.BarChart2
-              title={'Load chart data'}
+              title={'View activity'}
               data-toggle={'tooltip'}
               onClick={() => this.loadChart()}
               className={'icon chart-button'}
