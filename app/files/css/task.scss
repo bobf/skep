@@ -39,58 +39,6 @@ span.task {
   cursor: pointer;
 }
 
-.task .chart {
-  z-index: 9999999999;
-  width: 62em;
-  min-height: 30em;
-}
-
-.task .chart .loading {
-  height: 100%;
-  font-size: 1em;
-  font-style: oblique;
-  text-align: center;
-}
-
-.task .chart .header {
-  padding: 1em;
-}
-
-.task .chart .header h5 {
-  color: $label-text;
-  text-align: center;
-}
-
-.task .chart .close-icon {
-  display: block;
-  visibility: hidden;
-  text-align: right;
-  float: right;
-  padding: 0.3em;
-  width: 100%;
-}
-
-.task .chart .close-button {
-  cursor: pointer;
-  color: $outline-dark;
-}
-
-.task .chart:hover .close-icon {
-  visibility: visible;
-}
-
-.task .chart-content {
-  padding: 1em;
-}
-
-.task .close-button:hover {
-  color: $url-hover-color;
-}
-
-.task .chart.ready:hover {
-  background-color: $modal-background-hover-color;
-}
-
 .task .box {
   padding: 0.8em;
   border: 1px solid $label-text-light;

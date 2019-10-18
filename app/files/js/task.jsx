@@ -7,7 +7,6 @@ class Task extends React.Component {
   constructor(props) {
     super(props);
     this.state = { chartData: null, chartClosed: true };
-    this.chartRef = React.createRef();
   }
 
   tooltip() {

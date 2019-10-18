@@ -14,8 +14,10 @@ from flask import Flask, request, jsonify
 from skep.json import DelegatingJSONEncoder
 from calculator import create_database
 from calculator.charts.container import Container as ContainerChart
+from calculator.charts.node import Node as NodeChart
 from calculator.publisher import Publisher
 from calculator.orm.container_stat import ContainerStat
+from calculator.orm.node_stat import NodeStat
 
 logger = logging.getLogger('skep:calculator')
 log_level = getattr(logging, os.environ.get('LOG_LEVEL', 'info').upper())
@@ -38,7 +40,8 @@ pool = Pool(pool_size)
 publisher = Publisher(app_url, auth, logger)
 create_database(db_path)
 chart_types = {
-    'container': ContainerChart
+    'container': ContainerChart,
+    'node': NodeChart
 }
 
 @application.route("/chart", methods=["POST"])
@@ -65,6 +68,7 @@ def stats_create():
     containers = data['containers']
     tstamp = data['tstamp']
     [ContainerStat(db_path).save(container, tstamp) for container in containers]
+    NodeStat(db_path).save(data, tstamp)
 
     return 'OK', 200
 

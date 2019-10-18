@@ -1,0 +1,38 @@
+.chart {
+  z-index: 9999999999;
+  width: 62em;
+  min-height: 30em;
+}
+
+.chart .loading {
+  height: 100%;
+  font-size: 1em;
+  font-style: oblique;
+  text-align: center;
+}
+
+.chart .header {
+  padding: 1em;
+}
+
+.chart .header h5 {
+  color: $label-text;
+  text-align: center;
+}
+
+.chart .close-icon {
+  display: block;
+  visibility: hidden;
+  text-align: right;
+  float: right;
+  padding: 0.3em;
+  width: 100%;
+}
+
+.chart-content {
+  padding: 1em;
+}
+
+.chart.ready:hover {
+  background-color: $modal-background-hover-color;
+}

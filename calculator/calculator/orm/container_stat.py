@@ -15,7 +15,7 @@ class ContainerStat(Base):
         self.save_db(cursor, 'containers',
             {
                 'tstamp': tstamp,
-                'container_id': container['id'],
+                'id': container['id'],
                 'ram_usage': ram_usage,
                 'ram_limit': ram_limit,
                 'cpu': self.cpu_usage(container),
@@ -27,8 +27,8 @@ class ContainerStat(Base):
 
     def ram_usage(self, container):
         return (
-            container['memory_stats']['max_usage'],
-            container['memory_stats']['limit']
+            container['memory_stats'].get('max_usage', 0),
+            container['memory_stats'].get('limit', 0)
         )
 
     def cpu_usage(self, container):

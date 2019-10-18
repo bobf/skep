@@ -10,7 +10,7 @@ def create_database(db_path):
     database = sqlite3.connect(db_path)
     database.execute('''CREATE TABLE containers
         (tstamp real,
-         container_id text,
+         id text,
          cpu real,
          system_cpu real,
          ram_usage real,
@@ -20,13 +20,13 @@ def create_database(db_path):
 
     database.execute('''CREATE TABLE nodes
         (tstamp real,
-         node_id text,
+         id text,
+         load real,
          cpu real,
-         system_cpu real,
          ram real)''')
 
-    database.execute('''CREATE INDEX containers_container_id_idx
-        ON containers(container_id)''')
+    database.execute('''CREATE INDEX containers_id_id_idx
+        ON containers(id)''')
 
-    database.execute('''CREATE INDEX nodes_node_id_idx
-        ON nodes(node_id)''')
+    database.execute('''CREATE INDEX nodes_id_idx
+        ON nodes(id)''')

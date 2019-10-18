@@ -2,11 +2,16 @@ import * as Icon from 'react-feather';
 
 import FilesystemStats from './filesystem_stats';
 import NodeStats from './node_stats';
+import NodeChart from './node_chart';
 
 class Node extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { stats: { previous: {}, current: {} } };
+    this.state = {
+      stats: { previous: {}, current: {} },
+      chartData: null,
+      chartClosed: true
+    };
   }
 
   hostname() {
@@ -79,14 +84,61 @@ class Node extends React.Component {
     );
   }
 
+  chartButton() {
+    return (
+      <Icon.BarChart2
+        className={'icon chart-button'}
+        size={'1.2em'}
+        title={'View activity'}
+        data-toggle={'tooltip'}
+        onClick={() => this.loadChart()}
+      />
+    );
+  }
+
+  loadChart() {
+    const that = this;
+    const token = Skep.token();
+    const params = {
+      chartType: 'node',
+      requestID: token,
+      params: { hostname: this.hostname() }
+    };
+
+    this.setState({ chartClosed: false });
+    Skep.socket.emit('chart_request', params);
+    Skep.chartCallbacks[token] = function (data) {
+      that.setState({ chartData: data });
+    };
+  }
+
+  closeChart() {
+    this.setState({ chartData: null, chartClosed: true });
+  }
+
+  renderChart() {
+    const { chartData, chartClosed } = this.state;
+
+    if (chartClosed) {
+      return null;
+    }
+
+    return (
+      <NodeChart data={chartData} closeCallback={() => this.closeChart()} />
+    );
+  }
+
   render() {
     const { minimized, node } = this.props;
     return (
       <div id={`node-${this.props.node.id}`} className={'node'}>
+        {this.renderChart()}
         <Icon.Power className={'light'} size={'1em'} />
+        {this.chartButton()}
         <h2 title={'Version: ' + node.version} className={'hostname'}>
           {this.hostname()}
         </h2>
+        {minimized ? null : <br/>}
         {this.leaderBadge()}
         {this.roleBadge()}
         <NodeStats

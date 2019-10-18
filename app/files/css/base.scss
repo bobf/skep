@@ -51,6 +51,15 @@ html {
   }
 }
 
+.chart-button {
+  color: $label-text;
+}
+
+.chart-button:hover {
+  color: $accent-dark;
+  cursor: pointer;
+}
+
 .modal-wrapper {
   display: none;
 }

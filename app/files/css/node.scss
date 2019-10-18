@@ -105,6 +105,10 @@
   color: $label-text;
 }
 
+.node .chart-button {
+  float: right;
+}
+
 .role.badge, .leader.badge {
   float: right;
 }
@@ -118,8 +122,8 @@
   text-align: center;
   padding: 0.2em;
   font-size: 1.0em;
-  margin: 0.4em auto;
-  display: block;
+  display: inline;
+  margin-left: 0.2em;
 }
 
 .node .badge {

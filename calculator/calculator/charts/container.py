@@ -2,82 +2,30 @@ import random
 import time
 import traceback
 
-from calculator.orm.base import Base
+from calculator.charts.base import Base
 
-class Container:
+class Container(Base):
     def __init__(self, db_path, data, publisher):
-        self.db_path = db_path
-        self.container_id = data.get('containerID', None)
-        self.columns = ['tstamp', 'container_id', 'cpu', 'system_cpu',
+        self.id = data.get('containerID', None)
+        self.table = 'containers'
+        self.columns = ['tstamp', 'id', 'cpu', 'system_cpu',
                         'ram_usage', 'ram_limit', 'disk_ops', 'network_bytes']
-        self.time_indices, self.data = self.fetch_data(data)
-        self.publisher = publisher
-        self.period = self.calculate_period()
 
-
-    def build(self, sid, token):
-        try:
-            period, data = self.build_chart()
-            self.publisher.publish(period, data, sid, token)
-        except Exception as e:
-            print("Error in worker:", e)
-            traceback.print_exc()
-            raise
-
+        super().__init__(db_path, data, publisher)
 
     def build_chart(self):
-        if not self.data or self.container_id is None:
+        if not self.data or self.id is None:
             return None, None
 
         return (
             self.period,
             [
                 ['Time', 'CPU', 'RAM', 'Network', 'Disk'],
-                *self.chart_data()
+                *self.chart_data(
+                    self.cpu(), self.ram(), self.network(), self.disk()
+                )
             ]
         )
-
-    def fetch_data(self, data):
-        now = time.time()
-        since = data.get('since', 3600)
-        then = now - since
-        data = self.execute(data['containerID'], now, then)
-        interval = len(data) / since
-        time_indices = [then + (interval * index) for index in range(len(data))]
-
-        return time_indices, data
-
-    def chart_data(self):
-        charts = [self.cpu(), self.ram(), self.network(), self.disk()]
-
-        return list(zip(self.time_indices, *charts))
-
-    def period(self):
-        data = self.data
-
-        return max(x['tstamp'] for x in data) - min(x['tstamp'] for x in data)
-
-    def connect(self):
-        return Base(self.db_path).connect()
-
-    def execute(self, container_id, now, then):
-        db, cursor = self.connect()
-        params = [container_id, now, then]
-        columns = ', '.join(self.columns)
-        cursor.execute('''SELECT {columns} FROM containers
-                          WHERE container_id = ?
-                          AND tstamp < ?
-                          AND tstamp > ?'''.format(columns=columns),
-                          params)
-        rows = cursor.fetchall()
-        return [dict((key, row[index])
-                for index, key in enumerate(self.columns))
-                for row in rows]
-
-    def calculate_period(self):
-        data = self.data
-
-        return max(x['tstamp'] for x in data) - min(x['tstamp'] for x in data)
 
     def cpu(self):
         return [
