@@ -10,15 +10,15 @@ class Task extends React.Component {
   }
 
   tooltip() {
-    const host = `<strong>Host:</strong> ${this.hostname()}`;
+    const host = `Host: <em>${this.hostname()}</em>`;
 
     if (!this.slotID()) return host;
 
-    const slot = `<strong>Slot:</strong> ${this.slotID()}`;
-    const name = `<strong>Container:</strong> ${this.containerName()}`;
-    const digest = `<strong>Digest:</strong> ${this.digest()}`;
+    const slot = `Slot: <em>${this.slotID()}</em>`;
+    const name = `Container: <em>${this.containerName()}</em>`;
+    const digest = `Digest: <em>${this.digest() || '[none]'}</em>`;
     const content = [host, slot, name, digest].join('<br/>');
-    return `<div class="task-tooltip">${content}</div>`;
+    return `<div class="info-tooltip">${content}</div>`;
   }
 
   containerName() {

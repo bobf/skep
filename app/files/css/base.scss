@@ -46,13 +46,22 @@ html {
 }
 
 .tooltip {
+  max-width: 500px;
+
   .tooltip-inner {
+    max-width: 500px;
     color: $label-text-light !important;
 
     em {
       color: $label-text-dark !important;
     }
   }
+}
+
+.info-tooltip {
+  text-align: left;
+  width: auto;
+  white-space: nowrap;
 }
 
 .chart-button {

@@ -159,7 +159,10 @@ class Node extends React.Component {
   render() {
     const { minimized, node } = this.props;
     const tooltip = (
-      `Docker Engine Version: <em>${this.version()}</em>`
+      `<div class="info-tooltip">
+         Hostname: <em>${this.hostname()}</em><br/>
+         Docker Engine Version: <em>${this.version()}</em>
+       </div>`
     );
 
     return (

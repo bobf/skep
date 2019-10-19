@@ -12,6 +12,14 @@
   font-size: 0.9em;
 }
 
+.maximized .node-stats table {
+  margin-top: 0.4em;
+}
+
+.maximized .node-stats th {
+  padding: 0.3em 0.2em;
+}
+
 .node {
   .icon.disks {
     height: 1.2rem;
