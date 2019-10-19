@@ -32,9 +32,23 @@ class Monitor:
     def request(self, url, data):
         headers = headers={ 'Content-Type': 'application/json', **AUTH }
         manifest = Swarm().manifest()
-        data = json.dumps(manifest, cls=DelegatingJSONEncoder).encode('utf8')
+        data = { 'manifest': manifest, 'statistics': self.statistics(manifest) }
 
-        return Request(url, data=data, headers=headers)
+        return Request(url, data=self.encode(data), headers=headers)
+
+    def statistics(self, manifest):
+        return {
+            'counts': {
+                'nodes': len(manifest['nodes']),
+                'containers': len(manifest['containers']),
+                'networks': len(manifest['networks']),
+                'stacks': len(manifest['stacks']),
+                'services': sum(len(x.services) for x in manifest['stacks'])
+            }
+        }
+
+    def encode(self, data):
+        return json.dumps(data, cls=DelegatingJSONEncoder).encode('utf8')
 
     def url(self, type):
         return urllib.parse.urljoin(

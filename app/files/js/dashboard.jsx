@@ -13,6 +13,7 @@ class Dashboard extends React.Component {
       nodesMinimized: true,
       stacksMinimized: false,
       collapsedStacks: null,
+      overviewVisible: false,
       obscured: false
     }
   }
@@ -21,6 +22,16 @@ class Dashboard extends React.Component {
     return this._nodes.find(
       node => node.hostname.toLowerCase() === hostname.toLowerCase()
     )
+  }
+
+  manifest() {
+    const { manifest } = this.state;
+    return manifest;
+  }
+
+  swarmStatistics() {
+    const { statistics } = this.state;
+    return statistics;
   }
 
   services() {
@@ -35,7 +46,7 @@ class Dashboard extends React.Component {
         ref={this._stacks[stack.name]}
         key={`stack-${stack.name}`}
         stack={stack}
-        manifest={this.state.manifest}
+        manifest={this.manifest()}
         collapsed={this.isCollapsed(stack.name)} />
     );
   }
@@ -53,7 +64,7 @@ class Dashboard extends React.Component {
   }
 
   fullNodes() {
-    return this.state.manifest.nodes.map(
+    return this.manifest().nodes.map(
       node => this.findOrCreateNode(node)
     ).sort(
       (left, right) => {
@@ -137,7 +148,7 @@ class Dashboard extends React.Component {
   }
 
   collapseAll(options = {}) {
-    const { stacks } = this.state.manifest;
+    const { stacks } = this.manifest();
     const stackNames = stacks.map(stack => stack.name);
     const toCollapse = stackNames.filter(
       name => !options.except || name !== options.except
@@ -147,7 +158,7 @@ class Dashboard extends React.Component {
   }
 
   collapse(stackName) {
-    const { stacks } = this.state.manifest;
+    const { stacks } = this.manifest();
     this.setState({ collapsedStacks: stacks.map(stack => stack.name) });
   }
 
@@ -159,32 +170,103 @@ class Dashboard extends React.Component {
     return collapsedStacks.includes(stackName);
   }
 
-  render() {
-    if (!this.state.manifest) return this.renderManifestMissing();
+  toggleOverview(visible) {
+    this.setState({ overviewVisible: visible });
+  }
+
+  renderOverviewHeader(section, label, count) {
+    return (
+      <div key={`overview-header-${section}`} className={section}>
+        <span className={'header'}>
+          {label}
+        </span>
+      </div>
+    );
+  }
+
+  renderOverviewSection(section, label, count) {
+    return (
+      <div key={`overview-section-${section}`} className={section}>
+        <span className={'count'}>
+          {count}
+        </span>
+      </div>
+    );
+  }
+
+  renderOverviewMinimized() {
+    return (
+      <div
+        onClick={() => this.toggleOverview(true)}
+        className={'overview-minimized'}>
+        <Icon.ChevronDown className={'icon'} />
+        <div className={'overview-label'}>
+          {'Overview'}
+        </div>
+      </div>
+    );
+  }
+
+  renderOverview() {
+    const { statistics, overviewVisible } = this.state;
+    if (!statistics) return null;
+    if (!overviewVisible) return this.renderOverviewMinimized();
+
+    const sections = [
+      ['nodes', 'Nodes', statistics.counts.nodes],
+      ['services', 'Services', statistics.counts.services],
+      ['containers', 'Containers', statistics.counts.containers],
+      ['networks', 'Networks', statistics.counts.networks],
+    ]
 
     return (
-      <div className={this.state.obscured ? 'obscured' : ''} id={'dashboard'}>
-        <div className={'section minimized'} id={'nodes'}>
-          <div className={'section-content'}>
-            {this.nodeComponents().map(
-              component => component(this.state.nodesMinimized)
-            )}
-          </div>
+      <div
+        onClick={() => this.toggleOverview(false)}
+        className={'overview'}>
+        <div className={'headers'}>
+          <span>
+            {sections.map(section => this.renderOverviewHeader(...section))}
+          </span>
         </div>
+        <div className={'counts'}>
+          <span>
+            {sections.map(section => this.renderOverviewSection(...section))}
+          </span>
+        </div>
+      </div>
+    );
+  }
 
-        <button
-          onClick={() => this.toggleStacks()}
-          className={'toggle-section btn btn-secondary'}>
-          {this.state.stacksMinimized ? <Icon.ChevronsLeft/> : <Icon.ChevronsRight/>}
-        </button>
+  render() {
+    if (!this.manifest()) return this.renderManifestMissing();
+    const { nodes } = this.manifest();
 
-        <div id={'stacks'} className={'section'}>
-          <div className={'section-content'}>
-            <table className='stacks'>
-              <tbody>
-                {this.state.manifest.stacks.map(stack => this.renderStack(stack))}
-              </tbody>
-            </table>
+    return (
+      <div className={'dashboard-overview-wrapper'}>
+        {this.renderOverview()}
+        <div className={this.state.obscured ? 'obscured' : ''} id={'dashboard'}>
+          <div className={'section minimized'} id={'nodes'}>
+            <div className={'section-content'}>
+              {this.nodeComponents().map(
+                component => component(this.state.nodesMinimized)
+              )}
+            </div>
+          </div>
+
+          <button
+            onClick={() => this.toggleStacks()}
+            className={'toggle-section btn btn-secondary'}>
+            {this.state.stacksMinimized ? <Icon.ChevronsLeft/> : <Icon.ChevronsRight/>}
+          </button>
+
+          <div id={'stacks'} className={'section'}>
+            <div className={'section-content'}>
+              <table className='stacks'>
+                <tbody>
+                  {this.manifest().stacks.map(stack => this.renderStack(stack))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

@@ -24,6 +24,7 @@ $outline: #555;
 $outline-dark: #333;
 $accent: #629dda;
 $accent-dark: #375a7e;
+$accent-background: #4868af6b;
 
 $label-text: #ddd;
 $label-text-secondary: #dedede;
@@ -36,6 +37,12 @@ $updating: #dd4;
 $mapping-key: #38755d;
 $mapping-syntax: #ddd;
 $mapping-value: #999;
+
+$window-height: 100%;
+
+body {
+  height: 100%;
+}
 
 html {
   font-size: 14px;

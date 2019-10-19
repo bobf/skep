@@ -40,8 +40,8 @@ $(function () {
     Skep.chartCallbacks[data.requestID](data);
   });
 
-  socket.on('manifest', function(data) {
-    var manifest = JSON.parse(data);
+  socket.on('manifest', function(json) {
+    var data = JSON.parse(json);
 
     if (!Skep.dashboard) {
       Skep.dashboard = ReactDOM.render(
@@ -50,7 +50,7 @@ $(function () {
       );
     }
 
-    Skep.dashboard.setState({ manifest: manifest });
+    Skep.dashboard.setState(data);
   });
 
   socket.on('stats', function (json) {

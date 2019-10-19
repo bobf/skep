@@ -1,0 +1,105 @@
+$overview-height: 9em;
+
+.overview-minimized {
+  height: 2em;
+  display: block;
+  cursor: pointer;
+  margin-right: 1em;
+  position: fixed;
+  text-align: center;
+  width: 100%;
+  z-index: 999999999999999;
+  border-bottom: 1px solid $outline-dark;
+  background-color: $background-color;
+
+  .icon {
+    width: 2em;
+    height: 2em;
+    margin-right: 1em;
+    color: $label-text-dark;
+  }
+
+  &:hover {
+    background-color: $accent-background;
+
+    .icon, .overview-label {
+      color: $label-text;
+      visibility: visible;
+    }
+  }
+
+  .overview-label {
+    float: right;
+    margin: 0.4em 0.8em;
+    opacity: 0.5;
+    visibility: hidden;
+  }
+}
+
+.overview {
+  border-bottom: 1px solid $outline-dark;
+  background-image: url('../images/logo.svg');
+  background-repeat: no-repeat;
+  background-size: auto $overview-height - 1em;;
+  background-position: 0.8em 0.3em;
+  min-height: $overview-height;
+  max-height: $overview-height;
+  display: block;
+  position: fixed;
+  z-index: 999999999999999999999;
+  background-color: $background-color-secondary;
+  width: 100%;
+  height: $overview-height;
+  padding-left: 12.5em;
+
+  &:hover {
+    background-color: $background-color;
+    cursor: pointer;
+  }
+
+  .headers {
+    div {
+      vertical-align: middle;
+      text-align: center;
+      font-size: 1em;
+      height: 1.5em;
+      color: $label-text-subheading;
+      width: $overview-height;
+      padding-top: 0.2em;
+      display: inline-block;
+    }
+  }
+
+  .counts {
+    div {
+      float: left;
+      display: table;
+      height: $overview-height - 1.5em;
+      width: $overview-height;
+      text-align: center;
+
+      .count {
+        display: table-cell;
+        vertical-align: middle;
+        font-size: 2em;
+        color: $label-text-dark;
+      }
+    }
+  }
+
+  .nodes {
+    background-color: #4868af6b;
+  }
+
+  .services {
+    background-color: #aeaf486b;
+  }
+
+  .containers {
+    background-color: #48af636b;
+  }
+
+  .networks {
+    background-color: #5c48af6b;
+  }
+}

@@ -1,6 +1,6 @@
 #nodes {
   float: left;
-  height: 100%;
+  height: calc(100% - 2em);
   width: 21em;
   padding: 1em;
   overflow-y: scroll;
