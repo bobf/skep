@@ -37,6 +37,8 @@ class NodeChart extends ChartBase {
           minValue: 1,
           maxValue: 1,
           format: 'percent',
+          title: 'CPU / RAM %',
+          titleTextStyle: { color: '#eee' },
           textStyle: { color: '#999' }
         }
       }
