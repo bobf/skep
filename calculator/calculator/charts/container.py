@@ -10,6 +10,9 @@ class Container(Base):
         self.table = 'containers'
         self.columns = ['tstamp', 'id', 'cpu', 'system_cpu',
                         'ram_usage', 'ram_limit', 'disk_ops', 'network_bytes']
+        self.meta = {
+            'containerID': self.id
+        }
 
         super().__init__(db_path, data, publisher)
 
@@ -17,15 +20,12 @@ class Container(Base):
         if not self.data or self.id is None:
             return None, None
 
-        return (
-            self.period,
-            [
-                ['Time', 'CPU', 'RAM', 'Network', 'Disk'],
-                *self.chart_data(
-                    self.cpu(), self.ram(), self.network(), self.disk()
-                )
-            ]
-        )
+        return [['Time', 'Disk', 'Network', 'RAM', 'CPU'], *self.chart_data()]
+
+    def chart_data(self):
+        charts = [self.disk(), self.network(), self.ram(), self.cpu()]
+
+        return self.merge_timeline(*charts)
 
     def cpu(self):
         return [

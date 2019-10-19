@@ -20,7 +20,9 @@ $highlight-select: #bf9208d1;
 $highlight-select-background: rgba(240,240,102,0.1);
 $highlight-select-accent: #375a7e55;
 
-$outline-dark: #555;
+$outline: #555;
+$outline-dark: #333;
+$accent: #629dda;
 $accent-dark: #375a7e;
 
 $label-text: #ddd;
@@ -44,10 +46,12 @@ html {
 }
 
 .tooltip {
-  color: $label-text-light !important;
+  .tooltip-inner {
+    color: $label-text-light !important;
 
-  em {
-    color: $label-text-dark !important;
+    em {
+      color: $label-text-dark !important;
+    }
   }
 }
 
@@ -80,13 +84,12 @@ html {
 .modal-content {
   cursor: initial;
   background-color: $modal-background-color;
-  border: 1px solid #888;
   height: auto;
   max-height: 60%;
   width: 80%;
   margin: 5em auto;
   border: 2px solid $outline-dark;
-  box-shadow: 0px 0px 5px $outline-dark;
+  box-shadow: 0px 0px 5px $background-color;
 
   .viewport {
     overflow-y: scroll;

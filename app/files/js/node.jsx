@@ -84,6 +84,20 @@ class Node extends React.Component {
     );
   }
 
+  versionBadge() {
+    const { minimized } = this.props;
+    if (minimized) return null;
+
+    return (
+      <span
+        title={'Docker Engine Version'}
+        data-toggle={'tooltip'}
+        className={'badge badge-info'}>
+        {this.version()}
+      </span>
+    );
+  }
+
   chartButton() {
     return (
       <Icon.BarChart2
@@ -124,6 +138,12 @@ class Node extends React.Component {
     return cores;
   }
 
+  version() {
+    const { version } = this.props.node;
+
+    return version;
+  }
+
   renderChart() {
     const { chartData, chartClosed } = this.state;
 
@@ -138,17 +158,28 @@ class Node extends React.Component {
 
   render() {
     const { minimized, node } = this.props;
+    const tooltip = (
+      `Docker Engine Version: <em>${this.version()}</em>`
+    );
+
     return (
-      <div id={`node-${this.props.node.id}`} className={'node'}>
+      <div id={`node-${node.id}`} className={'node'}>
         {this.renderChart()}
         <Icon.Power className={'light'} size={'1em'} />
         {this.chartButton()}
-        <h2 title={'Version: ' + node.version} className={'hostname'}>
+        <h2
+          className={'hostname'}
+          title={tooltip}
+          data-html={'true'}
+          data-original-title={tooltip}
+          data-toggle={'tooltip'}>
           {this.hostname()}
         </h2>
-        {minimized ? null : <br/>}
-        {this.leaderBadge()}
-        {this.roleBadge()}
+        <div className={'badges'}>
+          {this.leaderBadge()}
+          {this.roleBadge()}
+          {this.versionBadge()}
+        </div>
         <NodeStats
           key={'node_' + node.id + '_stats'}
           minimized={minimized}

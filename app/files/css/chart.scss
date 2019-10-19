@@ -36,3 +36,20 @@
 .chart.ready:hover {
   background-color: $modal-background-hover-color;
 }
+
+.chart .subtitle {
+  text-align: right;
+  color: $label-text-dark;
+  display: block;
+  font-family: monospace;
+  width: 100%;
+  margin-top: -1.8em;
+  font-style: oblique;
+  opacity: 0.5;
+}
+
+.chart .no-data {
+  color: $label-text-dark;
+  text-align: center;
+  font-style: oblique;
+}

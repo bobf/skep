@@ -9,6 +9,7 @@ class Node(Base):
         self.id = data.get('hostname', '').lower()
         self.table = 'nodes'
         self.columns = ['tstamp', 'id', 'load', 'cpu', 'ram']
+        self.meta = { 'hostname': self.id }
 
         super().__init__(db_path, data, publisher)
 
@@ -16,18 +17,10 @@ class Node(Base):
         if not self.data or self.id is None:
             return None, None
 
-        return (
-            self.period,
-            [
-                ['Time', 'CPU', 'RAM', 'Load'],
-                *self.chart_data()
-            ]
-        )
+        return [['Time', 'Load', 'RAM', 'CPU'], *self.chart_data()]
 
     def chart_data(self):
-        charts = [self.cpu(), self.ram(), self.load()]
-
-        return list(zip(self.time_indices, *charts))
+        return self.merge_timeline(self.load(), self.ram(), self.cpu())
 
     def cpu(self):
         return [x['cpu'] for x in self.data]

@@ -169,7 +169,10 @@ class Task extends React.Component {
     }
 
     return (
-      <TaskChart data={chartData} closeCallback={() => this.closeChart()} />
+      <TaskChart
+        data={chartData}
+        hostname={this.hostname()}
+        closeCallback={() => this.closeChart()} />
     );
   }
 

@@ -99,9 +99,12 @@
 }
 
 .node .hostname {
-  font-family: monospace;
-  display: inline-block;
   text-transform: uppercase;
+  font-family: monospace;
+}
+
+.node h2.hostname {
+  display: inline-block;
   color: $label-text;
 }
 
@@ -109,8 +112,9 @@
   float: right;
 }
 
-.role.badge, .leader.badge {
+.node .badges {
   float: right;
+  display: inline;
 }
 
 .maximized .status {

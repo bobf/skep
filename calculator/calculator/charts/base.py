@@ -16,12 +16,15 @@ class Base:
     def calculate_period(self):
         data = self.data
 
+        if not data:
+            return None
+
         return max(x['tstamp'] for x in data) - min(x['tstamp'] for x in data)
 
     def build(self, sid, token):
         try:
-            period, data = self.build_chart()
-            self.publisher.publish(period, data, sid, token)
+            chart = self.build_chart()
+            self.publisher.publish(self.period, chart, sid, token, self.meta)
         except Exception as e:
             print("Error in worker:", e)
             traceback.print_exc()
@@ -40,7 +43,7 @@ class Base:
 
         return time_indices, data
 
-    def chart_data(self, *charts):
+    def merge_timeline(self, *charts):
         return list(zip(self.time_indices, *charts))
 
     def execute(self, now, then):

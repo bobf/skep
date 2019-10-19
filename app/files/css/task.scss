@@ -34,6 +34,12 @@ span.task {
   width: 1.2em;
 }
 
+.chart .subtitle {
+  .punctuation {
+    color: $accent;
+  }
+}
+
 .task .icon.chart-button {
   margin-top: 0.2em;
   cursor: pointer;
