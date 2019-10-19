@@ -92,7 +92,7 @@ class Node extends React.Component {
       <span
         title={'Docker Engine Version'}
         data-toggle={'tooltip'}
-        className={'badge badge-info'}>
+        className={'badge badge-secondary'}>
         {this.version()}
       </span>
     );

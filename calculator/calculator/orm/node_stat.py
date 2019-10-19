@@ -33,4 +33,4 @@ class NodeStat(Base):
         return available / total
 
     def load(self, data):
-        return data['load']['averages'][-1]
+        return data['load']['averages'][0]
