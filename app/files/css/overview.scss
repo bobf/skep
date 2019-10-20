@@ -13,9 +13,9 @@ $overview-section-width: 130px;
   width: 100%;
   z-index: 999999999999999;
   border-bottom: 1px solid $outline-dark;
-  background-color: $background-color;
   padding-top: 0.2em;
   visibility: visible;
+  background-color: $background-color;
 
   &.visible {
     visibility: visible;
@@ -45,7 +45,6 @@ $overview-section-width: 130px;
   background-color: $background-color;
   width: 100%;
   height: $overview-height;
-  padding-left: 12.5em;
   transition: opacity 0.5s ease;
   opacity: 0;
 
@@ -55,6 +54,13 @@ $overview-section-width: 130px;
 
   &.hidden {
     visibility: hidden;
+  }
+
+  .spacer {
+    width: 12.5em;
+    display: inline-block;
+    float: left;
+    height: $overview-height;
   }
 
   .headers {
@@ -107,6 +113,7 @@ $overview-section-width: 130px;
     display: table;
     padding-left: 1em;
     margin-top: -1em;
+    height: $overview-height;
 
     .detail-row {
       display: table-row;

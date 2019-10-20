@@ -71,7 +71,37 @@ class Overview extends React.Component {
     );
   }
 
-  renderNodesDetail(context) {
+  renderRows(data) {
+    const rows = data.map(rowData => this.renderRow(rowData));
+
+    return (
+      <div className={'detail-rows'}>
+        {rows}
+      </div>
+    );
+  }
+
+  renderSwarmDetail() {
+    const { name, created, updated } = this.props.statistics.swarm;
+    const data = [
+      {
+        title: 'Swarm Name',
+        value: name
+      },
+      {
+        title: 'Created',
+        value: moment(created).fromNow()
+      },
+      {
+        title: 'Last Updated',
+        value: moment(updated).fromNow(),
+        state: 'ok'
+      }
+    ];
+    return this.renderRows(data);
+  }
+
+  renderNodesDetail() {
     const {
       leaders,
       managers,
@@ -79,7 +109,7 @@ class Overview extends React.Component {
       reachableNodes,
       uniqueVersions,
       commonVersion
-    } = context.props.statistics.nodes;
+    } = this.props.statistics.nodes;
 
     const data = [
       {
@@ -100,18 +130,12 @@ class Overview extends React.Component {
       },
       {
         title: 'Docker Version',
-        value: uniqueVersions === 1 ? commonVersion : '[inconsistent]',
+        value: uniqueVersions === 1 ? commonVersion : '-',
         state: uniqueVersions === 1 ? 'ok' : 'warn',
-        message: context.nodeVersionMessage(uniqueVersions)
+        message: this.nodeVersionMessage(uniqueVersions)
       }
     ];
-    const rows = data.map(rowData => context.renderRow(rowData));
-
-    return (
-      <div className={'detail-rows'}>
-        {rows}
-      </div>
-    );
+    return this.renderRows(data);
   }
 
   renderServicesDetail() {
@@ -128,14 +152,15 @@ class Overview extends React.Component {
 
   renderDetail() {
     const { focusedSection } = this.state;
-    if (!focusedSection) return null;
-
-    return {
+    const renderer = {
+      swarm: this.renderSwarmDetail,
       nodes: this.renderNodesDetail,
       services: this.renderServicesDetail,
       containers: this.renderContainersDetail,
       networks: this.renderNetworksDetail
-    }[focusedSection](this);
+    }[focusedSection];
+
+    return renderer.apply(this);
   }
 
   renderHeader(section, label, count) {
@@ -183,10 +208,20 @@ class Overview extends React.Component {
     if (visible) classes.push('visible');
     if (hidden) classes.push('hidden');
 
+    const onMouseLeave = function (ev) {
+      this.focus('swarm');
+
+      return this.close(ev, closeCallback);
+    }
+
     return (
       <div
-        onMouseLeave={(ev) => this.close(ev, closeCallback)}
+        onMouseLeave={(ev) => onMouseLeave.call(this, ev)}
         className={`overview ${classes.join(' ')}`}>
+        <div
+          onMouseEnter={() => this.focus('swarm')}
+          className={'spacer'}>
+        </div>
         <div className={'headers'}>
           <span>
             {sections.map(section => this.renderHeader(...section))}
@@ -197,7 +232,7 @@ class Overview extends React.Component {
             {sections.map(section => this.renderSection(...section))}
           </span>
         </div>
-        <div className={'detail'}>
+        <div onMouseEnter={() => this.focus('swarm')} className={'detail'}>
           {this.renderDetail()}
         </div>
       </div>

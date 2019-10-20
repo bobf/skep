@@ -1,42 +1,51 @@
 
 class Statistics:
     def __init__(self, swarm):
-        self.swarm = swarm
+        self.data = swarm
 
     def overview(self):
         return {
-            'nodes': len(self.swarm.nodes()),
-            'containers': len(self.swarm.containers()),
-            'networks': len(self.swarm.networks()),
-            'stacks': len(self.swarm.stacks()),
-            'services': sum(len(x.services) for x in self.swarm.stacks())
+            'nodes': len(self.data.nodes()),
+            'containers': len(self.data.containers()),
+            'networks': len(self.data.networks()),
+            'stacks': len(self.data.stacks()),
+            'services': sum(len(x.services) for x in self.data.stacks())
+        }
+
+    def swarm(self):
+        attrs = self.data.attrs()
+
+        return {
+            'name': attrs['name'],
+            'created': attrs['created'],
+            'updated': attrs['updated']
         }
 
     def leaders(self):
-        return len([x for x in self.swarm.nodes() if x.leader()])
+        return len([x for x in self.data.nodes() if x.leader()])
 
     def managers(self):
-        return len([x for x in self.swarm.nodes() if x.role() == 'manager'])
+        return len([x for x in self.data.nodes() if x.role() == 'manager'])
 
     def workers(self):
-        return len([x for x in self.swarm.nodes() if x.role() == 'worker'])
+        return len([x for x in self.data.nodes() if x.role() == 'worker'])
 
     def reachable_nodes(self):
-        return len([x.reachable() for x in self.swarm.nodes()])
+        return len([x.reachable() for x in self.data.nodes()])
 
     def unique_versions(self):
-        return len(set(x.version() for x in self.swarm.nodes()))
+        return len(set(x.version() for x in self.data.nodes()))
 
     def common_version(self):
         if self.unique_versions() != 1:
             return None
 
-        nodes = self.swarm.nodes()
+        nodes = self.data.nodes()
         if not nodes:
             # Probably impossible ?
             return None
 
-        return self.swarm.nodes()[0].version()
+        return self.data.nodes()[0].version()
 
     def nodes(self):
         return {
@@ -51,6 +60,7 @@ class Statistics:
     def serialize(self):
         return {
             'overview': self.overview(),
+            'swarm': self.swarm(),
             'nodes': self.nodes()
         }
 
