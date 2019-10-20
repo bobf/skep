@@ -5,7 +5,9 @@
   max-width: 75%;
   padding-left: 2em;
   overflow-y: scroll;
+  position: fixed;
   table-layout: fixed;
+  height: 100%;
 }
 
 .collapsed .services {

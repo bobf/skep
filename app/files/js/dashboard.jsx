@@ -2,6 +2,7 @@ import React from 'react';
 import * as Icon from 'react-feather';
 
 import Node from './node';
+import Overview from './overview';
 import Stack from './stack';
 
 class Dashboard extends React.Component {
@@ -13,6 +14,8 @@ class Dashboard extends React.Component {
       nodesMinimized: true,
       stacksMinimized: false,
       collapsedStacks: null,
+      modalVisible: false,
+      modalHidden: true,
       overviewVisible: false,
       obscured: false
     }
@@ -172,75 +175,55 @@ class Dashboard extends React.Component {
 
   toggleOverview(visible) {
     this.setState({ overviewVisible: visible });
-  }
 
-  renderOverviewHeader(section, label, count) {
-    return (
-      <div key={`overview-header-${section}`} className={section}>
-        <span className={'header'}>
-          {label}
-        </span>
-      </div>
-    );
-  }
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
 
-  renderOverviewSection(section, label, count) {
-    return (
-      <div key={`overview-section-${section}`} className={section}>
-        <span className={'count'}>
-          {count}
-        </span>
-      </div>
-    );
+    if (visible) {
+      this.setState({ modalHidden: false });
+      this.setState({ modalVisible: true });
+    } else {
+      this.setState({ modalHidden: true });
+      this.timeout = setTimeout(
+        () => this.setState({ modalVisible: false }),
+        500
+      );
+    }
   }
 
   renderOverviewMinimized() {
+    const { overviewVisible } = this.state;
+    const className = overviewVisible ? '' : 'visible';
     return (
       <div
         onMouseEnter={() => this.toggleOverview(true)}
-        className={'overview-minimized'}>
+        className={`overview-minimized ${className}`}>
         <Icon.ArrowDownCircle className={'icon'} />
       </div>
     );
   }
 
   renderOverviewModal() {
-    const { overviewVisible } = this.state;
-
-    if (!overviewVisible) return null;
+    const { modalVisible, modalHidden } = this.state;
+    const classes = [];
+    if (modalVisible) classes.push('visible');
+    if (modalHidden) classes.push('hidden');
 
     return (
-      <div className={'overview-modal'}></div>
+      <div className={`overview-modal ${classes.join(' ')}`}></div>
     );
   }
 
   renderOverview() {
     const { statistics, overviewVisible } = this.state;
     if (!statistics) return null;
-    if (!overviewVisible) return this.renderOverviewMinimized();
-
-    const sections = [
-      ['nodes', 'Nodes', statistics.counts.nodes],
-      ['services', 'Services', statistics.counts.services],
-      ['containers', 'Containers', statistics.counts.containers],
-      ['networks', 'Networks', statistics.counts.networks],
-    ]
 
     return (
-      <div
-        onMouseLeave={() => this.toggleOverview(false)}
-        className={'overview'}>
-        <div className={'headers'}>
-          <span>
-            {sections.map(section => this.renderOverviewHeader(...section))}
-          </span>
-        </div>
-        <div className={'counts'}>
-          <span>
-            {sections.map(section => this.renderOverviewSection(...section))}
-          </span>
-        </div>
-      </div>
+      <Overview
+        visible={overviewVisible}
+        statistics={statistics}
+        closeCallback={() => this.toggleOverview(false)} />
     );
   }
 
@@ -250,6 +233,7 @@ class Dashboard extends React.Component {
 
     return (
       <div className={'dashboard-overview-wrapper'}>
+        {this.renderOverviewMinimized()}
         {this.renderOverview()}
         {this.renderOverviewModal()}
         <div className={this.state.obscured ? 'obscured' : ''} id={'dashboard'}>

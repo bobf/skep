@@ -11,6 +11,12 @@ class Node:
     def manager_status(self):
         return self.node.attrs.get('ManagerStatus', {})
 
+    def role(self):
+        return self.node.attrs['Spec']['Role']
+
+    def version(self):
+        return self.node.attrs['Description']['Engine']['EngineVersion']
+
     def attrs(self):
         attrs = self.node.attrs
 
@@ -18,10 +24,10 @@ class Node:
             'id': attrs['ID'],
             'hostname': attrs['Description']['Hostname'],
             'created': attrs['CreatedAt'],
-            'role': attrs['Spec']['Role'],
+            'role': self.role(),
             'leader': self.leader(),
             'reachable': self.reachable(),
-            'version': attrs['Description']['Engine']['EngineVersion']
+            'version': self.version()
         }
 
     def serializable(self):

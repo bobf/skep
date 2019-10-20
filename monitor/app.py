@@ -11,6 +11,7 @@ import urllib.request
 from urllib.request import Request
 
 from skep.docker.swarm import Swarm
+from skep.docker.statistics import Statistics
 from skep.json import DelegatingJSONEncoder
 
 if 'SKEP_SECRET' in os.environ:
@@ -31,21 +32,16 @@ class Monitor:
 
     def request(self, url, data):
         headers = headers={ 'Content-Type': 'application/json', **AUTH }
-        manifest = Swarm().manifest()
-        data = { 'manifest': manifest, 'statistics': self.statistics(manifest) }
+        swarm = Swarm()
+        data = {
+            'manifest': swarm.manifest(),
+            'statistics': self.statistics(swarm)
+        }
 
         return Request(url, data=self.encode(data), headers=headers)
 
-    def statistics(self, manifest):
-        return {
-            'counts': {
-                'nodes': len(manifest['nodes']),
-                'containers': len(manifest['containers']),
-                'networks': len(manifest['networks']),
-                'stacks': len(manifest['stacks']),
-                'services': sum(len(x.services) for x in manifest['stacks'])
-            }
-        }
+    def statistics(self, swarm):
+        return Statistics(swarm).serialize()
 
     def encode(self, data):
         return json.dumps(data, cls=DelegatingJSONEncoder).encode('utf8')

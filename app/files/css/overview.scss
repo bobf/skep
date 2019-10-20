@@ -1,4 +1,4 @@
-$overview-height: 9em;
+$overview-height: 8.5em;
 // Using `em` creates weird rounding issues and off-by-one pixel alignment
 $overview-section-width: 130px;
 
@@ -7,13 +7,19 @@ $overview-section-width: 130px;
   display: block;
   cursor: pointer;
   margin-right: 1em;
-  position: fixed;
+  position: sticky;
+  top: 0;
   text-align: right;
   width: 100%;
   z-index: 999999999999999;
   border-bottom: 1px solid $outline-dark;
   background-color: $background-color;
   padding-top: 0.2em;
+  visibility: visible;
+
+  &.visible {
+    visibility: visible;
+  }
 
   .icon {
     width: 1.4em;
@@ -33,16 +39,22 @@ $overview-section-width: 130px;
   min-height: $overview-height;
   max-height: $overview-height;
   display: block;
-  position: fixed;
-  z-index: 999999999999999999999;
-  background-color: $background-color-secondary;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: $background-color;
   width: 100%;
   height: $overview-height;
   padding-left: 12.5em;
+  transition: opacity 0.5s ease;
+  opacity: 0;
 
-  &:hover {
-    background-color: $background-color;
-    cursor: pointer;
+  &.visible {
+    opacity: 1;
+  }
+
+  &.hidden {
+    visibility: hidden;
   }
 
   .headers {
@@ -90,6 +102,44 @@ $overview-section-width: 130px;
   .networks {
     background-color: #5c48af6b;
   }
+
+  .detail {
+    display: table;
+    padding-left: 1em;
+    margin-top: -1em;
+
+    .detail-row {
+      display: table-row;
+      padding-bottom: 0.2em;
+    }
+
+    .detail-title, .detail-value, .detail-icon {
+      display: table-cell;
+    }
+
+    .detail-title {
+      color: $label-text-dark;
+      padding-right: 0.8em;
+    }
+
+    .detail-value {
+      color: $label-text;
+      font-family: monospace;
+    }
+
+    .detail-icon {
+      padding-left: 0.4em;
+
+      .icon {
+        width: 1.2em;
+        height: 1.2em;
+      }
+    }
+
+    .detail-punctuation {
+      color: $accent;
+    }
+  }
 }
 
 .overview-modal {
@@ -97,6 +147,15 @@ $overview-section-width: 130px;
   height: 100%;
   width: 100%;
   background-color: $background-color-translucent;
-  margin-top: $overview-height;
   z-index: 9999999999999999999999999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease;
+  &.visible {
+    visibility: visible;
+    opacity: 1;
+  }
+  &.hidden {
+    opacity: 0;
+  }
 }
