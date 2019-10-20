@@ -1,5 +1,7 @@
 import os
 
+import docker.errors
+
 from skep.docker.environment import Environment
 from skep.docker.task import Task
 from skep.docker.network import Network
@@ -71,10 +73,17 @@ class Service(ImageParser):
 
         return attrs['Spec']['Mode']['Replicated']['Replicas']
 
+    def try_tasks(self):
+        try:
+            return self.service.tasks()
+        except docker.errors.NotFound:
+            # The service was removed since we started inspecting it
+            return []
+
     def tasks(self):
         tasks = list(filter(
             lambda x: x.desired_state() == 'running',
-            [Task(x) for x in self.service.tasks()]
+            [Task(x) for x in self.try_tasks()]
         ))
 
         replicas = self.replicas()

@@ -19,6 +19,7 @@ from urllib.request import Request
 os.environ['LINUX_METRICS_ROOT_FS'] = os.environ.get('HOSTFS_PATH', '/hostfs')
 import linux_metrics as lm
 import docker
+import docker.errors
 
 import stats.memory as memory
 
@@ -98,7 +99,11 @@ class StatRunner:
 
     def containers(self):
         params = { 'filters': { 'status': 'running' } }
-        containers = self.docker().containers.list(**params)
+        try:
+            containers = self.docker().containers.list(**params)
+        except docker.errors.NotFound:
+            # A container was removed while we were inspecting it.
+            return []
 
         q = queue.Queue()
 

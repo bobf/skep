@@ -9,7 +9,11 @@ class Overview extends React.Component {
   }
 
   close(ev, callback) {
+    const { visible } = this.props;
+    if (!visible) return false;
+
     this.setState({ hidden: false });
+    this.timeout && clearTimeout(this.timeout);
     this.timeout = setTimeout(() => this.setState({ hidden: true }), 500);
 
     return callback(ev);
