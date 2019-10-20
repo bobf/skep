@@ -40,15 +40,21 @@ class TaskChart extends ChartBase {
           minValue: 10000,
           format: 'short',
           textStyle: { color: '#999' },
-          titleTextStyle: { color: '#eee' },
-          title: 'Network / Disk bps'
+          titleTextStyle: { color: '#aaa' },
+          title: 'Network / Disk bps',
+          gridlines: {
+            color: '#333'
+          }
         },
         1: {
           minValue: 1,
           format: 'percent',
-          titleTextStyle: { color: '#eee' },
+          titleTextStyle: { color: '#aaa' },
           title: 'CPU / RAM %',
-          textStyle: { color: '#999' }
+          textStyle: { color: '#999' },
+          gridlines: {
+            color: '#333'
+          }
         }
       }
     }

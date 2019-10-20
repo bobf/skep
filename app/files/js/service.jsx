@@ -399,8 +399,8 @@ class Service extends React.Component {
           </span>
         </th>
         <td>
-          <Environment compact={true} name={name} dashboard={dashboard} environment={environment} />
-          <Mounts compact={true} name={name} mounts={mounts} />
+          <Environment compact={true} serviceName={name} dashboard={dashboard} environment={environment} />
+          <Mounts compact={true} serviceName={name} mounts={mounts} />
           <span className={'image-id'}>{this.imageLink()}</span>
           {this.updateStatus()}
         </td>
@@ -421,8 +421,8 @@ class Service extends React.Component {
         <h2>
           {this.updateStatus()}
           <span className={'title'}>{this.nameLink()}</span>
-          <Environment name={name} dashboard={dashboard} environment={environment} />
-          <Mounts name={name} mounts={mounts} />
+          <Environment serviceName={name} dashboard={dashboard} environment={environment} />
+          <Mounts serviceName={name} mounts={mounts} />
 
           {this.imageLink()}
           {this.renderPortsExpanded()}

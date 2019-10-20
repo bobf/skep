@@ -1,14 +1,9 @@
 import Chart from 'react-google-charts';
 
 import Messages from './messages';
+import Modal from './modal';
 
 class ChartBase extends React.Component {
-  close(ev, callback) {
-    if (ev.target.closest('.modal-content')) return false;
-
-    return callback();
-  }
-
   loader() {
     return (
       <div className={'loading'}>
@@ -32,10 +27,10 @@ class ChartBase extends React.Component {
       hAxis: {
         textPosition: 'none',
         title: `Period: ${periodHuman}`,
-        titleTextStyle: { color: '#eee' },
-        baselineColor: '#999',
+        titleTextStyle: { color: '#aaa' },
+        baselineColor: '#555',
         gridlines: {
-          color: '#555'
+          color: '#333'
         }
       },
       chartArea: { width: '85%', height: '70%' }
@@ -67,27 +62,27 @@ class ChartBase extends React.Component {
     );
   }
 
+  renderChartContent(chart) {
+    return (
+      <div className={'chart-content'}>
+        {chart ? this.chart() : this.loader()}
+      </div>
+    );
+  }
+
   render() {
     const { chart } = this.props.data || {};
     const { closeCallback } = this.props;
     const className = chart ? 'ready' : 'loading';
 
     return (
-      <div onClick={(ev) => this.close(ev, closeCallback)} className={'modal-wrapper modal'}>
-        <div className={`modal-content chart ${className}`}>
-          <div className={'viewport'}>
-            <div className={'header'}>
-              <h5>{this.title()}</h5>
-              <div className={'subtitle'}>
-                {this.subtitle()}
-              </div>
-            </div>
-          </div>
-          <div className={'chart-content'}>
-            {chart ? this.chart() : this.loader()}
-          </div>
-        </div>
-      </div>
+      <Modal
+        content={this.renderChartContent(chart)}
+        closeCallback={closeCallback}
+        wrapperClass={'chart-wrapper'}
+        contentClass={`chart ${className}`}
+        title={this.title()}
+        subtitle={this.subtitle()} />
     );
   }
 }

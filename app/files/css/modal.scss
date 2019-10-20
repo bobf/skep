@@ -1,0 +1,21 @@
+.modal .header {
+  padding: 1em;
+  border-bottom: 1px solid $outline-dark;
+}
+
+.modal .header h5 {
+  color: $label-text-dark;
+  text-align: center;
+}
+
+
+.modal .subtitle {
+  text-align: right;
+  color: $label-text-dark;
+  display: block;
+  font-family: monospace;
+  width: 100%;
+  margin-top: -1.8em;
+  font-style: oblique;
+  opacity: 0.5;
+}

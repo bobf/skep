@@ -1,4 +1,6 @@
 $overview-height: 9em;
+// Using `em` creates weird rounding issues and off-by-one pixel alignment
+$overview-section-width: 130px;
 
 .overview-minimized {
   height: 2em;
@@ -37,7 +39,7 @@ $overview-height: 9em;
 }
 
 .overview {
-  border-bottom: 1px solid $outline-dark;
+  border-bottom: 3px solid $outline-dark;
   background-image: url('../images/logo.svg');
   background-repeat: no-repeat;
   background-size: auto $overview-height - 1em;;
@@ -64,7 +66,7 @@ $overview-height: 9em;
       font-size: 1em;
       height: 1.5em;
       color: $label-text-subheading;
-      width: $overview-height;
+      width: $overview-section-width;
       padding-top: 0.2em;
       display: inline-block;
     }
@@ -75,7 +77,7 @@ $overview-height: 9em;
       float: left;
       display: table;
       height: $overview-height - 1.5em;
-      width: $overview-height;
+      width: $overview-section-width;
       text-align: center;
 
       .count {
