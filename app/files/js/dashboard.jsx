@@ -197,13 +197,20 @@ class Dashboard extends React.Component {
   renderOverviewMinimized() {
     return (
       <div
-        onClick={() => this.toggleOverview(true)}
+        onMouseEnter={() => this.toggleOverview(true)}
         className={'overview-minimized'}>
-        <Icon.ChevronDown className={'icon'} />
-        <div className={'overview-label'}>
-          {'Overview'}
-        </div>
+        <Icon.ArrowDownCircle className={'icon'} />
       </div>
+    );
+  }
+
+  renderOverviewModal() {
+    const { overviewVisible } = this.state;
+
+    if (!overviewVisible) return null;
+
+    return (
+      <div className={'overview-modal'}></div>
     );
   }
 
@@ -221,7 +228,7 @@ class Dashboard extends React.Component {
 
     return (
       <div
-        onClick={() => this.toggleOverview(false)}
+        onMouseLeave={() => this.toggleOverview(false)}
         className={'overview'}>
         <div className={'headers'}>
           <span>
@@ -244,6 +251,7 @@ class Dashboard extends React.Component {
     return (
       <div className={'dashboard-overview-wrapper'}>
         {this.renderOverview()}
+        {this.renderOverviewModal()}
         <div className={this.state.obscured ? 'obscured' : ''} id={'dashboard'}>
           <div className={'section minimized'} id={'nodes'}>
             <div className={'section-content'}>

@@ -8,33 +8,19 @@ $overview-section-width: 130px;
   cursor: pointer;
   margin-right: 1em;
   position: fixed;
-  text-align: center;
+  text-align: right;
   width: 100%;
   z-index: 999999999999999;
   border-bottom: 1px solid $outline-dark;
   background-color: $background-color;
+  padding-top: 0.2em;
 
   .icon {
-    width: 2em;
-    height: 2em;
+    width: 1.4em;
+    height: 1.4em;
     margin-right: 1em;
-    color: $label-text-dark;
-  }
-
-  &:hover {
-    background-color: $accent-background;
-
-    .icon, .overview-label {
-      color: $label-text;
-      visibility: visible;
-    }
-  }
-
-  .overview-label {
-    float: right;
-    margin: 0.4em 0.8em;
-    opacity: 0.5;
-    visibility: hidden;
+    color: $url-hover-color;
+    opacity: 0.8;
   }
 }
 
@@ -104,4 +90,13 @@ $overview-section-width: 130px;
   .networks {
     background-color: #5c48af6b;
   }
+}
+
+.overview-modal {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: $background-color-translucent;
+  margin-top: $overview-height;
+  z-index: 9999999999999999999999999;
 }
