@@ -138,7 +138,7 @@ class Dashboard extends React.Component {
     if (visible) {
       $nodes.addClass('maximized');
       $nodes.removeClass('minimized');
-      $nodes.animate({ width: $dashboard.width() - 28}, 1000, 'swing',
+      $nodes.animate({ width: $('body').width() - 28}, 1000, 'swing',
                      () => $stacks.fadeOut());
       this.setState({ stacksMinimized: true, nodesMinimized: false });
     } else {
