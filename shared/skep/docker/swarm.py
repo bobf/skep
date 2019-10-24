@@ -17,8 +17,27 @@ class Swarm:
         )
         self.client = docker.DockerClient(base_url=socket_url)
 
-    def manifest(self):
+    def refresh(self):
         self.client.swarm.reload()
+        self._containers = self.load_containers()
+        self._nodes = self.load_nodes()
+        self._networks = self.load_networks()
+        self._stacks = self.load_stacks()
+
+    def containers(self):
+        return self._containers
+
+    def nodes(self):
+        return self._nodes
+
+    def networks(self):
+        return self._networks
+
+    def stacks(self):
+        return self._stacks
+
+    def manifest(self):
+        self.refresh()
         return {
             "containers": self.containers(),
             "nodes": self.nodes(),
@@ -27,16 +46,16 @@ class Swarm:
             "swarm": self
         }
 
-    def containers(self):
+    def load_containers(self):
         return [
             Container(container) for
             container in self.client.containers.list()
         ]
 
-    def networks(self):
+    def load_networks(self):
         return [Network(network) for network in self.client.networks.list()]
 
-    def stacks(self):
+    def load_stacks(self):
         return [
             Stack(name, list(Service(x, swarm=self) for x in services))
             for name, services in self.grouped_services()
@@ -48,7 +67,7 @@ class Swarm:
             key=self.stack_label
         )
 
-    def nodes(self):
+    def load_nodes(self):
         return [Node(x) for x in self.client.nodes.list()]
 
     def attrs(self):

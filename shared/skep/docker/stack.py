@@ -1,10 +1,13 @@
 class Stack:
-    def __init__(self, name, services):
+    def __init__(self, name, service_list):
         self.name = name
-        self.services = services
+        self.service_list = service_list
+
+    def services(self):
+        return [x.attrs() for x in self.service_list]
 
     def serializable(self):
         return {
             "name": self.name,
-            "services": [x.attrs() for x in self.services]
+            "services": self.services()
         }

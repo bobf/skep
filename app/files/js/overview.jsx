@@ -85,6 +85,17 @@ class Overview extends React.Component {
     );
   }
 
+  renderSkepDetail() {
+    const { version } = this.props.statistics.skep;
+    const data = [
+      {
+        title: 'Skep Version',
+        value: version
+      }
+    ];
+    return this.renderRows(data);
+  }
+
   renderSwarmDetail() {
     const { name, created, updated } = this.props.statistics.swarm;
     const data = [
@@ -143,7 +154,19 @@ class Overview extends React.Component {
   }
 
   renderServicesDetail() {
-    return 'services';
+    const { global, replicated } = this.props.statistics.services;
+
+    const data = [
+      {
+        title: 'Global',
+        value: global
+      },
+      {
+        title: 'Replicated',
+        value: replicated
+      }
+    ];
+    return this.renderRows(data);
   }
 
   renderContainersDetail() {
@@ -157,6 +180,7 @@ class Overview extends React.Component {
   renderDetail() {
     const { focusedSection } = this.state;
     const renderer = {
+      skep: this.renderSkepDetail,
       swarm: this.renderSwarmDetail,
       nodes: this.renderNodesDetail,
       services: this.renderServicesDetail,
@@ -168,11 +192,19 @@ class Overview extends React.Component {
   }
 
   renderHeader(section, label, count) {
+    const { focusedSection } = this.state;
+    const hover = (focusedSection === section);
+    const classes = [
+      'section-header',
+      section,
+      hover ? 'hover' : ''
+    ];
+
     return (
       <div
         onMouseEnter={() => this.focus(section)}
         key={`overview-header-${section}`}
-        className={section}>
+        className={classes.join(' ')}>
         <span className={'header'}>
           {label}
         </span>
@@ -181,11 +213,14 @@ class Overview extends React.Component {
   }
 
   renderSection(section, label, count) {
+    const { focusedSection } = this.state;
+    const hover = (focusedSection === section);
+    const classes = ['section-content', section, hover ? 'hover' : ''];
     return (
       <div
         onMouseEnter={() => this.focus(section)}
         key={`overview-section-${section}`}
-        className={section}>
+        className={classes.join(' ')}>
         <span className={'count'}>
           {count}
         </span>
@@ -223,7 +258,7 @@ class Overview extends React.Component {
         onMouseLeave={(ev) => onMouseLeave.call(this, ev)}
         className={`overview ${classes.join(' ')}`}>
         <div
-          onMouseEnter={() => this.focus('swarm')}
+          onMouseEnter={() => this.focus('skep')}
           className={'spacer'}>
         </div>
         <div className={'headers'}>

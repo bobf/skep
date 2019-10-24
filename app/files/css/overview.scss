@@ -7,6 +7,7 @@ $overview-section-width: 130px;
   background-repeat: no-repeat;
   background-position: 0.2em 0;
   background-size: auto 2em;
+  background-color: $outline-background;
   opacity: 0.6;
   height: 2.2em;
   display: block;
@@ -20,7 +21,6 @@ $overview-section-width: 130px;
   border-bottom: 1px solid $outline-dark;
   padding-top: 0.2em;
   visibility: visible;
-  background-color: $background-color;
 
   &.visible {
     visibility: visible;
@@ -95,6 +95,25 @@ $overview-section-width: 130px;
         font-size: 2em;
         color: $label-text-dark;
       }
+
+      border: 2px solid $transparent;
+      border-top: none;
+
+      // We use JS to set this class so that we can also highlight the related
+      // `.section-header` element.
+      &.hover {
+        border-color: $highlight-select;
+      }
+    }
+  }
+
+  .section-header {
+    border: 2px solid $transparent;
+    border-bottom: none;
+    border-bottom: none;
+
+    &.hover {
+      border-color: $highlight-select;
     }
   }
 

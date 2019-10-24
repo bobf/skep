@@ -33,6 +33,7 @@ class Monitor:
     def request(self, url, data):
         headers = headers={ 'Content-Type': 'application/json', **AUTH }
         swarm = Swarm()
+        swarm.refresh()
         data = {
             'manifest': swarm.manifest(),
             'statistics': self.statistics(swarm)

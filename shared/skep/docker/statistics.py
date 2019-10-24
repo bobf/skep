@@ -1,3 +1,6 @@
+from itertools import chain
+
+import skep
 
 class Statistics:
     def __init__(self, swarm):
@@ -9,9 +12,13 @@ class Statistics:
             'containers': len(self.data.containers()),
             'networks': len(self.data.networks()),
             'stacks': len(self.data.stacks()),
-            'services': sum(len(x.services) for x in self.data.stacks())
+            'services': sum(len(x.services()) for x in self.data.stacks())
         }
 
+    def skep(self):
+        return {
+            'version': skep.__version__
+        }
     def swarm(self):
         attrs = self.data.attrs()
 
@@ -47,6 +54,21 @@ class Statistics:
 
         return self.data.nodes()[0].version()
 
+    def global_services(self):
+        return len([x for x in self.all_services() if x['global']])
+
+    def replicated_services(self):
+        return len([x for x in self.all_services() if not x['global']])
+
+    def all_services(self):
+        return list(
+            chain.from_iterable(x.services() for x in self.data.stacks())
+        )
+
+    def containers(self):
+        return {
+        }
+
     def nodes(self):
         return {
             'leaders': self.leaders(),
@@ -57,10 +79,19 @@ class Statistics:
             'commonVersion': self.common_version()
         }
 
+    def services(self):
+        return {
+            'global': self.global_services(),
+            'replicated': self.replicated_services()
+        }
+
     def serialize(self):
         return {
             'overview': self.overview(),
             'swarm': self.swarm(),
-            'nodes': self.nodes()
+            'nodes': self.nodes(),
+            'skep': self.skep(),
+            'services': self.services(),
+            'containers': self.containers()
         }
 

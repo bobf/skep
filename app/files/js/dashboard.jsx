@@ -199,7 +199,6 @@ class Dashboard extends React.Component {
       <div
         onMouseEnter={() => this.toggleOverview(true)}
         className={`overview-minimized ${className}`}>
-        <Icon.ArrowDownCircle className={'icon'} />
       </div>
     );
   }

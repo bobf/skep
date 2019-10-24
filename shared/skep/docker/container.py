@@ -2,7 +2,7 @@ class Container:
     def __init__(self, container):
         self.attrs = container.attrs
         self.id = container.id
-        self.name = 'what'
+        self.name = container.name
         self.image = container.attrs['Image']
 
     def error(self):
