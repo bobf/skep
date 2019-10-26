@@ -7,7 +7,7 @@ import Dashboard from './dashboard';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import { updateSwarm } from './redux/models/swarm';
-import { updateNode } from './redux/models/node';
+import { updateNode, pingNode, unpingNode } from './redux/models/node';
 
 $(function () {
   if (typeof window === 'undefined') return;
@@ -62,6 +62,8 @@ $(function () {
   socket.on('stats', function (json) {
     const data = JSON.parse(json);
     store.dispatch(updateNode(data));
+    store.dispatch(pingNode(data));
+    setTimeout(() => store.dispatch(unpingNode(data)), 500);
   });
 
   $('body').tooltip({

@@ -1,3 +1,4 @@
+import store from './redux/store';
 import * as Icon from 'react-feather';
 
 import FilesystemStats from './filesystem_stats';
@@ -7,6 +8,7 @@ import NodeChart from './node_chart';
 class Node extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       chartData: null,
       chartClosed: true
@@ -159,6 +161,8 @@ class Node extends React.Component {
 
   render() {
     const { minimized, node } = this.props;
+    const { ping } = node;
+    const classes = ['node', ping ? 'ping' : ''];
     const tooltip = (
       `<div class="info-tooltip">
          Hostname: <em>${this.hostname()}</em><br/>
@@ -167,7 +171,7 @@ class Node extends React.Component {
     );
 
     return (
-      <div id={`node-${node.id}`} className={'node'}>
+      <div id={`node-${node.id}`} className={classes.join(' ')}>
         {this.renderChart()}
         <Icon.Power className={'light'} size={'1em'} />
         {this.chartButton()}

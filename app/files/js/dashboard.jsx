@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
+import store from './redux/store';
 import NodeList from './node_list';
 import Overview from './overview';
 import Stack from './stack';
