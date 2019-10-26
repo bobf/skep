@@ -1,7 +1,7 @@
 #!/bin/bash
 tmux -L skep-dev new-session -d './launch-dev-app' -n 'skep'
 tmux -L skep-dev split-window -p 33 -v './launch-dev-assets'
-tmux -L skep-dev split-window -v './launch-dev-monitor'
-tmux -L skep-dev split-window -v './launch-dev-agent'
-tmux -L skep-dev split-window -h './launch-dev-calculator'
+tmux -L skep-dev split-window -h -p 30 './launch-dev-monitor'
+tmux -L skep-dev split-window -h -p 30 './launch-dev-agent'
+tmux -L skep-dev split-window -h -p 30 './launch-dev-calculator'
 tmux -L skep-dev attach

@@ -23,14 +23,16 @@ class Service(ImageParser):
             "replicas": self.replicas(),
             "updated": attrs['UpdatedAt'],
             "updating": self.updating(),
+            "state": self.state(),
+            "stateMessage": self.state_message(),
             "ports": self.ports(),
             "image": self.image(),
             "tasks": self.tasks(),
             "networks": self.networks(),
             "environment": self.environment(),
             "mounts": self.mounts(),
-            "name_url": self.name_url(),
-            "image_url": self.image_url()
+            "nameURL": self.name_url(),
+            "imageURL": self.image_url()
         }
 
     def id(self):
@@ -107,9 +109,17 @@ class Service(ImageParser):
             self.service.attrs['Spec']['TaskTemplate']['ContainerSpec']['Image']
         )
 
+    def state(self):
+        return self.service.attrs.get('UpdateStatus', {}).get('State', None)
+
+    def state_message(self):
+        return self.service.attrs.get('UpdateStatus', {}).get('Message', None)
+
+    def rolling_back(self):
+        return self.state() == 'rollback_started'
+
     def updating(self):
-        state = self.service.attrs.get('UpdateStatus', {}).get('State', None)
-        return state == 'updating'
+        return self.state() in ('updating', 'rollback_started')
 
     def serializable(self):
         return self.attrs()

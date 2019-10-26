@@ -1,15 +1,11 @@
-$overview-height: 8.5em;
-// Using `em` creates weird rounding issues and off-by-one pixel alignment
-$overview-section-width: 130px;
-
 .overview-minimized {
   background-image: url('../images/logo-compact.svg');
   background-repeat: no-repeat;
-  background-position: 0.2em 0;
+  background-position: 0.4em 0.2em;
   background-size: auto 2em;
   background-color: $outline-background;
   opacity: 0.6;
-  height: 2.2em;
+  height: $overview-sticky-height;
   display: block;
   cursor: pointer;
   margin-right: 1em;

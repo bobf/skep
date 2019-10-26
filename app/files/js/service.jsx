@@ -51,51 +51,106 @@ class Service extends React.Component {
     return '[unknown]';
   }
 
-  imageWarning(message) {
+  stateIconWarning(message) {
     return (
       <span
         title={message}
         className={'service-icon text-warning update-warning'}
         data-toggle={'tooltip'}
+        data-html={'true'}
         data-original-title={message}>
-        <Icon.AlertTriangle className={'icon'} size={'1.2em'} />
+        <Icon.AlertTriangle className={'icon'} />
       </span>
     );
   }
 
-  updateStatus() {
-    const { updated, updating, image } = this.props.service;
-
-    if (updating) {
-      const updateTooltip = 'Update in progress';
-      return (
-        <span
-          title={updateTooltip}
-          className={'service-icon updating'}
-          data-original-title={updateTooltip}
-          data-toggle={'tooltip'}>
-        </span>
-      );
-    }
-
-    if (this.imageMismatch()) {
-      return this.imageWarning(Messages.service.inconsistentImages);
-    } else if (this.unknownDigest()) {
-      return this.imageWarning(Messages.service.unknownDigest);
-    }
-
-    const updatedTooltip = (`Updated <em>${moment(updated).fromNow()}</em>, ` +
-                            `verified image digests: <em>${this.shortDigest()}</em>`);
+  stateIconUpdating(message) {
     return (
       <span
-        title={updatedTooltip}
+        title={message}
+        data-original-title={message}
+        className={'service-icon updating'}
+        data-html={'true'}
+        data-toggle={'tooltip'}>
+        <Icon.RefreshCw className={'icon'} />
+      </span>
+    );
+  }
+
+  stateIconPaused(renderMessage) {
+    const { stateMessage } = this.props.service;
+    const message = renderMessage(stateMessage);
+    return (
+      <span
+        title={message}
+        className={'service-icon text-danger'}
+        data-toggle={'tooltip'}
+        data-html={'true'}
+        data-original-title={message}>
+        <Icon.PauseCircle className={'icon'} />
+      </span>
+    );
+  }
+
+  stateIconError(renderMessage) {
+    const { state } = this.props.service;
+    const message = renderMessage(state);
+    return (
+      <span
+        title={message}
+        className={'service-icon text-danger'}
+        data-toggle={'tooltip'}
+        data-html={'true'}
+        data-original-title={message}>
+        <Icon.AlertOctagon className={'icon'} />
+      </span>
+    );
+  }
+
+  stateIconComplete(renderMessage) {
+    const { updated } = this.props.service;
+    const message = renderMessage(moment(updated).fromNow(), this.shortDigest());
+
+    return (
+      <span
+        title={message}
         className={'service-icon text-success'}
         data-toggle={'tooltip'}
         data-html={'true'}
-        data-original-title={updatedTooltip}>
-        <Icon.CheckCircle className={'icon'} size={'1.2em'} />
+        data-original-title={message}>
+        <Icon.CheckCircle className={'icon'} />
       </span>
     );
+  }
+
+  stateIcon(type, messageDescriptor) {
+    const message = Messages.service.state[messageDescriptor];
+    switch (type) {
+      case 'updating': return this.stateIconUpdating(message);
+      case 'paused': return this.stateIconPaused(message);
+      case 'warning': return this.stateIconWarning(message);
+      case 'success': return this.stateIconComplete(message);
+      case 'error': return this.stateIconError(message);
+    }
+  }
+
+  updateStatus() {
+    const { updated, image, state } = this.props.service;
+    const messages = Messages.service.state;
+
+    if (this.imageMismatch()) return this.stateIcon('warning', 'inconsistentImages');
+    if (this.unknownDigest()) return this.stateIcon('warning', 'unknownDigest');
+
+    switch (state) {
+      case 'rollback_started': return this.stateIcon('updating', 'rollbackStarted');
+      case 'rollback_paused': return this.stateIcon('paused', 'rollbackPaused');
+      case 'rollback_completed': return this.stateIcon('success', 'rollbackComplete');
+      case 'started': return this.stateIcon('updating', 'updateStarted');
+      case 'paused': return this.stateIcon('paused', 'updatePaused');
+      case 'completed': return this.stateIcon('success', 'updateComplete');
+    }
+
+    return this.stateIcon(this.stateIcon('error', 'unrecognized'));
   }
 
   renderPortsExpanded() {
@@ -318,14 +373,14 @@ class Service extends React.Component {
   nameLink() {
     const { service } = this.props;
 
-    if (!service.name_url) return (
+    if (!service.nameURL) return (
       <span className={'service-name'}>
         {service.name}
       </span>
     );
 
     return (
-      <a className={'service-name'} href={service.name_url} target={'_blank'}>
+      <a className={'service-name'} href={service.nameURL} target={'_blank'}>
         {service.name}
       </a>
     );
@@ -355,7 +410,7 @@ class Service extends React.Component {
   }
 
   imageLink() {
-    const { image_url: imageURL } = this.props.service;
+    const { imageURL } = this.props.service;
 
     if (!imageURL) return (
       <span className={'image'}>
@@ -401,8 +456,8 @@ class Service extends React.Component {
         <td>
           <Environment compact={true} serviceName={name} dashboard={dashboard} environment={environment} />
           <Mounts compact={true} serviceName={name} mounts={mounts} />
-          <span className={'image-id'}>{this.imageLink()}</span>
           {this.updateStatus()}
+          <span className={'image-id'}>{this.imageLink()}</span>
         </td>
         <td className={'ports'}>
           {this.renderPortsCollapsed()}

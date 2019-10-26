@@ -5,7 +5,7 @@ import Messages from './messages';
 class Overview extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { focusedSection: 'nodes' };
+    this.state = { focusedSection: 'nodes', hidden: true };
   }
 
   close(ev, callback) {
