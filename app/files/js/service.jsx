@@ -3,9 +3,10 @@ import Environment from './environment';
 import Mounts from './mounts';
 import Messages from './messages';
 
+import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
-class Service extends React.Component {
+class ConnectedService extends React.Component {
   constructor(props) {
     super(props);
     this.state = { highlight: false };
@@ -18,11 +19,11 @@ class Service extends React.Component {
   replicas() {
     const { replicas } = this.props.service;
     const { dashboard } = this.props.stack;
+    const { nodes } = this.props.manifest.nodes;
 
     if (replicas !== null) return replicas;
 
-    // Global service
-    return Skep.dashboard.nodes().length;
+    return nodes && nodes.length;
   }
 
   imageMismatch() {
@@ -504,4 +505,9 @@ class Service extends React.Component {
   }
 }
 
+const select = (state) => {
+  return { swarm: state };
+};
+
+const Service = connect(select)(ConnectedService);
 export default Service;

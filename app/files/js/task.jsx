@@ -1,9 +1,10 @@
+import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
 import TaskStats from './task_stats';
 import TaskChart from './task_chart';
 
-class Task extends React.Component {
+class ConnectedTask extends React.Component {
   constructor(props) {
     super(props);
     this.state = { chartData: null, chartClosed: true };
@@ -27,7 +28,7 @@ class Task extends React.Component {
 
     if (!node) return "[waiting]";
 
-    const taskContainer = node.containers().find(
+    const taskContainer = node.containers.find(
       container => container.id === containerID
     );
 
@@ -37,7 +38,7 @@ class Task extends React.Component {
   hostname() {
     const node = this.node();
 
-    return node && node.hostname() || "[waiting]";
+    return node && node.hostname || "[waiting]";
   }
 
   digest() {
@@ -65,11 +66,10 @@ class Task extends React.Component {
   node() {
     const { containerID } = this.props.task;
     const { stack } = this.props;
-    const dashboard = stack.dashboard();
-    const nodes = dashboard.nodes();
+    const { nodes } = this.props;
 
-    return nodes.find(
-      node => node.hasContainer(containerID)
+    return Object.values(nodes).find(
+      node => node.containers.map(container => container.id).includes(containerID)
     );
   }
 
@@ -90,9 +90,9 @@ class Task extends React.Component {
   }
 
   stats() {
-    const nodeStats = this.nodeStats();
-    const current = this.containerStats(nodeStats.current);
-    const previous = this.containerStats(nodeStats.previous);
+    const node = this.node() || {};
+    const current = this.containerStats(node);
+    const previous = this.containerStats(node.previous);
     return { current: current || {}, previous: previous || {} };
   }
 
@@ -211,4 +211,9 @@ class Task extends React.Component {
   }
 }
 
+const select = (state) => {
+  return { nodes: state.nodes };
+}
+
+const Task = connect(select)(ConnectedTask);
 export default Task;

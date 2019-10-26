@@ -4,6 +4,11 @@ import 'bootstrap';
 
 import Dashboard from './dashboard';
 
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import { updateSwarm } from './redux/models/swarm';
+import { updateNode } from './redux/models/node';
+
 $(function () {
   if (typeof window === 'undefined') return;
 
@@ -45,32 +50,18 @@ $(function () {
 
     if (!Skep.dashboard) {
       Skep.dashboard = ReactDOM.render(
-        React.createElement(Dashboard, null),
+        <Provider store={store}>
+          <Dashboard />
+        </Provider>,
         document.getElementById('content')
       );
     }
-
-    Skep.dashboard.setState(data);
+    store.dispatch(updateSwarm(data));
   });
 
   socket.on('stats', function (json) {
-    if (!Skep.dashboard) return;
-
     const data = JSON.parse(json);
-    const node = Skep.dashboard.getNode(data.hostname)
-    if (!node) {
-      console.log('Could not find node for stats collection.', data);
-      return;
-    }
-
-    const previous = node.ref.current.state && node.ref.current.stats().current;
-    const stats = { current: data, previous: previous || {} };
-    node.ref.current.setState({ stats: stats });
-
-    $('#node-' + node.id).addClass('ping');
-    setTimeout(function () {
-      $('#node-' + node.id).removeClass('ping');
-    }, 500);
+    store.dispatch(updateNode(data));
   });
 
   $('body').tooltip({

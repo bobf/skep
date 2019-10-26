@@ -8,19 +8,20 @@ class Node extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      stats: { previous: {}, current: {} },
       chartData: null,
       chartClosed: true
     };
   }
 
   hostname() {
-    const { hostname } = this.props.node;
+    const { hostname } = this.props.node.manifest;
     return hostname;
   }
 
   stats() {
-    return this.state.stats;
+    const { node, previous } = this.props;
+
+    return { current: node, previous: previous };
   }
 
   containers() {
@@ -35,11 +36,11 @@ class Node extends React.Component {
   }
 
   leader() {
-    return this.props.node.leader;
+    return this.props.node.manifest.leader;
   }
 
   manager() {
-    return this.props.node.role === 'manager';
+    return this.props.node.manifest.role === 'manager';
   }
 
   roleClass() {
@@ -52,11 +53,11 @@ class Node extends React.Component {
 
   roleBadge() {
     const { minimized } = this.props;
-    const { role } = this.props.node;
+    const { role } = this.props.node.manifest;
     const label = {
       manager: { abbrev: 'M', full: 'Manager', level: 'primary' },
       worker: { abbrev: 'W', full: 'Worker', level: 'info' }
-    }[role];
+    }[role] || {};
     const tooltip = minimized ? label.full : '';
 
     return (
@@ -139,7 +140,7 @@ class Node extends React.Component {
   }
 
   version() {
-    const { version } = this.props.node;
+    const { version } = this.props.node.manifest;
 
     return version;
   }

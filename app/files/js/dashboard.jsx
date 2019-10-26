@@ -1,11 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
-import Node from './node';
+import NodeList from './node_list';
 import Overview from './overview';
 import Stack from './stack';
 
-class Dashboard extends React.Component {
+class ConnectedDashboard extends React.Component {
   constructor(props) {
     super(props);
     this._nodes = [];
@@ -28,7 +29,7 @@ class Dashboard extends React.Component {
   }
 
   manifest() {
-    const { manifest } = this.state;
+    const { manifest } = this.props.swarm;
     return manifest;
   }
 
@@ -42,11 +43,9 @@ class Dashboard extends React.Component {
   }
 
   renderStack(stack) {
-    this._stacks[stack.name] = this._stacks[stack.name] || React.createRef();
     return (
       <Stack
         dashboard={this}
-        ref={this._stacks[stack.name]}
         key={`stack-${stack.name}`}
         stack={stack}
         manifest={this.manifest()}
@@ -56,64 +55,6 @@ class Dashboard extends React.Component {
 
   stacks() {
     return Object.values(this._stacks).map(stack => stack.current);
-  }
-
-  nodeComponents() {
-    return this.fullNodes().map(node => node.component);
-  }
-
-  nodes() {
-    return this.fullNodes().map(node => node.ref.current);
-  }
-
-  fullNodes() {
-    return this.manifest().nodes.map(
-      node => this.findOrCreateNode(node)
-    ).sort(
-      (left, right) => {
-        const leftManager = left.ref.current && left.ref.current.manager();
-        const leftLeader = left.ref.current && left.ref.current.leader();
-        const rightManager = right.ref.current && right.ref.current.manager();
-        const rightLeader = right.ref.current && right.ref.current.leader();
-
-        if (leftLeader) return -1;
-        if (rightLeader) return 1;
-        if (leftManager && !rightManager) return -1;
-        if (rightManager && !leftManager) return 1;
-        if (left.hostname < right.hostname) return -1;
-        if (left.hostname > right.hostname) return 1;
-        return 0;
-      }
-    );
-  }
-
-  findOrCreateNode(state) {
-    const found = this._nodes.find(node => node.id === state.id);
-
-    if (found) {
-      return found;
-    }
-
-    const node = this.createNode(state);
-    this._nodes.push(node);
-    return node;
-  }
-
-  createNode(state) {
-    const ref = React.createRef();
-    return {
-      id: state.id,
-      hostname: state.hostname,
-      ref: ref,
-      component: (minimized) => (
-        <Node
-          key={state.id}
-          ref={ref}
-          node={state}
-          minimized={minimized}
-        />
-      )
-    }
   }
 
   toggle(id) {
@@ -215,13 +156,11 @@ class Dashboard extends React.Component {
   }
 
   renderOverview() {
-    const { statistics, overviewVisible } = this.state;
-    if (!statistics) return null;
+    const { overviewVisible } = this.state;
 
     return (
       <Overview
         visible={overviewVisible}
-        statistics={statistics}
         closeCallback={() => this.toggleOverview(false)} />
     );
   }
@@ -238,9 +177,7 @@ class Dashboard extends React.Component {
         <div className={this.state.obscured ? 'obscured' : ''} id={'dashboard'}>
           <div className={'section minimized'} id={'nodes'}>
             <div className={'section-content'}>
-              {this.nodeComponents().map(
-                component => component(this.state.nodesMinimized)
-              )}
+              <NodeList nodes={nodes} />
             </div>
           </div>
 
@@ -265,4 +202,9 @@ class Dashboard extends React.Component {
   }
 }
 
+const select = (state) => {
+  return { swarm: state.swarm };
+};
+
+const Dashboard = connect(select)(ConnectedDashboard);
 export default Dashboard;

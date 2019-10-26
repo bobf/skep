@@ -22,7 +22,7 @@ class Node:
 
         return {
             'id': attrs['ID'],
-            'hostname': attrs['Description']['Hostname'],
+            'hostname': attrs['Description']['Hostname'].lower(),
             'created': attrs['CreatedAt'],
             'role': self.role(),
             'leader': self.leader(),

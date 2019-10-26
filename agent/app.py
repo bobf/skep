@@ -234,7 +234,7 @@ def hostname():
 
 if __name__ == '__main__':
     StatRunner(
-        hostname=hostname(),
+        hostname=hostname().lower(),
         app_url=os.environ['SKEP_APP_URL'],
         calculator_url=os.environ['SKEP_CALCULATOR_URL'],
         disks=list(

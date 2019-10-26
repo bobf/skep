@@ -1,11 +1,18 @@
+import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
 import Messages from './messages';
 
-class Overview extends React.Component {
+class ConnectedOverview extends React.Component {
   constructor(props) {
     super(props);
     this.state = { focusedSection: 'nodes', hidden: true };
+  }
+
+  statistics() {
+    const { statistics } = this.props.swarm;
+
+    return statistics;
   }
 
   close(ev, callback) {
@@ -86,7 +93,7 @@ class Overview extends React.Component {
   }
 
   renderSkepDetail() {
-    const { version } = this.props.statistics.skep;
+    const { version } = this.statistics().skep;
     const data = [
       {
         title: 'Skep Version',
@@ -97,7 +104,7 @@ class Overview extends React.Component {
   }
 
   renderSwarmDetail() {
-    const { name, created, updated } = this.props.statistics.swarm;
+    const { name, created, updated } = this.statistics().swarm;
     const data = [
       {
         title: 'Swarm Name',
@@ -124,7 +131,7 @@ class Overview extends React.Component {
       reachableNodes,
       uniqueVersions,
       commonVersion
-    } = this.props.statistics.nodes;
+    } = this.statistics().nodes;
 
     const data = [
       {
@@ -154,7 +161,7 @@ class Overview extends React.Component {
   }
 
   renderServicesDetail() {
-    const { global, replicated } = this.props.statistics.services;
+    const { global, replicated } = this.statistics().services;
 
     const data = [
       {
@@ -229,7 +236,10 @@ class Overview extends React.Component {
   }
 
   render() {
-    const { statistics, closeCallback, visible } = this.props;
+    const { statistics } = this.props.swarm;
+    if (!statistics) return null;
+
+    const { closeCallback, visible } = this.props;
     const { hidden } = this.state;
 
     if (visible && this.timeout) {
@@ -279,4 +289,8 @@ class Overview extends React.Component {
   }
 }
 
+const select = (state) => {
+  return { swarm: state.swarm, nodes: state.nodes };
+};
+const Overview = connect(select)(ConnectedOverview);
 export default Overview;

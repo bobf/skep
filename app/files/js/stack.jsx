@@ -79,7 +79,6 @@ class Stack extends React.Component {
   }
 
   serviceRef(service) {
-    this._services[service.name] = this._services[service.name] || React.createRef();
     return this._services[service.name];
   }
 
