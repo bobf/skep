@@ -16,12 +16,13 @@ class Node extends React.Component {
   }
 
   hostname() {
-    const { hostname } = this.props.node.manifest;
+    const { hostname } = this.props.node;
     return hostname;
   }
 
   stats() {
-    const { node, previous } = this.props;
+    const { source: node } = this.props.node;
+    const { previous } = node || {};
 
     return { current: node, previous: previous };
   }
@@ -38,11 +39,11 @@ class Node extends React.Component {
   }
 
   leader() {
-    return this.props.node.manifest.leader;
+    return this.props.node.leader;
   }
 
   manager() {
-    return this.props.node.manifest.role === 'manager';
+    return this.props.node.role === 'manager';
   }
 
   roleClass() {
@@ -55,7 +56,7 @@ class Node extends React.Component {
 
   roleBadge() {
     const { minimized } = this.props;
-    const { role } = this.props.node.manifest;
+    const { role } = this.props.node;
     const label = {
       manager: { abbrev: 'M', full: 'Manager', level: 'primary' },
       worker: { abbrev: 'W', full: 'Worker', level: 'info' }
@@ -142,7 +143,7 @@ class Node extends React.Component {
   }
 
   version() {
-    const { version } = this.props.node.manifest;
+    const { version } = this.props.node;
 
     return version;
   }
@@ -161,7 +162,7 @@ class Node extends React.Component {
 
   render() {
     const { minimized, node } = this.props;
-    const { ping } = node;
+    const { ping } = node.source || {};
     const classes = ['node', ping ? 'ping' : ''];
     const tooltip = (
       `<div class="info-tooltip">

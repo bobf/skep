@@ -78,17 +78,11 @@ class Stack extends React.Component {
     );
   }
 
-  serviceRef(service) {
-    return this._services[service.name];
-  }
-
   renderService(service, collapsed) {
-    const { manifest } = this.props;
-    const ref = this.serviceRef(service);
+   const { manifest } = this.props;
     return (
       <Service
         collapsed={collapsed}
-        ref={ref}
         key={service.name}
         service={service}
         stack={this}

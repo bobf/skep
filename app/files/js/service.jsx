@@ -18,12 +18,11 @@ class ConnectedService extends React.Component {
 
   replicas() {
     const { replicas } = this.props.service;
-    const { dashboard } = this.props.stack;
-    const { nodes } = this.props.manifest.nodes;
+    const { nodes } = this.props.swarm.manifest;
 
     if (replicas !== null) return replicas;
 
-    return nodes && nodes.length;
+    return nodes && Object.values(nodes).length;
   }
 
   imageMismatch() {
@@ -474,13 +473,17 @@ class ConnectedService extends React.Component {
 
     return (
       <div className={'service ' + (updating ? 'updating' : '')}>
+        <div className={'service-badges'}>
+          {this.countBadge()}
+          {this.renderMode()}
+        </div>
         <h2>
-          {this.updateStatus()}
           <span className={'title'}>{this.nameLink()}</span>
-          <Environment serviceName={name} dashboard={dashboard} environment={environment} />
+          <Environment serviceName={name} environment={environment} />
           <Mounts serviceName={name} mounts={mounts} />
 
           {this.imageLink()}
+          {this.updateStatus()}
           {this.renderPortsExpanded()}
         </h2>
 
@@ -506,7 +509,7 @@ class ConnectedService extends React.Component {
 }
 
 const select = (state) => {
-  return { swarm: state };
+  return { swarm: state.swarm, nodes: state.nodes };
 };
 
 const Service = connect(select)(ConnectedService);

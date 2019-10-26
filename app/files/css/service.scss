@@ -4,6 +4,7 @@
 }
 
 .service h2 {
+  display: inline;
   font-size: 1rem;
   color: $label-text-dark;
 }
@@ -129,11 +130,23 @@ tr.service.highlight.networked {
   background-color: rgba(45,80,180,0.2);
 }
 
+.expanded .service .service-icon .icon {
+  height: 1.4em;
+  width: 1.4em;
+  margin-right: 0.2em;
+  margin-left: 0.4em;
+}
+
+.expanded .service .service-badges {
+  font-size: 1.2em;
+  display: inline;
+}
+
 .expanded div.service {
   padding-top: 0.6em;
 }
 
-.service-icon {
+.collapsed .service-icon {
   margin-right: 0.4em;
   margin-left: 0.2em;
   .icon {
