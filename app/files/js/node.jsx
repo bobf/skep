@@ -1,12 +1,12 @@
 import React from 'react';
-import store from './redux/store';
+import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
 import FilesystemStats from './filesystem_stats';
 import NodeStats from './node_stats';
 import NodeChart from './node_chart';
 
-class Node extends React.Component {
+class ConnectedNode extends React.Component {
   constructor(props) {
     super(props);
 
@@ -29,7 +29,10 @@ class Node extends React.Component {
   }
 
   containers() {
-    return this.stats().current.containers;
+    const { current } = this.stats();
+    if (!current) return [];
+
+    return current.containers;
   }
 
   hasContainer(containerID) {
@@ -149,6 +152,17 @@ class Node extends React.Component {
     return version;
   }
 
+  isHighlighted() {
+    const { selectedService } = this.props.dashboard;
+    if (!selectedService) return false;
+    const containerIDs = selectedService.tasks.map(task => task.containerID);
+    return containerIDs.some(
+      containerID => this.containers()
+                         .map(container => container.id)
+                         .includes(containerID)
+    );
+  }
+
   renderChart() {
     const { chartData, chartClosed } = this.state;
 
@@ -164,13 +178,16 @@ class Node extends React.Component {
   render() {
     const { minimized, node } = this.props;
     const { ping } = node.source || {};
-    const classes = ['node', ping ? 'ping' : ''];
+    const classes = ['node'];
     const tooltip = (
       `<div class="info-tooltip">
          Hostname: <em>${this.hostname()}</em><br/>
          Docker Engine Version: <em>${this.version()}</em>
        </div>`
     );
+
+    if (ping) classes.push('ping');
+    if (this.isHighlighted()) classes.push('highlight');
 
     return (
       <div id={`node-${node.id}`} className={classes.join(' ')}>
@@ -200,4 +217,9 @@ class Node extends React.Component {
   }
 }
 
+const select = state => {
+  return { dashboard: state.dashboard };
+};
+
+const Node = connect(select)(ConnectedNode);
 export default Node;

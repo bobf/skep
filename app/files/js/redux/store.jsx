@@ -1,9 +1,10 @@
 import { createStore, combineReducers } from 'redux';
-import swarm from './models/swarm';
+import dashboard from './models/dashboard';
 import nodes from './models/node';
+import swarm from './models/swarm';
 
 const store = createStore(
-  combineReducers({ swarm, nodes })
+  combineReducers({ dashboard, nodes, swarm })
 );
 
 export default store;

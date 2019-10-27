@@ -3,6 +3,8 @@ import Environment from './environment';
 import Mounts from './mounts';
 import Messages from './messages';
 
+import { selectService } from './redux/models/dashboard';
+
 import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
@@ -280,13 +282,6 @@ class ConnectedService extends React.Component {
     }
   }
 
-  highlightNetworkedServices(highlight) {
-    const { stack } = this.props;
-    this.networkedServices().forEach(
-      service => service.highlight(highlight, 'networked')
-    );
-  }
-
   name() {
     const { name } = this.props.service;
     return name;
@@ -297,20 +292,29 @@ class ConnectedService extends React.Component {
     return networks;
   }
 
-  networkedServices() {
-    const { stack } = this.props;
-    return stack
-           .dashboard()
-           .services()
-           .filter(service => this.isNetworkedService(service));
+  isSelected() {
+    const { selectedService } = this.props.dashboard;
+    if (!selectedService) return false;
+
+    const { id } = this.props.service;
+
+    return selectedService.id === id;
   }
 
-  isNetworkedService(service) {
-    const { networks, name } = this.props.service;
-    if (service.name() === name) return false;
+  isNetworkedService() {
+    const { selectedService } = this.props.dashboard;
+    const { networks, id } = this.props.service;
+    if (!selectedService) return false;
+    if (this.isSelected()) return false;
+
+    const { stacks } = this.props.swarm.manifest;
+    const service = stacks.map(stack => stack.services)
+                          .flat()
+                          .find(service => service.id === selectedService.id);
+    if (!service) return false; // should never happen ?
 
     const networkIds = new Set(networks.map(network => network.id));
-    const serviceNetworkIds = service.networks().map(network => network.id);
+    const serviceNetworkIds = service.networks.map(network => network.id);
     const intersect = serviceNetworkIds.filter(id => networkIds.has(id));
 
     return intersect.length > 0;
@@ -333,15 +337,10 @@ class ConnectedService extends React.Component {
   toggle(ev) {
     if (['A', 'SPAN'].includes(ev.target.tagName)) return false;
 
-    const { highlight } = this.state;
-    const { stack } = this.props;
-    if (!highlight) {
-      stack.dashboard().services().map(
-        service => service.highlight(false)
-      );
-    }
+    const { service, setSelected } = this.props;
 
-    this.highlightRelated(!highlight);
+    setSelected(this.isSelected() ? null : service);
+
     return false;
   }
 
@@ -427,18 +426,18 @@ class ConnectedService extends React.Component {
 
   renderCollapsed() {
     const { name, environment, mounts, updating } = this.props.service;
-    const { stack, service } = this.props;
-    const { highlight } = this.state;
-    const highlightClass = highlight ? `highlight ${this.state.highlightClass}` : '';
-    const updatingClass = updating ? 'updating' : '';
-    const dashboard = stack.dashboard();
+    const { stack, service, dashboard } = this.props;
+    const classes = ['service', 'collapsed'];
+    if (this.isSelected()) classes.push('selected');
+    if (this.isNetworkedService()) classes.push('networked');
+    if (updating) classes.push('updating');
     const networkTooltip = 'Reachable via a Docker network';
 
     return (
       <tr
         onClick={(ev) => this.toggle(ev)}
         key={`service-collapsed-${service.name}`}
-        className={`service collapsed ${highlightClass} ${updatingClass}`}>
+        className={classes.join(' ')}>
         <th className={'service-title'}>
           <span
             className={'network-icon'}
@@ -509,8 +508,14 @@ class ConnectedService extends React.Component {
 }
 
 const select = (state) => {
-  return { swarm: state.swarm, nodes: state.nodes };
+  return { swarm: state.swarm, nodes: state.nodes, dashboard: state.dashboard };
 };
 
-const Service = connect(select)(ConnectedService);
+const mapDispatchToProps = dispatch => {
+  return {
+    setSelected: serviceName => dispatch(selectService(serviceName))
+  };
+};
+
+const Service = connect(select, mapDispatchToProps)(ConnectedService);
 export default Service;
