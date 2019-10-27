@@ -5,7 +5,7 @@
 
 .service h2 {
   display: inline;
-  font-size: 1rem;
+  font-size: 1em;
   color: $label-text-dark;
 }
 
@@ -29,7 +29,7 @@ a.service-name:hover, a.image:hover {
 }
 
 .service span.title {
-  font-size: 1rem;
+  font-size: 1em;
   text-transform: lowercase;
   font-family: monospace;
 }
@@ -101,6 +101,7 @@ td.ports {
   .badge {
     position: absolute;
     margin-top: 0.2em;
+    width: 2em;
   }
 }
 
@@ -189,9 +190,26 @@ tr.service.networked {
     margin-right: 0.2em;
     margin-left: 0.4em;
   }
+
+  .service-name {
+    font-size: 1.2em;
+  }
+
   .service-badges {
     font-size: 1.2em;
     display: inline;
+    // Align outside of padding to keep alignment matched to collapsed stacks.
+    margin-left: -0.4em;
+
+    .badge {
+      padding: 0.25em;
+      width: 2em;
+    }
+
+    .mode-icon {
+      width: 1.05em;
+      height: 1.05em;
+    }
   }
 
   .buttons {

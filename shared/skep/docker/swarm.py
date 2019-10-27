@@ -19,7 +19,13 @@ class Swarm:
 
     def refresh(self):
         self.client.swarm.reload()
-        self._containers = self.load_containers()
+        try:
+            self._containers = self.load_containers()
+        except docker.errors.NotFound:
+            # Race condition can occur here; skip container data harvest on this
+            # run.
+            self._containers = []
+
         self._nodes = self.load_nodes()
         self._networks = self.load_networks()
         self._stacks = self.load_stacks()
