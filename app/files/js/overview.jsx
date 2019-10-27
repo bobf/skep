@@ -1,18 +1,36 @@
+import React from 'react';
 import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
+import ContainersDetail from './overview/containers_detail';
+import NetworksDetail from './overview/networks_detail';
+import NodesDetail from './overview/nodes_detail';
+import ServicesDetail from './overview/services_detail';
+import SkepDetail from './overview/skep_detail';
+import SwarmDetail from './overview/swarm_detail';
 import Messages from './messages';
 
 class ConnectedOverview extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { focusedSection: 'nodes', hidden: true };
+    this.state = {
+      focusedSection: null,
+      selectedSection: null,
+      hidden: true
+    };
   }
 
   statistics() {
     const { statistics } = this.props.swarm;
 
     return statistics;
+  }
+
+  services() {
+    const { stacks } = this.props.swarm.manifest;
+    const services = stacks.map(stack => stack.services).flat();
+
+    return services;
   }
 
   close(ev, callback) {
@@ -30,182 +48,46 @@ class ConnectedOverview extends React.Component {
     this.setState({ focusedSection: section });
   }
 
-  nodeVersionMessage(uniqueVersions) {
-    if (uniqueVersions === 1) {
-      return Messages.overview.nodes.consistentVersions;
+  select(section) {
+    const { selectedSection } = this.state;
+
+    if (section === selectedSection) {
+      this.setState({ selectedSection: null });
     } else {
-      return Messages.overview.nodes.inconsistentVersions(uniqueVersions);
+      this.setState({ selectedSection: section });
     }
   }
 
-  renderIcon(state, message) {
-    const mappedState = {
-      ok: 'success',
-      warn: 'warning',
-      error: 'error'
-    }[state];
+  isSectionSelected(section) {
+    const { selectedSection, focusedSection } = this.state;
 
-    const attributes = {
-      'data-toggle': 'tooltip',
-      'data-html': 'true',
-      'title': message,
-      'data-original-title': message,
-      'className': `icon text-${mappedState}`
-    }
+    if (selectedSection) return selectedSection === section;
+    if (focusedSection === section) return true;
 
-    switch (state) {
-      case 'ok':
-        return <Icon.CheckCircle {...attributes} />;
-      case 'warn':
-        return <Icon.AlertTriangle {...attributes} />;
-      case 'error':
-        return <Icon.CheckCircle {...attributes} />;
-    }
-  }
-
-  renderRow(rowData) {
-    return (
-      <div key={rowData.title} className={'detail-row'}>
-        <div className={'detail-title'}>
-          {rowData.title}
-          <span className={'detail-punctuation'}>
-            {':'}
-          </span>
-        </div>
-        <div className={'detail-value'}>
-          {rowData.value}
-        </div>
-        <div className={'detail-icon'}>
-          {this.renderIcon(rowData.state, rowData.message)}
-        </div>
-      </div>
-    );
-  }
-
-  renderRows(data) {
-    const rows = data.map(rowData => this.renderRow(rowData));
-
-    return (
-      <div className={'detail-rows'}>
-        {rows}
-      </div>
-    );
-  }
-
-  renderSkepDetail() {
-    const { version } = this.statistics().skep;
-    const data = [
-      {
-        title: 'Skep Version',
-        value: version
-      }
-    ];
-    return this.renderRows(data);
-  }
-
-  renderSwarmDetail() {
-    const { name, created, updated } = this.statistics().swarm;
-    const data = [
-      {
-        title: 'Swarm Name',
-        value: name
-      },
-      {
-        title: 'Created',
-        value: moment(created).fromNow()
-      },
-      {
-        title: 'Last Updated',
-        value: moment(updated).fromNow(),
-        state: 'ok'
-      }
-    ];
-    return this.renderRows(data);
-  }
-
-  renderNodesDetail() {
-    const {
-      leaders,
-      managers,
-      workers,
-      reachableNodes,
-      uniqueVersions,
-      commonVersion
-    } = this.statistics().nodes;
-
-    const data = [
-      {
-        title: 'Leaders',
-        value: leaders,
-        state: leaders === 1 ? 'ok' : 'warn'
-      },
-      {
-        title: 'Managers',
-        value: managers,
-        state: managers % 2 === 1 ? 'ok' : 'warn',
-        message: managers % 2 === 1 ? null : Messages.overview.nodes.noQuorum
-      },
-      {
-        title: 'Workers',
-        value: workers,
-        state: reachableNodes === managers + workers ? 'ok' : 'warn'
-      },
-      {
-        title: 'Docker Version',
-        value: uniqueVersions === 1 ? commonVersion : '-',
-        state: uniqueVersions === 1 ? 'ok' : 'warn',
-        message: this.nodeVersionMessage(uniqueVersions)
-      }
-    ];
-    return this.renderRows(data);
-  }
-
-  renderServicesDetail() {
-    const { global, replicated } = this.statistics().services;
-
-    const data = [
-      {
-        title: 'Global',
-        value: global
-      },
-      {
-        title: 'Replicated',
-        value: replicated
-      }
-    ];
-    return this.renderRows(data);
-  }
-
-  renderContainersDetail() {
-    return 'containers';
-  }
-
-  renderNetworksDetail() {
-    return 'networks';
+    return false;
   }
 
   renderDetail() {
-    const { focusedSection } = this.state;
+    const { focusedSection, selectedSection } = this.state;
+    const section = selectedSection ? selectedSection : focusedSection;
     const renderer = {
-      skep: this.renderSkepDetail,
-      swarm: this.renderSwarmDetail,
-      nodes: this.renderNodesDetail,
-      services: this.renderServicesDetail,
-      containers: this.renderContainersDetail,
-      networks: this.renderNetworksDetail
-    }[focusedSection];
+      swarm: () => React.createElement(SwarmDetail),
+      skep: () => React.createElement(SkepDetail),
+      services: () => React.createElement(ServicesDetail),
+      nodes: () => React.createElement(NodesDetail),
+      networks: () => React.createElement(NetworksDetail),
+      containers: () => React.createElement(ContainersDetail),
+    }[section || 'swarm'];
 
-    return renderer.apply(this);
+    return renderer();
   }
 
   renderHeader(section, label, count) {
-    const { focusedSection } = this.state;
-    const hover = (focusedSection === section);
-    const classes = [
-      'section-header',
-      section,
-      hover ? 'hover' : ''
-    ];
+    const { selectedSection } = this.state;
+    const hover = this.isSectionSelected(section);
+    const classes = ['section-header', section];
+    if (hover) classes.push('hover');
+    if (selectedSection === section) classes.push('selected');
 
     return (
       <div
@@ -220,12 +102,18 @@ class ConnectedOverview extends React.Component {
   }
 
   renderSection(section, label, count) {
-    const { focusedSection } = this.state;
-    const hover = (focusedSection === section);
-    const classes = ['section-content', section, hover ? 'hover' : ''];
+    const { selectedSection } = this.state;
+    const hover = this.isSectionSelected(section);
+    const classes = ['section-content', section]
+
+    if (hover) classes.push('hover');
+    if (section === 'skep' && hover) classes.push('bounce');
+    if (selectedSection === section) classes.push('selected');
+
     return (
       <div
         onMouseEnter={() => this.focus(section)}
+        onClick={() => this.select(section)}
         key={`overview-section-${section}`}
         className={classes.join(' ')}>
         <span className={'count'}>
@@ -256,10 +144,12 @@ class ConnectedOverview extends React.Component {
     const classes = [];
     if (visible) classes.push('visible');
     if (hidden) classes.push('hidden');
+    if (this.isSectionSelected('skep')) classes.push('bounce');
+
 
     const onMouseLeave = function (ev) {
-      this.focus('swarm');
-
+      const dataToggle = ev.target.attributes['data-toggle'];
+      if (dataToggle && dataToggle.value === 'tooltip') return false;
       return this.close(ev, closeCallback);
     }
 
@@ -269,7 +159,7 @@ class ConnectedOverview extends React.Component {
         className={`overview ${classes.join(' ')}`}>
         <div
           onMouseEnter={() => this.focus('skep')}
-          className={'spacer'}>
+          className={`spacer`}>
         </div>
         <div className={'headers'}>
           <span>
@@ -281,7 +171,7 @@ class ConnectedOverview extends React.Component {
             {sections.map(section => this.renderSection(...section))}
           </span>
         </div>
-        <div onMouseEnter={() => this.focus('swarm')} className={'detail'}>
+        <div onMouseEnter={() => this.focus()} className={'detail'}>
           {this.renderDetail()}
         </div>
       </div>

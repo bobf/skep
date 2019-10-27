@@ -22,8 +22,15 @@ const Messages = {
     nodes: {
       inconsistentVersions: (count) => `<em>${count}</em> unique Docker Engine versions detected.`,
       consistentVersions: 'All nodes are running the same Docker Engine version.',
-      noQuorum: '<em>Even</em> number of nodes detected. <em>Quorum</em> cannot be attained.'
-    }
+      noQuorum: '<em>Even</em> number of nodes detected. <em>Quorum</em> cannot be attained.',
+    },
+    containers: {
+      valid: (count) => `<em>${count}</em> containers reported by <em>Swarm</em> and <em>Nodes</em>.`,
+      invalid: (count, swarmCount) => `<em>${count}</em> containers reported by <Swarm> does not match <em>${swarmCount}</em> containers reported by <em>Nodes</em>.`,
+    },
+    networks: {
+      unattached: (count) => `Detected <em>${count}</em> networks not attached to any services.`,
+    },
   }
 };
 

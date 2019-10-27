@@ -1,3 +1,4 @@
+import React from 'react';
 import store from './redux/store';
 import * as Icon from 'react-feather';
 

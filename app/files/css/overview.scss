@@ -89,27 +89,42 @@
         display: table-cell;
         vertical-align: middle;
         font-size: 2em;
-        color: $label-text-dark;
+        color: $overview-count;
       }
 
-      border: 2px solid $transparent;
+      border: 3px solid $transparent;
       border-top: none;
 
       // We use JS to set this class so that we can also highlight the related
       // `.section-header` element.
       &.hover {
-        border-color: $highlight-select;
+        border-color: $overview-highlight-hover;
+        .count {
+          color: $overview-count-select;
+        }
+      }
+
+      &.selected {
+        border-color: $overview-highlight-select;
       }
     }
   }
 
+  .section-content {
+    cursor: pointer;
+  }
+
   .section-header {
-    border: 2px solid $transparent;
+    border: 3px solid $transparent;
     border-bottom: none;
     border-bottom: none;
 
     &.hover {
-      border-color: $highlight-select;
+      border-color: $overview-highlight-hover;
+    }
+
+    &.selected {
+      border-color: $overview-highlight-select;
     }
   }
 
@@ -130,6 +145,11 @@
   }
 
   .detail {
+    h3 {
+      font-size: 1em;
+      color: $label-text;
+    }
+
     display: table;
     padding-left: 1em;
     margin-top: -1em;
@@ -147,6 +167,8 @@
     .detail-title {
       color: $label-text-dark;
       padding-right: 0.8em;
+      // Needed for auto-generated task states
+      text-transform: capitalize;
     }
 
     .detail-value {
@@ -185,4 +207,23 @@
   &.hidden {
     opacity: 0;
   }
+}
+
+
+.bounce {
+    animation: animatedBackground 1.5s ease infinite;
+}
+
+@keyframes animatedBackground {
+  0% { background-position: 1.2em 0.2em; }
+  50% { background-position: 1.2em -1.5em; }
+  100% { background-position: 1.2em -1.5em; }
+
+  0%   { background-position: 1.2em 0.2em; }
+  10%  { background-position: 1.2em 0.2em; }
+  30%  { background-position: 1.2em -0.4em; }
+  50%  { background-position: 1.2em 0.2em; }
+  57%  { background-position: 1.2em 0.1em; }
+  64%  { background-position: 1.2em 0.2em; }
+  100%  { background-position: 1.2em 0.2em; }
 }
