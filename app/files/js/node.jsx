@@ -185,7 +185,7 @@ class ConnectedNode extends React.Component {
     const { ping } = this.agentData() || {};
     const classes = ['node'];
     const tooltip = (
-      `<div class="info-tooltip">
+      `<div class="tooltip-inner info-tooltip">
          Hostname: <em>${this.hostname()}</em><br/>
          Docker Engine Version: <em>${this.version()}</em>
        </div>`
