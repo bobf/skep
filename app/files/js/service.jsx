@@ -138,17 +138,19 @@ class ConnectedService extends React.Component {
   }
 
   updateStatus() {
-    const { updated, image, state } = this.props.service;
+    const { updated, image, state, updating } = this.props.service;
     const messages = Messages.service.state;
 
-    if (this.imageMismatch()) return this.stateIcon('warning', 'inconsistentImages');
-    if (this.unknownDigest()) return this.stateIcon('warning', 'unknownDigest');
+    if (!updating) {
+      if (this.imageMismatch()) return this.stateIcon('warning', 'inconsistentImages');
+      if (this.unknownDigest()) return this.stateIcon('warning', 'unknownDigest');
+    }
 
     switch (state) {
       case 'rollback_started': return this.stateIcon('updating', 'rollbackStarted');
       case 'rollback_paused': return this.stateIcon('paused', 'rollbackPaused');
       case 'rollback_completed': return this.stateIcon('success', 'rollbackComplete');
-      case 'started': return this.stateIcon('updating', 'updateStarted');
+      case 'updating': return this.stateIcon('updating', 'updateStarted');
       case 'paused': return this.stateIcon('paused', 'updatePaused');
       case 'completed': return this.stateIcon('success', 'updateComplete');
       case null: return this.stateIcon('success', 'noUpdate');
