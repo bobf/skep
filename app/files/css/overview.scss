@@ -215,15 +215,11 @@
 }
 
 
-.bounce {
-    animation: animatedBackground 1.5s ease infinite;
+.bounce-logo {
+  animation: bounce-logo 1.5s ease infinite;
 }
 
-@keyframes animatedBackground {
-  0% { background-position: 1.2em 0.2em; }
-  50% { background-position: 1.2em -1.5em; }
-  100% { background-position: 1.2em -1.5em; }
-
+@keyframes bounce-logo {
   0%   { background-position: 1.2em 0.2em; }
   10%  { background-position: 1.2em 0.2em; }
   30%  { background-position: 1.2em -0.4em; }

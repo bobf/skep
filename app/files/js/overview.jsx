@@ -107,7 +107,7 @@ class ConnectedOverview extends React.Component {
     const classes = ['section-content', section]
 
     if (hover) classes.push('hover');
-    if (section === 'skep' && hover) classes.push('bounce');
+    if (section === 'skep' && hover) classes.push('bounce-logo');
     if (selectedSection === section) classes.push('selected');
 
     return (
@@ -144,7 +144,7 @@ class ConnectedOverview extends React.Component {
     const classes = [];
     if (visible) classes.push('visible');
     if (hidden) classes.push('hidden');
-    if (this.isSectionSelected('skep')) classes.push('bounce');
+    if (this.isSectionSelected('skep')) classes.push('bounce-logo');
 
 
     const onMouseLeave = function (ev) {
