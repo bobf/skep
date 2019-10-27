@@ -10,7 +10,8 @@
 }
 
 .service-name, a.service-name, a.image {
-  color: $label-text-dark;
+  color: $label-text;
+  opacity: 0.7;
   text-transform: lowercase;
   font-family: monospace;
 }
@@ -50,8 +51,8 @@ a.service-name:hover, a.image:hover {
 
 .service .mode-icon {
   color: $label-text-dark;
-  height: 1em;
-  width: 1em;
+  width: 18px;
+  height: 18px;
   margin-right: 0.4em;
   margin-left: 0.4em;
   opacity: 1;
@@ -102,6 +103,7 @@ td.ports {
     position: absolute;
     margin-top: 0.2em;
     width: 2em;
+    height: 1.6em;
   }
 }
 
@@ -184,6 +186,10 @@ tr.service.networked {
   padding-top: 0.6em;
   border-bottom: 1px solid $outline;
 
+  .image-wrapper {
+    float: left;
+  }
+
   .service-icon .icon {
     height: 1.4em;
     width: 1.4em;
@@ -204,16 +210,14 @@ tr.service.networked {
     .badge {
       padding: 0.25em;
       width: 2em;
-    }
-
-    .mode-icon {
-      width: 1.05em;
-      height: 1.05em;
+      height: 1.65em;
     }
   }
 
   .buttons {
-    float: right;
+    position: absolute;
+    right: 2em;
+    margin-top: -1.4em;
   }
 
   .ports {

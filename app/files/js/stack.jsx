@@ -1,11 +1,21 @@
-import Service from './service';
 import * as Icon from 'react-feather';
+import { connect } from 'react-redux';
 
-class Stack extends React.Component {
+import { selectStack } from './redux/models/dashboard';
+import Service from './service';
+
+class ConnectedStack extends React.Component {
   constructor(props) {
     super(props);
     this.state = { highlight: {} }
     this._services = {};
+  }
+
+  isExpanded() {
+    const { selectedStack } = this.props.dashboard;
+    const { name } = this.props.stack;
+
+    return selectedStack === name;
   }
 
   services() {
@@ -22,34 +32,34 @@ class Stack extends React.Component {
     );
   }
 
-  dashboard() {
-    const { dashboard } = this.props;
-    return dashboard;
-  }
-
   expand() {
     const { name } = this.props.stack;
-    const { dashboard } = this.props;
+    const { setExpandedStack } = this.props;
 
-    dashboard.collapseAll({ except: name });
+    setExpandedStack(name);
 
     return false;
   }
 
   collapse() {
-    const { dashboard } = this.props;
-    const { name } = this.props.stack;
+    const { setExpandedStack } = this.props;
 
-    dashboard.collapse(name);
+    setExpandedStack(null);
 
     return false;
   }
 
+  collapseIcon(expanded) {
+    if (expanded) return <Icon.Minimize className={'icon expand'} />
+
+    return <Icon.Maximize className={'icon expand'} />
+  }
+
   collapseButton() {
     const { name } = this.props.stack;
-    const { collapsed } = this.props;
-    const callback = collapsed ? () => this.expand() : () => this.collapse();
-    const icon = collapsed ? <Icon.Maximize className={'icon expand'} /> : <Icon.Minimize className={'icon expand'} />
+    const expanded = this.isExpanded();
+    const callback = expanded ? () => this.collapse() : () => this.expand();
+    const icon = this.collapseIcon(expanded);
     return (
       <button
         type={'button'}
@@ -119,12 +129,10 @@ class Stack extends React.Component {
   }
 
   renderContent() {
-    const { collapsed } = this.props;
-
-    if (collapsed) {
-      return this.renderCollapsed();
-    } else {
+    if (this.isExpanded()) {
       return this.renderExpanded();
+    } else {
+      return this.renderCollapsed();
     }
   }
 
@@ -134,4 +142,15 @@ class Stack extends React.Component {
   }
 }
 
+const select = (state) => {
+  return { dashboard: state.dashboard };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setExpandedStack: stackName => dispatch(selectStack(stackName))
+  };
+};
+
+const Stack = connect(select, mapDispatchToProps)(ConnectedStack);
 export default Stack;

@@ -59,7 +59,7 @@ class Monitor:
 
         try:
             response = urllib.request.urlopen(request)
-        except urllib.error.URLError as e:
+        except (urllib.error.URLError, ConnectionResetError) as e:
             self.log.warning(
                 'Could not publish stats: %s (%s)' % (url, e)
             )

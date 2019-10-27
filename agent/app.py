@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import http.client
 import json
 import logging
 import multiprocessing
@@ -32,7 +33,7 @@ class StatRunner:
     def __init__(self, **kwargs):
         self.opts = kwargs
         self.log = self.logger(kwargs)
-        self.log.info('Launching SapptatRunner(%s)' % (kwargs,))
+        self.log.info('Launching Agent(%s)' % (kwargs,))
 
     def docker(self):
         # Host Docker socket must be mounted in agent containers here:
@@ -56,7 +57,7 @@ class StatRunner:
 
         try:
             response = urllib.request.urlopen(request)
-        except urllib.error.URLError as e:
+        except (urllib.error.URLError, http.client.RemoteDisconnected) as e:
             self.log.warning(
                 'Could not publish stats: %s (%s)' % (url, e)
             )

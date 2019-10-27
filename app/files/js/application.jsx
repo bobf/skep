@@ -12,13 +12,17 @@ import { updateNode, pingNode, unpingNode } from './redux/models/node';
 $(function () {
   if (typeof window === 'undefined') return;
 
-  var socket = io.connect(
+  const socket = io.connect(
     location.protocol + '//' + document.domain + ':' + location.port
   );
 
-  window.Skep = window.Skep || {};
+  const initNode = (data) => {
+    store.dispatch(updateNode(data));
+    store.dispatch(pingNode(data));
+    setTimeout(() => store.dispatch(unpingNode(data)), 500);
+  };
 
-  Skep = {
+  const Skep = {
     chartCallbacks: {},
     socket: socket,
     thresholds: {
@@ -36,6 +40,8 @@ $(function () {
                                          .substring(2, 15);
     }
   };
+
+  window.Skep = Skep;
 
   socket.on('connect', function() {
     socket.emit('init');
@@ -59,11 +65,15 @@ $(function () {
     store.dispatch(updateSwarm(data));
   });
 
+  socket.on('stats.init', function (json) {
+    const nodes = JSON.parse(json);
+    console.log(nodes);
+    nodes.forEach((node) => initNode(node));
+  });
+
   socket.on('stats', function (json) {
     const data = JSON.parse(json);
-    store.dispatch(updateNode(data));
-    store.dispatch(pingNode(data));
-    setTimeout(() => store.dispatch(unpingNode(data)), 500);
+    initNode(data);
   });
 
   $('body').tooltip({

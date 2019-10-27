@@ -171,21 +171,16 @@ class ConnectedService extends React.Component {
             data-toggle={'tooltip'}
             title={'Published Port'}
             className={'published port'}>
-            {':'}
             {mapping.published}
           </span>
-          <span className={'published arrow'}>
-            &#8613;
+          <span className={'punctuation'}>
+            {':'}
           </span>
           <span
             data-toggle={'tooltip'}
             title={'Target Port'}
             className={'target port'}>
-            {':'}
             {mapping.target}
-          </span>
-          <span className={'target arrow'}>
-            &#8615;
           </span>
         </div>
       )
@@ -457,7 +452,7 @@ class ConnectedService extends React.Component {
           </span>
         </th>
         <td>
-          <Environment compact={true} serviceName={name} dashboard={dashboard} environment={environment} />
+          <Environment compact={true} serviceName={name} environment={environment} />
           <Mounts compact={true} serviceName={name} mounts={mounts} />
           {this.updateStatus()}
           <span className={'image-id'}>{this.imageLink()}</span>
@@ -472,7 +467,6 @@ class ConnectedService extends React.Component {
   renderExpanded() {
     const { name, image, environment, mounts, updating } = this.props.service;
     const { stack } = this.props;
-    const dashboard = stack.dashboard();
 
     return (
       <div className={'service ' + (updating ? 'updating' : '')}>
@@ -487,11 +481,12 @@ class ConnectedService extends React.Component {
         <div className={'buttons'}>
           <Environment serviceName={name} environment={environment} />
           <Mounts serviceName={name} mounts={mounts} />
+          <div className={'image-wrapper'}>
+            {this.updateStatus()}
+            {this.imageLink()}
+          </div>
           {this.renderPortsExpanded()}
         </div>
-
-        {this.imageLink()}
-        {this.updateStatus()}
 
         <div className={'tasks'}>
           {this.tasks().map(task => (

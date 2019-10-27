@@ -10,8 +10,6 @@ import Stack from './stack';
 class ConnectedDashboard extends React.Component {
   constructor(props) {
     super(props);
-    this._nodes = [];
-    this._stacks = {};
     this.state = {
       nodesMinimized: true,
       stacksMinimized: false,
@@ -21,12 +19,6 @@ class ConnectedDashboard extends React.Component {
       overviewVisible: false,
       obscured: false
     }
-  }
-
-  getNode(hostname) {
-    return this._nodes.find(
-      node => node.hostname.toLowerCase() === hostname.toLowerCase()
-    )
   }
 
   manifest() {
@@ -46,16 +38,11 @@ class ConnectedDashboard extends React.Component {
   renderStack(stack) {
     return (
       <Stack
-        dashboard={this}
         key={`stack-${stack.name}`}
         stack={stack}
         manifest={this.manifest()}
         collapsed={this.isCollapsed(stack.name)} />
     );
-  }
-
-  stacks() {
-    return Object.values(this._stacks).map(stack => stack.current);
   }
 
   toggle(id) {
