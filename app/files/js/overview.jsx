@@ -150,6 +150,7 @@ class ConnectedOverview extends React.Component {
     const onMouseLeave = function (ev) {
       const dataToggle = ev.target.attributes['data-toggle'];
       if (dataToggle && dataToggle.value === 'tooltip') return false;
+      this.focus('swarm');
       return this.close(ev, closeCallback);
     }
 
@@ -158,6 +159,7 @@ class ConnectedOverview extends React.Component {
         onMouseLeave={(ev) => onMouseLeave.call(this, ev)}
         className={`overview ${classes.join(' ')}`}>
         <div
+          onClick={() => this.select('skep')}
           onMouseEnter={() => this.focus('skep')}
           className={`spacer`}>
         </div>

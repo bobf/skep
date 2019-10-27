@@ -60,6 +60,9 @@ class Statistics:
     def replicated_services(self):
         return len([x for x in self.all_services() if not x['global']])
 
+    def published_services(self):
+        return len([x for x in self.all_services() if x['ports']])
+
     def all_services(self):
         return list(
             chain.from_iterable(x.services() for x in self.data.stacks())
@@ -82,7 +85,8 @@ class Statistics:
     def services(self):
         return {
             'global': self.global_services(),
-            'replicated': self.replicated_services()
+            'replicated': self.replicated_services(),
+            'published': self.published_services()
         }
 
     def serialize(self):

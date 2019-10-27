@@ -58,6 +58,7 @@
   }
 
   .spacer {
+    cursor: pointer;
     width: 12.5em;
     display: inline-block;
     float: left;
@@ -174,6 +175,10 @@
     .detail-value {
       color: $label-text;
       font-family: monospace;
+
+      a {
+        color: $url-hover-color;
+      }
     }
 
     .detail-icon {

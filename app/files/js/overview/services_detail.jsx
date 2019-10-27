@@ -9,7 +9,7 @@ class ConnectedServicesDetail extends OverviewDetail {
   }
 
   render() {
-    const { global, replicated } = this.statistics().services;
+    const { global, replicated, published } = this.statistics().services;
 
     const data = [
       {
@@ -19,7 +19,11 @@ class ConnectedServicesDetail extends OverviewDetail {
       {
         title: 'Replicated',
         value: replicated
-      }
+      },
+      {
+        title: 'Published',
+        value: published
+      },
     ];
 
     return this.renderRows(data);

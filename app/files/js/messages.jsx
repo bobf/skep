@@ -1,4 +1,7 @@
 const Messages = {
+  skep: {
+    homepage: 'https://github.com/bobf/skep',
+  },
   service: {
     state: {
       inconsistentImages: 'Tasks are running inconsistent images. Compare task details for more information.',
