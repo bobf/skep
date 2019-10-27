@@ -29,15 +29,27 @@ class ConnectedContainersDetail extends OverviewDetail {
       task => {
         states[task.state] = states[task.state] || [];
         states[task.state].push(task);
+        if (task.message !== task.state) {
+          states[task.message] = states[task.message] || [];
+          states[task.message].push(task);
+        }
       }
     );
 
     return states;
   }
 
+  rowData(state, tasks) {
+    return {
+      title: state,
+      value: tasks.length,
+      state: ['running', 'started'].includes(state) ? 'ok' : null,
+    };
+  }
+
   render() {
     const containers = this.containers();
-    const tasks = this.tasksByState();
+    const tasksByState = this.tasksByState();
     const { containers: swarmCount } = this.props.swarm.statistics.overview;
     const count = containers.length;
     const valid = swarmCount === count;
@@ -50,17 +62,9 @@ class ConnectedContainersDetail extends OverviewDetail {
         message: valid ? messages.valid(count) : messages.invalid(count, swarmCount)
       }
     ];
-    const row = (state, tasks) => {
-      return {
-        title: state,
-        value: tasks.length,
-        state: state === 'running' ? 'ok' : null,
-      };
-    };
+    const stateData = Object.entries(tasksByState).map(keypair => this.rowData(...keypair));
 
-    Object.entries(tasks).forEach(keypair => data.push(row(...keypair)));
-
-    return this.renderRows(data);
+    return this.renderRows(data.concat(stateData));
   }
 }
 

@@ -156,6 +156,11 @@
     margin-top: -1em;
     height: $overview-height;
 
+    .row-chunk {
+      display: inline;
+      margin-right: 0.8em;
+    }
+
     .detail-row {
       display: table-row;
       padding-bottom: 0.2em;

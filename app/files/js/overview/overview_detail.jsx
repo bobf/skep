@@ -16,6 +16,13 @@ class OverviewDetail extends React.Component {
     return statistics;
   }
 
+  chunkedRows(rows, chunkSize) {
+    // https://www.w3resource.com/javascript-exercises/fundamental/javascript-fundamental-exercise-265.php
+    return Array.from({ length: Math.ceil(rows.length / chunkSize) }, (v, i) =>
+      rows.slice(i * chunkSize, i * chunkSize + chunkSize)
+    );
+  }
+
   renderIcon(state, message) {
     const mappedState = {
       ok: 'success',
@@ -41,9 +48,9 @@ class OverviewDetail extends React.Component {
     }
   }
 
-  renderRow(rowData) {
+  renderRow(rowData, index) {
     return (
-      <div key={rowData.title} className={'detail-row'}>
+      <div key={`row-data-${index}`} className={'detail-row'}>
         <div className={'detail-title'}>
           {rowData.title}
           <span className={'detail-punctuation'}>
@@ -60,13 +67,22 @@ class OverviewDetail extends React.Component {
     );
   }
 
+  renderRowChunk(rows, index) {
+    return (
+      <div key={`rows-chunk-${index}`} className={'row-chunk'}>
+        {rows}
+      </div>
+    );
+  }
+
   renderRows(data) {
-    const rows = data.map(rowData => this.renderRow(rowData));
+    const rows = data.map((rowData, index) => this.renderRow(rowData, index));
+    const chunkedRows = this.chunkedRows(rows, 4);
 
     return (
       <div className={'detail-rows'}>
       <h3>{this.title()}</h3>
-        {rows}
+        {chunkedRows.map((rows, index) => this.renderRowChunk(rows, index))}
       </div>
     );
   }
