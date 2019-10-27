@@ -67,6 +67,12 @@ $(function () {
   });
 
   $('body').tooltip({
-    selector: '[data-toggle="tooltip"]'
+    selector: '[data-toggle="tooltip"]',
+    placement: () => {
+      // Sometimes tooltips get stuck - hook into placement function to remove
+      // them before rendering. V. hacky.
+      $('.tooltip.fade').remove();
+      return 'auto';
+    },
   });
 });

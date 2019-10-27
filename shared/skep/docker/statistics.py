@@ -9,10 +9,10 @@ class Statistics:
     def overview(self):
         return {
             'nodes': len(self.data.nodes()),
-            'containers': len(self.data.containers()),
+            'containers': sum(len(x['tasks']) for x in self.all_services()),
             'networks': len(self.data.networks()),
             'stacks': len(self.data.stacks()),
-            'services': sum(len(x.services()) for x in self.data.stacks())
+            'services': len(self.all_services())
         }
 
     def skep(self):

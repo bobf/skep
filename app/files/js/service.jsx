@@ -110,8 +110,9 @@ class ConnectedService extends React.Component {
   }
 
   stateIconComplete(renderMessage) {
-    const { updated } = this.props.service;
-    const message = renderMessage(moment(updated).fromNow(), this.shortDigest());
+    const { updated, created } = this.props.service;
+    const time = updated || created;
+    const message = renderMessage(moment(time).fromNow(), this.shortDigest());
 
     return (
       <span
@@ -150,6 +151,7 @@ class ConnectedService extends React.Component {
       case 'started': return this.stateIcon('updating', 'updateStarted');
       case 'paused': return this.stateIcon('paused', 'updatePaused');
       case 'completed': return this.stateIcon('success', 'updateComplete');
+      case null: return this.stateIcon('success', 'noUpdate');
     }
 
     return this.stateIcon(this.stateIcon('error', 'unrecognized'));
@@ -478,13 +480,16 @@ class ConnectedService extends React.Component {
         </div>
         <h2>
           <span className={'title'}>{this.nameLink()}</span>
+        </h2>
+
+        <div className={'buttons'}>
           <Environment serviceName={name} environment={environment} />
           <Mounts serviceName={name} mounts={mounts} />
-
-          {this.imageLink()}
-          {this.updateStatus()}
           {this.renderPortsExpanded()}
-        </h2>
+        </div>
+
+        {this.imageLink()}
+        {this.updateStatus()}
 
         <div className={'tasks'}>
           {this.tasks().map(task => (

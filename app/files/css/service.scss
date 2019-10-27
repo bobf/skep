@@ -48,6 +48,44 @@ a.service-name:hover, a.image:hover {
   margin-right: 0.2em;
 }
 
+.service .mode-icon {
+  color: $label-text-dark;
+  height: 1em;
+  width: 1em;
+  margin-right: 0.4em;
+  margin-left: 0.4em;
+  opacity: 1;
+}
+
+.service .network-icon {
+  visibility: hidden;
+  position: absolute;
+  left: 0.3em;
+  vertical-align: middle;
+  display: inline;
+}
+
+.service.networked .network-icon {
+  visibility: visible;
+  color: rgba(70,120,235,1.0);
+}
+
+.service {
+  .image-label {
+    font-family: monospace;
+    background-color: $background-color-secondary;
+    color: $label-text-subheading;
+    border-radius: 0.4em;
+    margin: 0.2em;
+    text-shadow: 0px 0px 5px $outline-dark;
+    padding: 0.2em 0.4em;
+  }
+}
+
+.service-updated-tooltip {
+  text-align: left;
+}
+
 td.ports {
   text-align: right;
   padding-right: 0.2em;
@@ -55,20 +93,31 @@ td.ports {
 
 .service-title {
   width: 50%;
+
+  .mode-icon {
+    margin-left: 2em;
+  }
+
+  .badge {
+    position: absolute;
+    margin-top: 0.2em;
+  }
 }
 
-.collapsed .service .ports {
-  .published {
-    color: $port-published;
-  }
+.collapsed .service {
+  .ports {
+    .published {
+      color: $port-published;
+    }
 
-  .target {
-    color: $port-target;
-  }
+    .target {
+      color: $port-target;
+    }
 
-  .published.arrow {
-    color: $port-published;
-    margin-right: 0.4em;
+    .published.arrow {
+      color: $port-published;
+      margin-right: 0.4em;
+    }
   }
 }
 
@@ -130,20 +179,34 @@ tr.service.networked {
   background-color: rgba(45,80,180,0.2);
 }
 
-.expanded .service .service-icon .icon {
-  height: 1.4em;
-  width: 1.4em;
-  margin-right: 0.2em;
-  margin-left: 0.4em;
-}
-
-.expanded .service .service-badges {
-  font-size: 1.2em;
-  display: inline;
-}
-
-.expanded div.service {
+.expanded .service  {
   padding-top: 0.6em;
+  border-bottom: 1px solid $outline;
+
+  .service-icon .icon {
+    height: 1.4em;
+    width: 1.4em;
+    margin-right: 0.2em;
+    margin-left: 0.4em;
+  }
+  .service-badges {
+    font-size: 1.2em;
+    display: inline;
+  }
+
+  .buttons {
+    float: right;
+  }
+
+  .ports {
+    text-align: right;
+    margin-right: 0.4em;
+  }
+
+  .tasks {
+    // Allow for environment/mount buttons and port mappings
+    margin-right: 12.2em;
+  }
 }
 
 .collapsed .service-icon {
@@ -153,44 +216,6 @@ tr.service.networked {
     height: 1.5em;
     width: 1.5em;
   }
-}
-
-.service .mode-icon {
-  color: $label-text-dark;
-  height: 1em;
-  width: 1em;
-  margin-right: 0.4em;
-  margin-left: 0.4em;
-  opacity: 1;
-}
-
-.service .network-icon {
-  visibility: hidden;
-  position: absolute;
-  left: 0.3em;
-  vertical-align: middle;
-  display: inline;
-}
-
-.service.networked .network-icon {
-  visibility: visible;
-  color: rgba(70,120,235,1.0);
-}
-
-.service {
-  .image-label {
-    font-family: monospace;
-    background-color: $background-color-secondary;
-    color: $label-text-subheading;
-    border-radius: 0.4em;
-    margin: 0.2em;
-    text-shadow: 0px 0px 5px $outline-dark;
-    padding: 0.2em 0.4em;
-  }
-}
-
-.service-updated-tooltip {
-  text-align: left;
 }
 
 .service .updating .icon {
