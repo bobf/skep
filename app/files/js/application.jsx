@@ -22,6 +22,18 @@ $(function () {
     setTimeout(() => store.dispatch(unpingNode(data)), 500);
   };
 
+  const initManifest = (data) => {
+    if (!Skep.dashboard) {
+      Skep.dashboard = ReactDOM.render(
+        <Provider store={store}>
+          <Dashboard />
+        </Provider>,
+        document.getElementById('content')
+      );
+    }
+    store.dispatch(updateSwarm(data));
+  };
+
   const Skep = {
     chartCallbacks: {},
     socket: socket,
@@ -51,24 +63,15 @@ $(function () {
     Skep.chartCallbacks[data.requestID](data);
   });
 
-  socket.on('manifest', function(json) {
-    var data = JSON.parse(json);
-
-    if (!Skep.dashboard) {
-      Skep.dashboard = ReactDOM.render(
-        <Provider store={store}>
-          <Dashboard />
-        </Provider>,
-        document.getElementById('content')
-      );
-    }
-    store.dispatch(updateSwarm(data));
+  socket.on('init', function(json) {
+    const data = JSON.parse(json);
+    initManifest(data.manifest);
+    Object.values(data.nodes).forEach((node) => initNode(node));
   });
 
-  socket.on('stats.init', function (json) {
-    const nodes = JSON.parse(json);
-    console.log(nodes);
-    nodes.forEach((node) => initNode(node));
+  socket.on('manifest', function(json) {
+    const data = JSON.parse(json);
+    initManifest(data);
   });
 
   socket.on('stats', function (json) {

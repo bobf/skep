@@ -7,19 +7,8 @@ class ConnectedNodeList extends React.Component {
   sortedNodes() {
     const { nodes } = this.props;
     const { nodes: swarmNodes } = this.props.swarm.manifest;
-    Object.values(swarmNodes).forEach(
-      swarmNode => {
-        const node = Object.values(nodes).find(
-          node => node.hostname === swarmNode.hostname
-        );
-        if (node) {
-          // Avoid data-mangling later by providing convenient access points:
-          swarmNode.source = node;
-        }
-      }
-    );
 
-    return Object.values(swarmNodes).sort(
+    return swarmNodes.sort(
       (left, right) => {
         if (left.leader) return -1;
         if (right.leader) return 1;
@@ -35,8 +24,6 @@ class ConnectedNodeList extends React.Component {
   }
 
   render() {
-    const { nodes } = this.props;
-
     return this.sortedNodes().map(node => (
       <Node
         key={node.hostname}

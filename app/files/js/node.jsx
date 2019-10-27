@@ -21,8 +21,13 @@ class ConnectedNode extends React.Component {
     return hostname;
   }
 
+  agentData() {
+    const { nodes } = this.props;
+    return nodes[this.hostname()];
+  }
+
   stats() {
-    const { source: node } = this.props.node;
+    const node = this.agentData();
     const { previous } = node || {};
 
     return { current: node, previous: previous };
@@ -177,7 +182,7 @@ class ConnectedNode extends React.Component {
 
   render() {
     const { minimized, node } = this.props;
-    const { ping } = node.source || {};
+    const { ping } = this.agentData() || {};
     const classes = ['node'];
     const tooltip = (
       `<div class="info-tooltip">
@@ -188,7 +193,6 @@ class ConnectedNode extends React.Component {
 
     if (ping) classes.push('ping');
     if (this.isHighlighted()) classes.push('highlight');
-
     return (
       <div id={`node-${node.id}`} className={classes.join(' ')}>
         {this.renderChart()}
@@ -218,7 +222,7 @@ class ConnectedNode extends React.Component {
 }
 
 const select = state => {
-  return { dashboard: state.dashboard };
+  return { dashboard: state.dashboard, nodes: state.nodes };
 };
 
 const Node = connect(select)(ConnectedNode);

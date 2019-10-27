@@ -24,7 +24,7 @@ else:
 
 application.json_encoder = DelegatingJSONEncoder
 socketio = SocketIO(application)
-cache = { 'nodes': {} }
+cache = { 'manifest': {}, 'nodes': {} }
 
 SECRET = os.environ.get('SKEP_SECRET', None)
 
@@ -43,11 +43,7 @@ def root():
 
 @socketio.on('init')
 def handle_init():
-    if 'manifest' not in cache:
-        return
-
-    socketio.emit('manifest', json.dumps(cache['manifest']))
-    socketio.emit('stats.init', json.dumps(list(cache['nodes'].values())))
+    socketio.emit('init', json.dumps(cache))
 
 @socketio.on('chart_request')
 def handle_chart_request(params):
