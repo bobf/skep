@@ -35,7 +35,9 @@ class ConnectedOverview extends React.Component {
 
   close(ev, callback) {
     const { visible } = this.props;
+    const { selectedSection } = this.state;
     if (!visible) return false;
+    if (selectedSection) return false;
 
     this.setState({ hidden: false });
     this.timeout && clearTimeout(this.timeout);
