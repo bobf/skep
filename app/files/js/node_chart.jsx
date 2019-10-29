@@ -1,6 +1,12 @@
 import ChartBase from './chart_base';
+import { requestNodeChart } from './redux/models/charts';
 
 class NodeChart extends ChartBase {
+  requestChart(period) {
+    const { hostname } = this.props;
+    return requestNodeChart(hostname, period);
+  }
+
   title() {
     return 'Node Activity';
   }

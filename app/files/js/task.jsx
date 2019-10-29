@@ -4,6 +4,9 @@ import * as Icon from 'react-feather';
 import TaskStats from './task_stats';
 import TaskChart from './task_chart';
 
+import store from './redux/store';
+import { requestContainerChart } from './redux/models/charts';
+
 class ConnectedTask extends React.Component {
   constructor(props) {
     super(props);
@@ -120,21 +123,20 @@ class ConnectedTask extends React.Component {
     const that = this;
     const token = Skep.token();
     const { containerID } = this.props.task;
-    const params = {
-      chartType: 'container',
-      requestID: token,
-      params: { containerID: containerID }
-    };
 
     this.setState({ chartClosed: false });
-    Skep.socket.emit('chart_request', params);
-    Skep.chartCallbacks[token] = function (data) {
-      that.setState({ chartData: data });
-    };
+    store.dispatch(requestContainerChart(containerID));
   }
 
   closeChart() {
     this.setState({ chartData: null, chartClosed: true });
+  }
+
+  chartData() {
+    const { containerID } = this.props.task;
+    const { container } = this.props.charts;
+
+    return container[containerID];
   }
 
   renderState() {
@@ -162,6 +164,7 @@ class ConnectedTask extends React.Component {
   }
 
   renderChart() {
+    const { containerID } = this.props.task;
     const { chartData, chartClosed } = this.state;
 
     if (chartClosed) {
@@ -170,7 +173,8 @@ class ConnectedTask extends React.Component {
 
     return (
       <TaskChart
-        data={chartData}
+        data={this.chartData()}
+        containerID={containerID}
         hostname={this.hostname()}
         closeCallback={() => this.closeChart()} />
     );
@@ -212,7 +216,7 @@ class ConnectedTask extends React.Component {
 }
 
 const select = (state) => {
-  return { nodes: state.nodes };
+  return { nodes: state.nodes, charts: state.charts };
 }
 
 const Task = connect(select)(ConnectedTask);

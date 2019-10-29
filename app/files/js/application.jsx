@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import { updateSwarm } from './redux/models/swarm';
 import { updateNode, pingNode, unpingNode } from './redux/models/node';
+import { respondChart } from './redux/models/charts';
 
 $(function () {
   if (typeof window === 'undefined') return;
@@ -60,7 +61,7 @@ $(function () {
   });
 
   socket.on('chart_response', function(data) {
-    Skep.chartCallbacks[data.requestID](data);
+    store.dispatch(respondChart(data));
   });
 
   socket.on('init', function(json) {

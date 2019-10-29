@@ -6,6 +6,9 @@ import FilesystemStats from './filesystem_stats';
 import NodeStats from './node_stats';
 import NodeChart from './node_chart';
 
+import store from './redux/store';
+import { requestNodeChart } from './redux/models/charts';
+
 class ConnectedNode extends React.Component {
   constructor(props) {
     super(props);
@@ -124,23 +127,18 @@ class ConnectedNode extends React.Component {
   }
 
   loadChart() {
-    const that = this;
-    const token = Skep.token();
-    const params = {
-      chartType: 'node',
-      requestID: token,
-      params: { hostname: this.hostname() }
-    };
-
     this.setState({ chartClosed: false });
-    Skep.socket.emit('chart_request', params);
-    Skep.chartCallbacks[token] = function (data) {
-      that.setState({ chartData: data });
-    };
+    store.dispatch(requestNodeChart(this.hostname()));
   }
 
   closeChart() {
     this.setState({ chartData: null, chartClosed: true });
+  }
+
+  chartData() {
+    const { node } = this.props.charts;
+
+    return node[this.hostname()];
   }
 
   cores() {
@@ -169,14 +167,19 @@ class ConnectedNode extends React.Component {
   }
 
   renderChart() {
-    const { chartData, chartClosed } = this.state;
+    const { chartClosed } = this.state;
+    const chartData = this.chartData();
 
     if (chartClosed) {
       return null;
     }
 
     return (
-      <NodeChart cores={this.cores()} data={chartData} closeCallback={() => this.closeChart()} />
+      <NodeChart
+        hostname={this.hostname()}
+        cores={this.cores()}
+        data={chartData}
+        closeCallback={() => this.closeChart()} />
     );
   }
 
@@ -222,7 +225,7 @@ class ConnectedNode extends React.Component {
 }
 
 const select = state => {
-  return { dashboard: state.dashboard, nodes: state.nodes };
+  return { dashboard: state.dashboard, nodes: state.nodes, charts: state.charts };
 };
 
 const Node = connect(select)(ConnectedNode);

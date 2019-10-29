@@ -1,6 +1,12 @@
 import ChartBase from './chart_base';
+import { requestContainerChart } from './redux/models/charts';
 
 class TaskChart extends ChartBase {
+  requestChart(period) {
+    const { containerID } = this.props;
+    return requestContainerChart(containerID, period);
+  }
+
   title() {
     return 'Container Activity';
   }
@@ -9,7 +15,7 @@ class TaskChart extends ChartBase {
     const { data, hostname } = this.props;
     if (!data) return null;
 
-    const { containerID } = data.meta;
+    const { id: containerID } = data.meta;
 
     return (
       <div>

@@ -21,10 +21,10 @@ class Base:
 
         return max(x['tstamp'] for x in data) - min(x['tstamp'] for x in data)
 
-    def build(self, sid, token):
+    def build(self, sid):
         try:
             chart = self.build_chart()
-            self.publisher.publish(self.period, chart, sid, token, self.meta)
+            self.publisher.publish(self.period, chart, sid, self.meta)
         except Exception as e:
             print("Error in worker:", e)
             traceback.print_exc()
@@ -35,10 +35,16 @@ class Base:
 
     def fetch_data(self, data):
         now = time.time()
-        since = data.get('since', 3600)
-        then = now - since
+
+        try:
+            period = int(data.get('period', '3600'))
+        except ValueError:
+            period = 3600
+
+        print(period)
+        then = now - period
         data = self.execute(now, then)
-        interval = len(data) / since
+        interval = len(data) / period
         time_indices = [then + (interval * index) for index in range(len(data))]
 
         return time_indices, data

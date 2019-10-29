@@ -2,14 +2,14 @@ import Chart from 'react-google-charts';
 
 import Messages from './messages';
 import Modal from './modal';
+import store from './redux/store';
+import { requestNodeChart, requestContainerChart } from './redux/models/charts';
 
 class ChartBase extends React.Component {
-  loader() {
-    return (
-      <div className={'loading'}>
-        Loading...
-      </div>
-    );
+  constructor(props) {
+    super(props);
+
+    this.state = { loading: true };
   }
 
   options() {
@@ -39,33 +39,71 @@ class ChartBase extends React.Component {
     return Object.assign({}, baseOptions, this.chartOptions());
   }
 
+  componentDidUpdate(prevProps) {
+    const { data } = this.props;
+    const { data: prevData } = prevProps;
+    if (data !== prevData) {
+      this.setState({ loading: false });
+    }
+  }
+
+
+  periodChange(ev) {
+    this.setState({ loading: true });
+    store.dispatch(this.requestChart(ev.target.value));
+  }
+
+  renderNoData() {
+    return (
+      <div className={'no-data'}>
+        {Messages.chart.noData}
+      </div>
+    );
+  }
+
+  renderLoading() {
+    return (
+      <div className={'loader'}>
+        {Messages.chart.loading}
+      </div>
+    );
+  }
 
   chart() {
+    const { loading } = this.state;
     const { chart, period } = this.props.data;
 
-    if (!chart[1]) {
-      return (
-        <div className={'no-data'}>
-          {Messages.chart.noData}
-        </div>
-      )
-    }
+    if (loading) return this.renderLoading();
+    if (!chart[1]) return this.renderNoData();
 
     return (
-      <Chart
-        width={'60em'}
-        height={'30em'}
-        chartType={'AreaChart'}
-        data={chart}
-        options={this.options()}
-      />
+      <div className={'chart-view'}>
+        <div className={'period-menu'}>
+          <span className={'title'}>Time Period:</span>
+          <select
+            className={'custom-select'}
+            defaultValue={'3600'}
+            onChange={(ev) => this.periodChange(ev)}>
+            <option value={'3600'}>1 hour</option>
+            <option value={'86400'}>1 day</option>
+            <option value={'604800'}>1 week</option>
+          </select>
+        </div>
+        <Chart
+          width={'60em'}
+          height={'30em'}
+          chartType={'AreaChart'}
+          data={chart}
+          options={this.options()}
+        />
+      </div>
     );
   }
 
   renderChartContent(chart) {
     return (
       <div className={'chart-content'}>
-        {chart ? this.chart() : this.loader()}
+        {chart ? this.chart() : this.renderLoading()}
       </div>
     );
   }

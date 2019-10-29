@@ -102,7 +102,9 @@ class ConnectedDashboard extends React.Component {
     return collapsedStacks.includes(stackName);
   }
 
-  toggleOverview(visible) {
+  toggleOverview(ev, visible) {
+    if (Skep.modal) return false;
+
     this.setState({ overviewVisible: visible });
 
     if (this.timeout) {
@@ -126,7 +128,7 @@ class ConnectedDashboard extends React.Component {
     const className = overviewVisible ? '' : 'visible';
     return (
       <div
-        onMouseEnter={() => this.toggleOverview(true)}
+        onMouseEnter={(ev) => this.toggleOverview(ev, true)}
         className={`overview-minimized ${className}`}>
       </div>
     );
@@ -149,7 +151,7 @@ class ConnectedDashboard extends React.Component {
     return (
       <Overview
         visible={overviewVisible}
-        closeCallback={() => this.toggleOverview(false)} />
+        closeCallback={(ev) => this.toggleOverview(ev, false)} />
     );
   }
 
