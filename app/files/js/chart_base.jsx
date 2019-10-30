@@ -9,7 +9,7 @@ class ChartBase extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { loading: true };
+    this.state = { loading: true, periodDefault: 3600 };
   }
 
   options() {
@@ -49,7 +49,7 @@ class ChartBase extends React.Component {
 
 
   periodChange(ev) {
-    this.setState({ loading: true });
+    this.setState({ loading: true, periodDefault: ev.target.value });
     store.dispatch(this.requestChart(ev.target.value));
   }
 
@@ -70,7 +70,7 @@ class ChartBase extends React.Component {
   }
 
   chart() {
-    const { loading } = this.state;
+    const { loading, periodDefault } = this.state;
     const { chart, period } = this.props.data;
 
     if (loading) return this.renderLoading();
@@ -79,14 +79,14 @@ class ChartBase extends React.Component {
     return (
       <div className={'chart-view'}>
         <div className={'period-menu'}>
-          <span className={'title'}>Time Period:</span>
+          <span className={'period-title'}>Time Period:</span>
           <select
             className={'custom-select'}
-            defaultValue={'3600'}
+            defaultValue={periodDefault}
             onChange={(ev) => this.periodChange(ev)}>
-            <option value={'3600'}>1 hour</option>
-            <option value={'86400'}>1 day</option>
-            <option value={'604800'}>1 week</option>
+            <option value={3600}>1 hour</option>
+            <option value={86400}>1 day</option>
+            <option value={604800}>1 week</option>
           </select>
         </div>
         <Chart
