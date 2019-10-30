@@ -91,7 +91,7 @@ class ChartBase extends React.Component {
         </div>
         <Chart
           width={'60em'}
-          height={'30em'}
+          height={'28em'}
           chartType={'AreaChart'}
           data={chart}
           options={this.options()}

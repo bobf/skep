@@ -141,7 +141,10 @@ class ConnectedDashboard extends React.Component {
     if (modalHidden) classes.push('hidden');
 
     return (
-      <div className={`overview-modal ${classes.join(' ')}`}></div>
+      <div
+        onClick={(ev) => this.toggleOverview(ev, false)}
+        className={`overview-modal ${classes.join(' ')}`}>
+      </div>
     );
   }
 

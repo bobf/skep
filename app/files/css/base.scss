@@ -67,6 +67,8 @@ html {
 }
 
 .tooltip {
+  position: fixed;
+  z-index: 999999999999999999999999999999999999;
   max-width: 500px;
 
   .tooltip-inner {
