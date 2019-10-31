@@ -1,3 +1,4 @@
+import math
 import time
 import traceback
 
@@ -41,13 +42,19 @@ class Base:
         except ValueError:
             period = 3600
 
-        print(period)
         then = now - period
         data = self.execute(now, then)
         interval = len(data) / period
         time_indices = [then + (interval * index) for index in range(len(data))]
 
-        return time_indices, data
+        return self.normalize(time_indices), self.normalize(data)
+
+    def normalize(self, data):
+        # Reduce browser load by limiting chart data to 100 datapoints
+        points = 100
+        nth_element = max(int(math.ceil(len(data) / points)), 1)
+
+        return data[0::nth_element]
 
     def merge_timeline(self, *charts):
         return list(zip(self.time_indices, *charts))
