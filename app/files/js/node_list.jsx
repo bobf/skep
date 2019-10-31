@@ -24,11 +24,13 @@ class ConnectedNodeList extends React.Component {
   }
 
   render() {
+    const { minimized } = this.props;
+
     return this.sortedNodes().map(node => (
       <Node
         key={node.hostname}
         node={node}
-        minimized={true}
+        minimized={minimized}
       />
     ));
   }

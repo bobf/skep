@@ -161,6 +161,7 @@ class ConnectedDashboard extends React.Component {
   render() {
     if (!this.manifest()) return this.renderManifestMissing();
     const { nodes } = this.manifest();
+    const { nodesMinimized: minimized } = this.state;
 
     return (
       <div className={'dashboard-overview-wrapper'}>
@@ -170,7 +171,7 @@ class ConnectedDashboard extends React.Component {
         <div className={this.state.obscured ? 'obscured' : ''} id={'dashboard'}>
           <div className={'section minimized'} id={'nodes'}>
             <div className={'section-content'}>
-              <NodeList nodes={nodes} />
+              <NodeList minimized={minimized} nodes={nodes} />
             </div>
           </div>
 
