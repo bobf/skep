@@ -1,3 +1,5 @@
+$primary: #51a764;
+
 $overview-sticky-height: 2.4em;
 $overview-height: 8.5em;
 // Using `em` creates weird rounding issues and off-by-one pixel alignment
@@ -9,7 +11,7 @@ $overview-count-select: #ffffff77;
 
 $transparent: #00000000;
 
-$port-published: #9d9;
+$port-published: $primary;
 $port-target: #999;
 
 $mount-button: #824747;

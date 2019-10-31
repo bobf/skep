@@ -83,7 +83,11 @@ table.stacks {
 }
 
 .stacks th.service-title {
-  padding: 0.4em;
+  padding: 0.5em 0.4em;
+}
+
+.collapsed.stack tr {
+  height: 1.2em;
 }
 
 .collapsed .indent {

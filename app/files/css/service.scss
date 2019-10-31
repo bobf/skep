@@ -51,8 +51,8 @@ a.service-name:hover, a.image:hover {
 
 .service .mode-icon {
   color: $label-text-dark;
-  width: 18px;
-  height: 18px;
+  width: 1em;
+  height: 1em;
   margin-right: 0.4em;
   margin-left: 0.4em;
   opacity: 1;
@@ -204,8 +204,6 @@ tr.service.networked {
   .service-badges {
     font-size: 1.2em;
     display: inline;
-    // Align outside of padding to keep alignment matched to collapsed stacks.
-    margin-left: -0.4em;
 
     .badge {
       padding: 0.25em;
@@ -229,8 +227,7 @@ tr.service.networked {
   .tasks {
     // Allow for port mappings
     margin-right: 10.2em;
-    // Aligning with count badge
-    margin-left: -1.4em;
+    margin-top: 0.4em;
   }
 }
 
