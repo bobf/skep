@@ -227,8 +227,10 @@ tr.service.networked {
   }
 
   .tasks {
-    // Allow for environment/mount buttons and port mappings
-    margin-right: 12.2em;
+    // Allow for port mappings
+    margin-right: 10.2em;
+    // Aligning with count badge
+    margin-left: -1.4em;
   }
 }
 
