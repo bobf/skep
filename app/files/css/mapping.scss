@@ -1,9 +1,15 @@
+.modal-content.mapping {
+  width: 60%;
+}
+
 .mapping-wrapper {
-  display: inline;
+  display: inline-block;
 }
 
 .mapping {
-  font-family: monospace;
+  .keypairs {
+    font-family: monospace;
+  }
 }
 
 .mapping table {
@@ -57,7 +63,6 @@
   padding: 2em;
   font-size: 1em;
   letter-spacing: 0.3px;
-  width: 50%;
   z-index: 9999;
   line-height: 1.6em;
 }

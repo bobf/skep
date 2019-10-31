@@ -1,44 +1,21 @@
 import * as Icon from 'react-feather';
 
+import Modal from './modal';
+
 class Mapping extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { collapsed: true };
+    this.state = { visible: false };
   }
 
   className() {
-    const { collapsed } = this.state;
-    const modalClass = collapsed ? '' : 'modal';
-    return `mapping ${this.label().toLowerCase()} ${modalClass} modal-wrapper`;
-  }
-
-  expand() {
-    const $button = $(`#${this.buttonID()}`);
-    const modalTop = $button.offset().top + $button.height() + 10;
-    this.setState({ collapsed: false, modalTop: modalTop });
-    return false;
-  }
-
-  collapse() {
-    this.setState({ collapsed: true });
-    return false;
-  }
-
-  toggle(ev) {
-    if (this.isEmpty()) return false;
-    if (ev.target.closest('.modal-content')) return false;
-
-    const { collapsed } = this.state;
-    collapsed ? this.expand() : this.collapse();
-    // REVIEW: This feels hacky but, without it, the tooltip does not disappear
-    // until the user manually takes focus away from the button.
-    $('.environment .btn').blur();
-    return false;
+    const { visible } = this.state;
+    return `mapping ${this.label().toLowerCase()}`;
   }
 
   buttonID() {
-    const { name } = this.props;
-    return `mapping-${name}`;
+    const { serviceName } = this.props;
+    return `mapping-${serviceName}`;
   }
 
   isEmpty() {
@@ -57,7 +34,7 @@ class Mapping extends React.Component {
     return this.label();
   }
 
-  icon(empty, collapsed) {
+  icon(empty, visible) {
     const { compact } = this.props;
 
     if (compact) return null;
@@ -68,7 +45,7 @@ class Mapping extends React.Component {
       );
     }
 
-    if (collapsed) {
+    if (visible) {
       return (
         <Icon.Eye className={'icon'} size={'1.2em'} />
       );
@@ -87,7 +64,25 @@ class Mapping extends React.Component {
     }
   }
 
-  renderExpandButton(collapsed) {
+  toggleMapping(ev, visible) {
+    if (this.isEmpty()) {
+      ev.stopPropagation();
+
+      return false;
+    }
+
+    this.setState({ visible: visible });
+
+    if (!visible) {
+      // REVIEW: This feels hacky but, without it, the tooltip does not
+      // disappear until the user manually takes focus away from the button.
+      $('.environment .btn').blur();
+    }
+
+    return false;
+  }
+
+  renderExpandButton(visible) {
     const empty = this.isEmpty();
     const tooltip = this.tooltip();
     const className = empty ? 'btn-secondary disabled' : 'btn-primary';
@@ -100,48 +95,44 @@ class Mapping extends React.Component {
         data-html={'true'}
         id={this.buttonID()}
         className={`btn expand mapping ${className} ${this.label().toLowerCase()}`}
-        onClick={(ev) => this.toggle(ev)}>
+        onClick={(ev) => this.toggleMapping(ev, true)}>
         {this.formattedLabel()}
-        {this.icon(empty, collapsed)}
+        {this.icon(empty, visible)}
       </button>
     );
   }
 
-  renderCollapsed() {
+  renderHidden() {
     return null;
   }
 
-  renderExpanded() {
-    const { name } = this.props;
+  renderVisible() {
+    const { serviceName } = this.props;
     const data = this.data();
-    const { collapsed } = this.state;
-    const modalClass = collapsed ? '' : 'modal';
     const rows = Object.keys(data).sort().map(
       key => this.renderRow(key, data[key])
     );
 
     return (
-      <div
-        className={`modal-content keypairs ${modalClass}`}>
-        <div className={'viewport'}>
-          <h3>{this.label()}</h3>
-          <h2>{name}</h2>
-          {rows}
-        </div>
-      </div>
-    )
+      <Modal
+        content={rows}
+        contentClass={'mapping keypairs'}
+        wrapperClass={'mapping'}
+        title={this.label()}
+        subtitle={serviceName}
+        closeCallback={() => this.toggleMapping(false)}
+      />
+    );
   }
 
   render() {
-    const { collapsed } = this.state;
+    const { visible } = this.state;
     const { compact } = this.props;
     return (
       <div className={'mapping-wrapper ' + (compact ? 'compact' : '')}>
-        {this.renderExpandButton(collapsed)}
-        <div
-          onClick={(ev) => this.toggle(ev)}
-          className={this.className()}>
-          {collapsed ? this.renderCollapsed() : this.renderExpanded()}
+        {this.renderExpandButton(visible)}
+        <div className={this.className()}>
+          {visible ? this.renderVisible() : this.renderHidden()}
         </div>
       </div>
     );

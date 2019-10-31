@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import http.client
 import json
 import logging
 import multiprocessing
@@ -19,6 +20,7 @@ from urllib.request import Request
 os.environ['LINUX_METRICS_ROOT_FS'] = os.environ.get('HOSTFS_PATH', '/hostfs')
 import linux_metrics as lm
 import docker
+import docker.errors
 
 import stats.memory as memory
 
@@ -31,7 +33,7 @@ class StatRunner:
     def __init__(self, **kwargs):
         self.opts = kwargs
         self.log = self.logger(kwargs)
-        self.log.info('Launching SapptatRunner(%s)' % (kwargs,))
+        self.log.info('Launching Agent(%s)' % (kwargs,))
 
     def docker(self):
         # Host Docker socket must be mounted in agent containers here:
@@ -55,7 +57,7 @@ class StatRunner:
 
         try:
             response = urllib.request.urlopen(request)
-        except urllib.error.URLError as e:
+        except (urllib.error.URLError, http.client.RemoteDisconnected) as e:
             self.log.warning(
                 'Could not publish stats: %s (%s)' % (url, e)
             )
@@ -98,7 +100,11 @@ class StatRunner:
 
     def containers(self):
         params = { 'filters': { 'status': 'running' } }
-        containers = self.docker().containers.list(**params)
+        try:
+            containers = self.docker().containers.list(**params)
+        except docker.errors.NotFound:
+            # A container was removed while we were inspecting it.
+            return []
 
         q = queue.Queue()
 
@@ -229,7 +235,7 @@ def hostname():
 
 if __name__ == '__main__':
     StatRunner(
-        hostname=hostname(),
+        hostname=hostname().lower(),
         app_url=os.environ['SKEP_APP_URL'],
         calculator_url=os.environ['SKEP_CALCULATOR_URL'],
         disks=list(

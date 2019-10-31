@@ -9,9 +9,9 @@ class Publisher:
         self.auth = auth
         self.log = log
 
-    def publish(self, period, chart_data, sid, token, meta):
+    def publish(self, period, chart_data, sid, meta):
         url = urllib.parse.urljoin(self.app_url, 'chart_response')
-        request = self.request(url, period, chart_data, sid, token, meta)
+        request = self.request(url, period, chart_data, sid, meta)
 
         try:
             response = urllib.request.urlopen(request)
@@ -26,17 +26,15 @@ class Publisher:
                 )
             )
 
-    def request(self, url, period, chart_data, sid, token, meta):
+    def request(self, url, period, chart_data, sid, meta):
         headers = { 'Content-Type': 'application/json', **self.auth }
         params = {
             'sid': sid,
-            'requestID': token,
             'period': period,
             'chart': chart_data,
             'meta': meta
         }
 
-        print("PUBLISH", params)
         return Request(
             url,
             data=json.dumps(params).encode('utf8'),

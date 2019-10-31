@@ -1,6 +1,6 @@
 #nodes {
   float: left;
-  height: 100%;
+  height: calc(100% - 2em);
   width: 21em;
   padding: 1em;
   overflow-y: scroll;
@@ -17,6 +17,7 @@
   display: inline-block;
   margin: 1em;
   padding-top: 0.8em;
+  min-width: 20em;
 
   .badges {
     margin-top: 0.2em;
@@ -38,7 +39,7 @@
 }
 
 .node .light {
-  position: fixed;
+  position: absolute;
   height: 1.2em;
   width: 1.2em;
   color: $outline-dark;
@@ -54,6 +55,7 @@
 
 .minimized .node {
   margin-bottom: 1.2em 0;
+  height: 4.4em;
 }
 
 .minimized .node tr.memory th {
@@ -85,7 +87,7 @@
 }
 
 .node.highlight {
-  box-shadow: 0px 0px 1px $highlight-select;
+  box-shadow: 0px 0px 3px $highlight-select;
 }
 
 .node h2 {

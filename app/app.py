@@ -24,7 +24,7 @@ else:
 
 application.json_encoder = DelegatingJSONEncoder
 socketio = SocketIO(application)
-cache = {}
+cache = { 'manifest': {}, 'nodes': {} }
 
 SECRET = os.environ.get('SKEP_SECRET', None)
 
@@ -43,10 +43,7 @@ def root():
 
 @socketio.on('init')
 def handle_init():
-    if 'manifest' not in cache:
-        return
-
-    socketio.emit('manifest', cache['manifest'])
+    socketio.emit('init', json.dumps(cache))
 
 @socketio.on('chart_request')
 def handle_chart_request(params):
@@ -64,8 +61,6 @@ def handle_chart_request(params):
 def chart_response_create():
     data = request.get_json()
     sid = data.pop('sid')
-
-    print('RESPONSE')
     socketio.emit('chart_response', data, room=sid)
 
     return 'OK', 200
@@ -73,7 +68,11 @@ def chart_response_create():
 @application.route("/stats", methods=["POST"])
 def stats_create():
     if authorize_request(request, SECRET):
-        socketio.emit("stats", json.dumps(request.get_json()), broadcast=True)
+        data = request.get_json()
+        if 'hostname' in data:
+            cache['nodes'][data['hostname']] = data
+
+        socketio.emit("stats", json.dumps(data), broadcast=True)
         return 'OK', 200
 
     return 'Unauthorized', 401
@@ -81,9 +80,9 @@ def stats_create():
 @application.route("/manifest", methods=["POST"])
 def manifest_create():
     if authorize_request(request, SECRET):
-        manifest = json.dumps(request.get_json())
+        manifest = request.get_json()
         cache['manifest'] = manifest
-        socketio.emit("manifest", manifest, broadcast=True)
+        socketio.emit("manifest", json.dumps(manifest), broadcast=True)
         return 'OK', 200
 
     return 'Unauthorized', 401

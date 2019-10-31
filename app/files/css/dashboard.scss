@@ -1,3 +1,10 @@
+#dashboard {
+  height: calc(100% - 2.4em);
+  position: absolute;
+  top: 0;
+  margin-top: $overview-sticky-height;
+}
+
 h2.section-header {
   font-size: 1.4em;
   margin: 0.8em 0;
@@ -5,7 +12,7 @@ h2.section-header {
 }
 
 .toggle-section {
-  height: 100%;
+  height: $window-height;
   padding: 0;
   float: left;
   width: 28px; /* In pixels because we use this to calculate screen offsets */

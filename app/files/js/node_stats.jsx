@@ -12,8 +12,7 @@ class NodeStats extends React.Component {
     this.initialize(props);
   }
 
-  initialize(props) {
-    const { stats } = props;
+  initialize(stats) {
     const { memory, cpu, networks, disks, filesystems, load } = (stats || {});
 
     this.memory = memory ? new MemoryStats(memory) : null;
@@ -269,7 +268,7 @@ class NodeStats extends React.Component {
     const { stats } = this.props;
     if (!stats) return null;
 
-    this.initialize(this.props);
+    this.initialize(stats);
 
     if (minimized) {
       return this.renderMinimized();

@@ -1,14 +1,19 @@
+import React from 'react';
+import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
 import FilesystemStats from './filesystem_stats';
 import NodeStats from './node_stats';
 import NodeChart from './node_chart';
 
-class Node extends React.Component {
+import store from './redux/store';
+import { requestNodeChart } from './redux/models/charts';
+
+class ConnectedNode extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      stats: { previous: {}, current: {} },
       chartData: null,
       chartClosed: true
     };
@@ -19,12 +24,23 @@ class Node extends React.Component {
     return hostname;
   }
 
+  agentData() {
+    const { nodes } = this.props;
+    return nodes[this.hostname()];
+  }
+
   stats() {
-    return this.state.stats;
+    const node = this.agentData();
+    const { previous } = node || {};
+
+    return { current: node, previous: previous };
   }
 
   containers() {
-    return this.stats().current.containers;
+    const { current } = this.stats();
+    if (!current) return [];
+
+    return current.containers;
   }
 
   hasContainer(containerID) {
@@ -56,7 +72,7 @@ class Node extends React.Component {
     const label = {
       manager: { abbrev: 'M', full: 'Manager', level: 'primary' },
       worker: { abbrev: 'W', full: 'Worker', level: 'info' }
-    }[role];
+    }[role] || {};
     const tooltip = minimized ? label.full : '';
 
     return (
@@ -111,23 +127,18 @@ class Node extends React.Component {
   }
 
   loadChart() {
-    const that = this;
-    const token = Skep.token();
-    const params = {
-      chartType: 'node',
-      requestID: token,
-      params: { hostname: this.hostname() }
-    };
-
     this.setState({ chartClosed: false });
-    Skep.socket.emit('chart_request', params);
-    Skep.chartCallbacks[token] = function (data) {
-      that.setState({ chartData: data });
-    };
+    store.dispatch(requestNodeChart(this.hostname()));
   }
 
   closeChart() {
     this.setState({ chartData: null, chartClosed: true });
+  }
+
+  chartData() {
+    const { node } = this.props.charts;
+
+    return node[this.hostname()];
   }
 
   cores() {
@@ -144,29 +155,49 @@ class Node extends React.Component {
     return version;
   }
 
+  isHighlighted() {
+    const { selectedService } = this.props.dashboard;
+    if (!selectedService) return false;
+    const containerIDs = selectedService.tasks.map(task => task.containerID);
+    return containerIDs.some(
+      containerID => this.containers()
+                         .map(container => container.id)
+                         .includes(containerID)
+    );
+  }
+
   renderChart() {
-    const { chartData, chartClosed } = this.state;
+    const { chartClosed } = this.state;
+    const chartData = this.chartData();
 
     if (chartClosed) {
       return null;
     }
 
     return (
-      <NodeChart cores={this.cores()} data={chartData} closeCallback={() => this.closeChart()} />
+      <NodeChart
+        hostname={this.hostname()}
+        cores={this.cores()}
+        data={chartData}
+        closeCallback={() => this.closeChart()} />
     );
   }
 
   render() {
     const { minimized, node } = this.props;
+    const { ping } = this.agentData() || {};
+    const classes = ['node'];
     const tooltip = (
-      `<div class="info-tooltip">
+      `<div class="tooltip-inner info-tooltip">
          Hostname: <em>${this.hostname()}</em><br/>
          Docker Engine Version: <em>${this.version()}</em>
        </div>`
     );
 
+    if (ping) classes.push('ping');
+    if (this.isHighlighted()) classes.push('highlight');
     return (
-      <div id={`node-${node.id}`} className={'node'}>
+      <div id={`node-${node.id}`} className={classes.join(' ')}>
         {this.renderChart()}
         <Icon.Power className={'light'} size={'1em'} />
         {this.chartButton()}
@@ -193,4 +224,9 @@ class Node extends React.Component {
   }
 }
 
+const select = state => {
+  return { dashboard: state.dashboard, nodes: state.nodes, charts: state.charts };
+};
+
+const Node = connect(select)(ConnectedNode);
 export default Node;

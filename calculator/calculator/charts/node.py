@@ -9,7 +9,7 @@ class Node(Base):
         self.id = data.get('hostname', '').lower()
         self.table = 'nodes'
         self.columns = ['tstamp', 'id', 'load', 'cpu', 'ram']
-        self.meta = { 'hostname': self.id }
+        self.meta = { 'id': self.id, 'type': 'node' }
 
         super().__init__(db_path, data, publisher)
 

@@ -1,6 +1,12 @@
 import ChartBase from './chart_base';
+import { requestContainerChart } from './redux/models/charts';
 
 class TaskChart extends ChartBase {
+  requestChart(period) {
+    const { containerID } = this.props;
+    return requestContainerChart(containerID, period);
+  }
+
   title() {
     return 'Container Activity';
   }
@@ -9,7 +15,7 @@ class TaskChart extends ChartBase {
     const { data, hostname } = this.props;
     if (!data) return null;
 
-    const { containerID } = data.meta;
+    const { id: containerID } = data.meta;
 
     return (
       <div>
@@ -40,15 +46,21 @@ class TaskChart extends ChartBase {
           minValue: 10000,
           format: 'short',
           textStyle: { color: '#999' },
-          titleTextStyle: { color: '#eee' },
-          title: 'Network / Disk bps'
+          titleTextStyle: { color: '#aaa' },
+          title: 'Network / Disk bps',
+          gridlines: {
+            color: '#333'
+          }
         },
         1: {
           minValue: 1,
           format: 'percent',
-          titleTextStyle: { color: '#eee' },
+          titleTextStyle: { color: '#aaa' },
           title: 'CPU / RAM %',
-          textStyle: { color: '#999' }
+          textStyle: { color: '#999' },
+          gridlines: {
+            color: '#333'
+          }
         }
       }
     }

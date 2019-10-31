@@ -1,0 +1,237 @@
+.overview-minimized {
+  background-image: url('../images/logo-compact.svg');
+  background-repeat: no-repeat;
+  background-position: 0.4em 0.2em;
+  background-size: auto 2em;
+  background-color: $outline-background;
+  opacity: 0.6;
+  height: $overview-sticky-height;
+  display: block;
+  cursor: pointer;
+  margin-right: 1em;
+  position: sticky;
+  top: 0;
+  text-align: right;
+  width: 100%;
+  z-index: 999999999999999;
+  border-bottom: 1px solid $outline-dark;
+  padding-top: 0.2em;
+  visibility: visible;
+
+  &.visible {
+    visibility: visible;
+  }
+
+  .icon {
+    width: 1.4em;
+    height: 1.4em;
+    margin-right: 1em;
+    color: $url-hover-color;
+    opacity: 0.8;
+  }
+}
+
+.overview {
+  border-bottom: 3px solid $outline-dark;
+  background-image: url('../images/logo.svg');
+  background-repeat: no-repeat;
+  background-size: auto $overview-height - 1em;;
+  background-position: 1.2em 0.1em;
+  min-height: $overview-height;
+  max-height: $overview-height;
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: $background-color;
+  width: 100%;
+  height: $overview-height;
+  transition: opacity 0.5s ease;
+  opacity: 0;
+
+  &.visible {
+    opacity: 1;
+  }
+
+  &.hidden {
+    visibility: hidden;
+  }
+
+  .spacer {
+    cursor: pointer;
+    width: 12.5em;
+    display: inline-block;
+    float: left;
+    height: $overview-height;
+  }
+
+  .headers {
+    div {
+      vertical-align: middle;
+      text-align: center;
+      font-size: 1em;
+      height: 1.5em;
+      color: $label-text-subheading;
+      width: $overview-section-width;
+      padding-top: 0.2em;
+      display: inline-block;
+    }
+  }
+
+  .counts {
+    div {
+      float: left;
+      display: table;
+      height: $overview-height - 1.5em;
+      width: $overview-section-width;
+      text-align: center;
+
+      .count {
+        display: table-cell;
+        vertical-align: middle;
+        font-size: 2em;
+        color: $overview-count;
+      }
+
+      border: 3px solid $transparent;
+      border-top: none;
+
+      // We use JS to set this class so that we can also highlight the related
+      // `.section-header` element.
+      &.hover {
+        border-color: $overview-highlight-hover;
+        .count {
+          color: $overview-count-select;
+        }
+      }
+
+      &.selected {
+        border-color: $overview-highlight-select;
+      }
+    }
+  }
+
+  .section-content {
+    cursor: pointer;
+  }
+
+  .section-header {
+    border: 3px solid $transparent;
+    border-bottom: none;
+    border-bottom: none;
+
+    &.hover {
+      border-color: $overview-highlight-hover;
+    }
+
+    &.selected {
+      border-color: $overview-highlight-select;
+    }
+  }
+
+  .nodes {
+    background-color: #4868af6b;
+  }
+
+  .services {
+    background-color: #aeaf486b;
+  }
+
+  .containers {
+    background-color: #48af636b;
+  }
+
+  .networks {
+    background-color: #5c48af6b;
+  }
+
+  .detail {
+    h3 {
+      font-size: 1em;
+      color: $label-text;
+      margin-bottom: 0;
+    }
+
+    display: table;
+    padding-left: 1em;
+    margin-top: -1em;
+    height: $overview-height;
+
+    .row-chunk {
+      display: inline;
+      margin-right: 0.8em;
+    }
+
+    .detail-row {
+      display: table-row;
+      padding-bottom: 0.2em;
+    }
+
+    .detail-title, .detail-value, .detail-icon {
+      display: table-cell;
+    }
+
+    .detail-title {
+      color: $label-text-dark;
+      padding-right: 0.8em;
+      // Needed for auto-generated task states
+      text-transform: capitalize;
+    }
+
+    .detail-value {
+      color: $label-text;
+      font-family: monospace;
+
+      a {
+        color: $url-hover-color;
+      }
+    }
+
+    .detail-icon {
+      padding-left: 0.4em;
+
+      .icon {
+        width: 1.2em;
+        height: 1.2em;
+      }
+    }
+
+    .detail-punctuation {
+      color: $accent;
+    }
+  }
+}
+
+.overview-modal {
+  cursor: pointer;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: $background-color-translucent;
+  z-index: 9999999999999999999999999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease;
+  &.visible {
+    visibility: visible;
+    opacity: 1;
+  }
+  &.hidden {
+    opacity: 0;
+  }
+}
+
+
+.bounce-logo {
+  animation: bounce-logo 1.5s ease infinite;
+}
+
+@keyframes bounce-logo {
+  0%   { background-position: 1.2em 0.2em; }
+  10%  { background-position: 1.2em 0.2em; }
+  30%  { background-position: 1.2em -0.4em; }
+  50%  { background-position: 1.2em 0.2em; }
+  57%  { background-position: 1.2em 0.1em; }
+  64%  { background-position: 1.2em 0.2em; }
+  100%  { background-position: 1.2em 0.2em; }
+}

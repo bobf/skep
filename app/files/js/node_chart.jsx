@@ -1,6 +1,12 @@
 import ChartBase from './chart_base';
+import { requestNodeChart } from './redux/models/charts';
 
 class NodeChart extends ChartBase {
+  requestChart(period) {
+    const { hostname } = this.props;
+    return requestNodeChart(hostname, period);
+  }
+
   title() {
     return 'Node Activity';
   }
@@ -10,9 +16,7 @@ class NodeChart extends ChartBase {
     if (!data) return null;
 
     const { hostname } = data.meta;
-    return (
-        hostname
-    );
+    return hostname;
   }
 
   chartOptions() {
@@ -30,16 +34,22 @@ class NodeChart extends ChartBase {
           maxValue: cores,
           format: '',
           textStyle: { color: '#999' },
-          titleTextStyle: { color: '#eee' },
-          title: 'Load'
+          titleTextStyle: { color: '#aaa' },
+          title: 'Load',
+          gridlines: {
+            color: '#333'
+          }
         },
         1: {
           minValue: 1,
           maxValue: 1,
           format: 'percent',
           title: 'CPU / RAM %',
-          titleTextStyle: { color: '#eee' },
-          textStyle: { color: '#999' }
+          titleTextStyle: { color: '#aaa' },
+          textStyle: { color: '#999' },
+          gridlines: {
+            color: '#333'
+          }
         }
       }
     }

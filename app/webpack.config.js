@@ -52,6 +52,16 @@ module.exports = {
       },
 
       {
+        test: /\.svg$/,
+        use: {
+          loader: 'svg-url-loader',
+          options: {
+            encoding: 'base64'
+          }
+        }
+      },
+
+      {
         test: /\.scss$/,
         resolve: {
           extensions: ['.scss'],

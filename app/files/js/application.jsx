@@ -4,16 +4,38 @@ import 'bootstrap';
 
 import Dashboard from './dashboard';
 
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import { updateSwarm } from './redux/models/swarm';
+import { updateNode, pingNode, unpingNode } from './redux/models/node';
+import { respondChart } from './redux/models/charts';
+
 $(function () {
   if (typeof window === 'undefined') return;
 
-  var socket = io.connect(
+  const socket = io.connect(
     location.protocol + '//' + document.domain + ':' + location.port
   );
 
-  window.Skep = window.Skep || {};
+  const initNode = (data) => {
+    store.dispatch(updateNode(data));
+    store.dispatch(pingNode(data));
+    setTimeout(() => store.dispatch(unpingNode(data)), 500);
+  };
 
-  Skep = {
+  const initManifest = (data) => {
+    if (!Skep.dashboard) {
+      Skep.dashboard = ReactDOM.render(
+        <Provider store={store}>
+          <Dashboard />
+        </Provider>,
+        document.getElementById('content')
+      );
+    }
+    store.dispatch(updateSwarm(data));
+  };
+
+  const Skep = {
     chartCallbacks: {},
     socket: socket,
     thresholds: {
@@ -32,48 +54,39 @@ $(function () {
     }
   };
 
+  window.Skep = Skep;
+
   socket.on('connect', function() {
     socket.emit('init');
   });
 
   socket.on('chart_response', function(data) {
-    Skep.chartCallbacks[data.requestID](data);
+    store.dispatch(respondChart(data));
   });
 
-  socket.on('manifest', function(data) {
-    var manifest = JSON.parse(data);
+  socket.on('init', function(json) {
+    const data = JSON.parse(json);
+    initManifest(data.manifest);
+    Object.values(data.nodes).forEach((node) => initNode(node));
+  });
 
-    if (!Skep.dashboard) {
-      Skep.dashboard = ReactDOM.render(
-        React.createElement(Dashboard, null),
-        document.getElementById('content')
-      );
-    }
-
-    Skep.dashboard.setState({ manifest: manifest });
+  socket.on('manifest', function(json) {
+    const data = JSON.parse(json);
+    initManifest(data);
   });
 
   socket.on('stats', function (json) {
-    if (!Skep.dashboard) return;
-
     const data = JSON.parse(json);
-    const node = Skep.dashboard.getNode(data.hostname)
-    if (!node) {
-      console.log('Could not find node for stats collection.', data);
-      return;
-    }
-
-    const previous = node.ref.current.state && node.ref.current.stats().current;
-    const stats = { current: data, previous: previous || {} };
-    node.ref.current.setState({ stats: stats });
-
-    $('#node-' + node.id).addClass('ping');
-    setTimeout(function () {
-      $('#node-' + node.id).removeClass('ping');
-    }, 500);
+    initNode(data);
   });
 
   $('body').tooltip({
-    selector: '[data-toggle="tooltip"]'
+    selector: '[data-toggle="tooltip"]',
+    placement: () => {
+      // Sometimes tooltips get stuck - hook into placement function to remove
+      // them before rendering. V. hacky.
+      $('.tooltip.fade').remove();
+      return 'auto';
+    },
   });
 });

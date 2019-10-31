@@ -1,12 +1,13 @@
 #stacks {
   padding: 1em;
   float: left;
-  height: 100%;
   min-width: 75%;
   max-width: 75%;
   padding-left: 2em;
   overflow-y: scroll;
+  position: fixed;
   table-layout: fixed;
+  height: 100%;
 }
 
 .collapsed .services {

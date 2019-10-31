@@ -1,5 +1,7 @@
 import os
 
+import docker.errors
+
 from skep.docker.environment import Environment
 from skep.docker.task import Task
 from skep.docker.network import Network
@@ -21,14 +23,16 @@ class Service(ImageParser):
             "replicas": self.replicas(),
             "updated": attrs['UpdatedAt'],
             "updating": self.updating(),
+            "state": self.state(),
+            "stateMessage": self.state_message(),
             "ports": self.ports(),
             "image": self.image(),
             "tasks": self.tasks(),
             "networks": self.networks(),
             "environment": self.environment(),
             "mounts": self.mounts(),
-            "name_url": self.name_url(),
-            "image_url": self.image_url()
+            "nameURL": self.name_url(),
+            "imageURL": self.image_url()
         }
 
     def id(self):
@@ -71,10 +75,17 @@ class Service(ImageParser):
 
         return attrs['Spec']['Mode']['Replicated']['Replicas']
 
+    def try_tasks(self):
+        try:
+            return self.service.tasks()
+        except docker.errors.NotFound:
+            # The service was removed since we started inspecting it
+            return []
+
     def tasks(self):
         tasks = list(filter(
             lambda x: x.desired_state() == 'running',
-            [Task(x) for x in self.service.tasks()]
+            [Task(x) for x in self.try_tasks()]
         ))
 
         replicas = self.replicas()
@@ -98,9 +109,17 @@ class Service(ImageParser):
             self.service.attrs['Spec']['TaskTemplate']['ContainerSpec']['Image']
         )
 
+    def state(self):
+        return self.service.attrs.get('UpdateStatus', {}).get('State', None)
+
+    def state_message(self):
+        return self.service.attrs.get('UpdateStatus', {}).get('Message', None)
+
+    def rolling_back(self):
+        return self.state() == 'rollback_started'
+
     def updating(self):
-        state = self.service.attrs.get('UpdateStatus', {}).get('State', None)
-        return state == 'updating'
+        return self.state() in ('updating', 'rollback_started')
 
     def serializable(self):
         return self.attrs()

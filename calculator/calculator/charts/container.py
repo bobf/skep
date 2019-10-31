@@ -10,9 +10,7 @@ class Container(Base):
         self.table = 'containers'
         self.columns = ['tstamp', 'id', 'cpu', 'system_cpu',
                         'ram_usage', 'ram_limit', 'disk_ops', 'network_bytes']
-        self.meta = {
-            'containerID': self.id
-        }
+        self.meta = { 'id': self.id, 'type': 'container' }
 
         super().__init__(db_path, data, publisher)
 
@@ -37,7 +35,8 @@ class Container(Base):
         return (
             (data[i + 1]['cpu'] - x['cpu'])
             /
-            (data[i + 1]['system_cpu'] - x['system_cpu'])
+            # Ensure division by zero errors are impossible
+            max(data[i + 1]['system_cpu'] - x['system_cpu'], 0.00000001)
         )
 
     def ram(self):

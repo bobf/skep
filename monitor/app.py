@@ -11,6 +11,7 @@ import urllib.request
 from urllib.request import Request
 
 from skep.docker.swarm import Swarm
+from skep.docker.statistics import Statistics
 from skep.json import DelegatingJSONEncoder
 
 if 'SKEP_SECRET' in os.environ:
@@ -31,10 +32,20 @@ class Monitor:
 
     def request(self, url, data):
         headers = headers={ 'Content-Type': 'application/json', **AUTH }
-        manifest = Swarm().manifest()
-        data = json.dumps(manifest, cls=DelegatingJSONEncoder).encode('utf8')
+        swarm = Swarm()
+        swarm.refresh()
+        data = {
+            'manifest': swarm.manifest(),
+            'statistics': self.statistics(swarm)
+        }
 
-        return Request(url, data=data, headers=headers)
+        return Request(url, data=self.encode(data), headers=headers)
+
+    def statistics(self, swarm):
+        return Statistics(swarm).serialize()
+
+    def encode(self, data):
+        return json.dumps(data, cls=DelegatingJSONEncoder).encode('utf8')
 
     def url(self, type):
         return urllib.parse.urljoin(
@@ -48,7 +59,7 @@ class Monitor:
 
         try:
             response = urllib.request.urlopen(request)
-        except urllib.error.URLError as e:
+        except (urllib.error.URLError, ConnectionResetError) as e:
             self.log.warning(
                 'Could not publish stats: %s (%s)' % (url, e)
             )

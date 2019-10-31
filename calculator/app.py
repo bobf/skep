@@ -48,17 +48,16 @@ chart_types = {
 def chart_create():
     data = request.get_json()
 
-    if not all(x in data for x in ['params', 'chartType', 'requestID']):
+    if not all(x in data for x in ['params', 'chartType']):
         return (
-            'Invalid request: must provide keys [params, chartType requestID]',
+            'Invalid request: must provide keys [params, chartType]',
             422
         )
 
     params = data['params']
     chart_type = data['chartType']
-    token = data['requestID']
     chart = chart_types[chart_type](db_path, params, publisher)
-    _result = pool.apply_async(chart.build, (data['sid'], token))
+    _result = pool.apply_async(chart.build, (data['sid'],))
 
     return 'OK', 200
 
