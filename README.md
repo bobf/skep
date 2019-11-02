@@ -1,104 +1,63 @@
-# Skep
-
-![logo](images/logo.png)
-
 ## Overview
 
-_Skep_ is a monitoring dashboard for [_Docker Swarm_](https://docs.docker.com/engine/swarm/):
+_Skep_ is a monitoring dashboard for [_Docker Swarm_](https://docs.docker.com/engine/swarm/).
 
-![Dashboard](images/screenshots/001-dashboard.png)
+See [skepdocker.github.io](https://skepdocker.github.io/) for features, screenshots, etc..
 
 You may find _Skep_ to be a useful addition to your toolbox along with projects like these:
 
+* [Swarmpit](https://swarmpit.io/)
 * [SwarmProm](https://github.com/stefanprodan/swarmprom)
 * [swarm-dashboard](https://github.com/charypar/swarm-dashboard)
 * [docker-swarm-visualizer](https://github.com/dockersamples/docker-swarm-visualizer)
 * [portainer.io](https://www.portainer.io/)
 * [Consul](https://www.consul.io/)
 
-_Skep_ attempts to satisfy the following design objectives:
+## Configuration/Setup
 
-* Simple configuration and quick deployment
-* Low resource footprint
-* Reactive and clean user interface
+### Quickstart
 
-## Features
+Launch _Skep_ using the default configuration by running the following command on any _Swarm_ manager:
+```
+curl -sSL https://raw.githubusercontent.com/bobf/skep/master/docker-compose.yml |\
+docker-compose -f - config |\
+docker stack deploy -c - skep
+```
 
-### Expanded Stack View
+_Skep_ will be available on any _Swarm_ node on port `8080`.
 
-View details of all tasks for each service including container metrics.
+When you have finished evaluating _Skep_ you can remove the stack to destroy all services and networks:
+```
+docker stack rm skep
+```
 
-![Expanded stack](images/screenshots/002-stack-expanded.png)
+### Configuration
 
-### Mount Configuration
+**`SKEP_SECRET` should be set for all relevant services (see below).**
 
-Display all configured mount points for a given service.
+The _agent_ service is responsible for harvesting host and container metrics; configure this service as appropriate for your hardware/operating system setup.
 
-![Mount configuration](images/screenshots/003-mounts.png)
+See the sections below to configure each of _Skep_'s components. The provided [example docker-compose.yml](docker-compose.yml) can be used as a starting point.
 
-### Environment Configuration
+When you have a `docker-compose.yml` that suits your requirements you can launch _Skep_ by executing the following command on any _Swarm_ manager:
 
-Display all configured environment variables for a given service.
+```
+docker-compose -f <your-compose-file.yml> config | docker stack deploy -c - skep
+```
 
-_Values for keys containing "password", "key", etc. are replaced by asterisks._
-
-![Environment configuration](images/screenshots/004-environment.png)
-
-### Related Nodes and Services Highlighting
-
-Click any service to highlight:
-
-* All services that share a network with the selected service
-* All nodes that are running a task belonging to the selected service
-
-![Related item highlighting](images/screenshots/005-node-network-highlight.png)
-
-### Node View
-
-Expand the node view to see further details of a node including disk activity [**not shown in screenshot**], file system usage, etc.
-
-![Nodes](images/screenshots/006-nodes.png)
-
-### Service Update Tracking
-
-Monitor service updates to ensure deployments run cleanly:
-
-![Service update](images/screenshots/007-service-update-tracking.gif)
-
-### Flashing Lights
-
-Enjoy looking at the flashing lights telling you that your nodes are alive and well.
-
-![Flashing lights](images/screenshots/008-flashing-lights.gif)
-
-## Configuration
-
-An [example docker-compose.yml](docker-compose.yml) is provided.
-
-The following environment variables are available:
-
-### Front end web app
+#### Front end web app
 
 | Variable | Meaning | Example |
 |-|-|-|
 | `SKEP_SECRET` | Set this to an appropriately complex token to verify agent updates. It is **highly recommended** that you enable this feature. (The same value must be set for the _agent_ and _monitor_ services).  | `averylongandcomplexsecret` |
+| `SKEP_CALCULATOR_URL` | URL that the _calculator_ service will be available on for handling chart requests. | `http://calculator:8080/`
 
-### Monitor
-
-| `SKEP_SECRET` | If provided, will use to authenticate with front end web app when reporting statistics (the same value must be set for the web app service) | `averylongandcomplexsecret` |
-| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
-| `SERVICE_URL_TEMPLATE` | URL template for service names | See [URL templating](#url-templating) |
-| `IMAGE_URL_TEMPLATE` | URL template for image names | See [URL templating](#url-templating) |
-| `LOG_LEVEL` | By default, the monitor only logs initial configuration on launch and errors. Set to `DEBUG` to log all statistics. | `INFO` _(default/recommended)_ |
-| `COLLECT_INTERVAL` | Time in seconds to wait between gathering metrics. | `5` |
-| `SAMPLE_DURATION` | _Minimum_ time in seconds to monitor disk I/O etc. Will accumulate for multiple devices. | `10` |
-
-### Agent
+#### Agent
 
 | Variable | Meaning | Example |
 |-|-|-|
-| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
 | `SKEP_SECRET` | If provided, will use to authenticate with front end web app when reporting statistics (the same value must be set for the web app service) | `averylongandcomplexsecret` |
+| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
 | `DISKS` | Comma-separated list of disk devices to monitor (disk activity) | `sda,sdc` |
 | `FILE_SYSTEMS` | Comma-separated list of file systems to monitor (available space) | `/hostfs/root,/hostfs/backups` (see [file systems](#file-systems)) |
 | `NETWORK_INTERFACES` | Comma-separated list of network devices to monitor (traffic) **[not yet implemented]** | `eth0,eth3` |
@@ -107,11 +66,72 @@ The following environment variables are available:
 | `LOG_LEVEL` | By default, the agent only logs initial configuration on launch and errors. Set to `DEBUG` to log all statistics. | `INFO` _(default/recommended)_ |
 | `SKEP_HOST` | Set to `docker-desktop` when running on Docker Desktop for Mac | `docker-desktop` |
 
+#### Monitor
+
+| Variable | Meaning | Example |
+|-|-|-|
+| `SKEP_SECRET` | If provided, will use to authenticate with front end web app when reporting statistics (the same value must be set for the web app service) | `averylongandcomplexsecret` |
+| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
+| `SERVICE_URL_TEMPLATE` | URL template for service names | See [URL templating](#url-templating) |
+| `IMAGE_URL_TEMPLATE` | URL template for image names | See [URL templating](#url-templating) |
+| `LOG_LEVEL` | By default, the monitor only logs initial configuration on launch and errors. Set to `DEBUG` to log all statistics. | `INFO` _(default/recommended)_ |
+| `COLLECT_INTERVAL` | Time in seconds to wait between gathering metrics. | `5` |
+| `SAMPLE_DURATION` | _Minimum_ time in seconds to monitor disk I/O etc. Will accumulate for multiple devices. | `10` |
+
+#### Monitor
+
+| Variable | Meaning | Example |
+|-|-|-|
+| `SKEP_SECRET` | If provided, will use to authenticate with front end web app when reporting statistics (the same value must be set for the web app service) | `averylongandcomplexsecret` |
+| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
+| `SERVICE_URL_TEMPLATE` | URL template for service names | See [URL templating](#url-templating) |
+| `IMAGE_URL_TEMPLATE` | URL template for image names | See [URL templating](#url-templating) |
+| `LOG_LEVEL` | By default, the monitor only logs initial configuration on launch and errors. Set to `DEBUG` to log all statistics. | `INFO` _(default/recommended)_ |
+| `COLLECT_INTERVAL` | Time in seconds to wait between gathering metrics. | `5` |
+| `SAMPLE_DURATION` | _Minimum_ time in seconds to _monitor_ disk I/O etc. Will accumulate for multiple devices. | `10` |
+
+#### Calculator
+
+| Variable | Meaning | Example |
+|-|-|-|
+| `SKEP_SECRET` | If provided, will use to authenticate with front end web app when reporting statistics (the same value must be set for the web app service) | `averylongandcomplexsecret` |
+| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
+| `SKEP_CALCULATOR_DB_PATH` | Path to statistics _SQLite3_ database. Mount a shared storage endpoint to this location if you want to retain data between restarts. | `/calculator.db` _(default/recommended)_ |
+| `SKEP_CALCULATOR_DB_PERSIST` | By default, the statistics database is re-initialised on startup. Set this variable to any value to retain data between restarts. | _(not set)_ |
+| `LOG_LEVEL` | Application server log level. | `INFO` _(default/recommended)_ |
+
 ## Deployment
 
-Deploy _Skep_ as a [Docker Stack](https://docs.docker.com/engine/reference/commandline/stack_deploy/):
-```bash
-docker stack deploy -c docker-compose.yml skep
+_Skep_ uses the [gunicorn](https://gunicorn.org/) web server in conjunction with [Flask](https://palletsprojects.com/p/flask/) and [Flask-SocketIO](https://github.com/miguelgrinberg/Flask-SocketIO).
+
+To deploy _Skep_ behind _Nginx_ the following configuration can be used:
+```
+upstream skep {
+  # Docker Swarm Nodes:
+  server node1:8080;
+  server node2:8080;
+  server node3:8080;
+}
+
+server {
+    server_name skep.example.com;
+
+    location / {
+        proxy_pass http://skep;
+    }
+
+    location /socket.io {
+        proxy_http_version 1.1;
+        proxy_buffering off;
+        proxy_set_header Origin "";
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_pass http://skep;
+    }
+
+    listen 80;
+    listen [::]:80;
+}
 ```
 
 <a name="file-systems"></a>
@@ -162,19 +182,24 @@ IMAGE_URL_TEMPLATE=https://hub.docker.com/r/{organization}/{repository}
 
 ## Architecture
 
-_Skep_ is comprised of three services:
+_Skep_ is comprised of four services:
 
-* An agent which is deployed globally (i.e. to all _Swarm_ nodes);
-* A monitor which must be deployed to one manager node;
-* A web app that can be deployed to any node but must also have only one replica.
+* An _agent_ which is deployed globally (i.e. to all _Swarm_ nodes);
+* A _monitor_ which must be deployed to one manager node;
+* A _calculator_ which stores and calculates chart data which can be deployed to any node and must have only one replica;
+* A web _app_ that can be deployed to any node and must have only one replica.
 
-See [docker-compose.yml](docker-compose.yml) for example configuration.
+The _agent_ periodically harvests system and container metrics which are sent to the _calculator_ and _app_ services; the _app_ service forwards the data to the [_React_](https://reactjs.org/) front end using [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) / [socket.io](https://socket.io/). The _calculator_ service retains the data in an [SQLite3](https://www.sqlite.org/version3.html) database.
 
-The agent periodically harvests system and container metrics which are sent to the web server and forwarded to the [_React_](https://reactjs.org/)-based front end.
+Chart requests are sent to the _app_ which forwards to the _calculator_. A confirmation is immediately returned to the front end while the _calculator_ uses one of its worker processes to render the chart data. When the data has been compiled it is sent back to the front end via a _WebSocket_ event.
 
-Agents use bind mounts to access metrics from the host system (`/proc`, `/etc/`, and `/dev` are mounted). Agents also gather statistics about containers running on each host by mounting the `/var/run/docker.sock`.
+_Redux_ is used in the front end to manage events and data storage/manipulation.
 
-The agent and monitor are written in _Python_ using the excellent [Docker SDK for Python](https://docker-py.readthedocs.io/en/stable/index.html).
+_Agents_ use bind mounts to access metrics from the host system (`/proc`, `/etc/`, and `/dev` are mounted). _Agents_ also gather statistics about containers running on each host by mounting the _Docker_ socket (`/var/run/docker.sock`).
+
+All services are written in _Python 3_.
+
+_Skep_ utilises the excellent [Docker SDK for Python](https://docker-py.readthedocs.io/en/stable/index.html) extensively.
 
 The web application is also written in _Python_ using the equally excellent [Flask](http://flask.pocoo.org/) web framework and [Flask-SocketIO](https://flask-socketio.readthedocs.io/en/latest/).
 
