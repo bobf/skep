@@ -35,6 +35,9 @@ class ContainerStat(Base):
         return container['cpu_stats']['cpu_usage']['total_usage']
 
     def system_cpu_usage(self, container):
+        if 'system_cpu_usage' not in container['cpu_stats']:
+            return None
+
         return container['cpu_stats']['system_cpu_usage']
 
     def disk_ops(self, container):

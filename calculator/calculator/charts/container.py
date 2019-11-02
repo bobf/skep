@@ -14,11 +14,8 @@ class Container(Base):
 
         super().__init__(db_path, data, publisher)
 
-    def build_chart(self):
-        if not self.data or self.id is None:
-            return None, None
-
-        return [['Time', 'Disk', 'Network', 'RAM', 'CPU'], *self.chart_data()]
+    def titles(self):
+        return ('Time', 'Disk', 'Network', 'RAM', 'CPU')
 
     def chart_data(self):
         charts = [self.disk(), self.network(), self.ram(), self.cpu()]

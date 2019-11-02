@@ -13,7 +13,7 @@ class TaskChart extends ChartBase {
 
   subtitle() {
     const { data, hostname } = this.props;
-    if (!data) return null;
+    if (!data || !data.meta) return null;
 
     const { id: containerID } = data.meta;
 

@@ -1,5 +1,6 @@
 const REQUEST = 'skep/chart/REQUEST';
 const RESPONSE = 'skep/chart/RESPONSE';
+export const NO_DATA = 'skep/chart/NO_DATA';
 
 function requestChart(type, calculatorParams) {
   const params = { chartType: type, params: calculatorParams };
@@ -16,9 +17,24 @@ function reduceResponse(state, action) {
 
   newState.node = Object.assign({}, state.nodes, {});
   newState.container = Object.assign({}, state.containers, {});
-  newState[type][id] = action.payload;
+  newState[type][id] = formatPayload(action.payload);
 
   return newState;
+}
+
+function formatPayload(payload) {
+  if (!payload || !payload.chart) return { chart: NO_DATA };
+
+  const { chart, meta, period } = payload;
+  const { data, titles } = chart;
+
+  const toDate = (timestamp) => moment.unix(timestamp).toDate();
+  const convertTimestamps = (first, ...rest) => [toDate(first)].concat(rest);
+  return {
+    chart: [titles].concat(data.map((row) => convertTimestamps(...row))),
+    meta: meta,
+    period: period
+  };
 }
 
 const defaultState = { node: {}, container: {} };

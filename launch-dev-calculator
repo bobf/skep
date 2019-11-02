@@ -8,5 +8,6 @@ export FLASK_DEBUG=1
 export SKEP_LISTEN_HOST=0.0.0.0
 export SKEP_CALCULATOR_PORT=5040
 export SKEP_CALCULATOR_DB_PATH=/tmp/calculator.db
+export SKEP_CALCULATOR_DB_PERSIST=1
 export LOG_LEVEL=debug
 pipenv run python app.py

@@ -46,6 +46,8 @@ services:
     environment:
       SKEP_SECRET:
       SKEP_APP_URL: http://app:8080
+      SKEP_CALCULATOR_DB_PATH: /calculator.db
+      SKEP_CALCULATOR_DB_PERSIST:
       LOG_LEVEL:
 
   monitor:

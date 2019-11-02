@@ -1,6 +1,8 @@
 import math
+import statistics
 import time
 import traceback
+from operator import itemgetter
 
 from calculator.orm.base import Base as ORMBase
 
@@ -11,7 +13,7 @@ class Base:
         self.period = self.calculate_period()
         self.publisher = publisher
 
-    def build_chart(self):
+    def titles(self):
         raise NotImplementedError
 
     def calculate_period(self):
@@ -31,6 +33,12 @@ class Base:
             traceback.print_exc()
             raise
 
+    def build_chart(self):
+        if not self.data or self.id is None:
+            return None
+
+        return { 'titles': self.titles(), 'data': self.chart_data() }
+
     def connect(self):
         return ORMBase(self.db_path).connect()
 
@@ -43,18 +51,32 @@ class Base:
             period = 3600
 
         then = now - period
-        data = self.execute(now, then)
+        data = self.normalize(self.execute(now, then))
         interval = len(data) / period
         time_indices = [then + (interval * index) for index in range(len(data))]
 
-        return self.normalize(time_indices), self.normalize(data)
+        return time_indices, data
 
     def normalize(self, data):
-        # Reduce browser load by limiting chart data to 100 datapoints
-        points = 100
+        # Reduce browser load by limiting chart data to 500 datapoints
+        points = 500
         nth_element = max(int(math.ceil(len(data) / points)), 1)
 
-        return data[0::nth_element]
+        return [self.normalize_chunk(x) for x in zip(*[iter(data)] * nth_element)]
+
+    def normalize_chunk(self, chunk):
+        normalized = {}
+
+        pick = lambda k: map(itemgetter(k), chunk)
+        normalized['tstamp'] = statistics.median(pick('tstamp'))
+        normalized['id'] = chunk[0]['id']
+        for key in chunk[0].keys():
+            if key in ('tstamp', 'id'):
+                continue
+            # REVIEW: Is median or mean a better average here ?
+            normalized[key] = statistics.mean(pick(key))
+
+        return normalized
 
     def merge_timeline(self, *charts):
         return list(zip(self.time_indices, *charts))

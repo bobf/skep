@@ -13,9 +13,10 @@ class NodeChart extends ChartBase {
 
   subtitle() {
     const { data } = this.props;
-    if (!data) return null;
+    if (!data || !data.meta) return null;
 
-    const { hostname } = data.meta;
+    const { id: hostname } = data.meta;
+
     return hostname;
   }
 

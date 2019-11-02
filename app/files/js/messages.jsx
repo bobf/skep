@@ -21,7 +21,7 @@ const Messages = {
     }
   },
   chart: {
-    noData: 'No data currently available for this entity.',
+    noData: 'Metrics currently unavailable. Try again in a few minutes.',
     loading: 'Loading chart data ...',
   },
   overview: {

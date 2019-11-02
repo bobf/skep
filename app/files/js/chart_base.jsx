@@ -3,7 +3,7 @@ import Chart from 'react-google-charts';
 import Messages from './messages';
 import Modal from './modal';
 import store from './redux/store';
-import { requestNodeChart, requestContainerChart } from './redux/models/charts';
+import { requestNodeChart, requestContainerChart, NO_DATA } from './redux/models/charts';
 
 class ChartBase extends React.Component {
   constructor(props) {
@@ -73,8 +73,8 @@ class ChartBase extends React.Component {
     const { loading, periodDefault } = this.state;
     const { chart, period } = this.props.data;
 
+    if (chart === NO_DATA) return this.renderNoData();
     if (loading) return this.renderLoading();
-    if (!chart[1]) return this.renderNoData();
 
     return (
       <div className={'chart-view'}>

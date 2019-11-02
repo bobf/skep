@@ -13,11 +13,8 @@ class Node(Base):
 
         super().__init__(db_path, data, publisher)
 
-    def build_chart(self):
-        if not self.data or self.id is None:
-            return None, None
-
-        return [['Time', 'Load', 'RAM', 'CPU'], *self.chart_data()]
+    def titles(self):
+        return ('Time', 'Load', 'RAM', 'CPU')
 
     def chart_data(self):
         return self.merge_timeline(self.load(), self.ram(), self.cpu())
