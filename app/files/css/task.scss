@@ -52,10 +52,15 @@ span.task {
   margin: 1em;
   display: block;
   // Do not pulse background if parent service is updating
-  background-color: $background-color-highlight;
+  background-color: $background-color;
   height: 10.4em;
 }
 
-.task.highlight {
-  background-color: rgba(240,240,102,0.1);
+.task.highlighted {
+  background-color: $highlight-select-background;
+
+  .box {
+    box-shadow: 0px 0px 3px $highlight-select;
+    border-color: $highlight-select;
+  }
 }

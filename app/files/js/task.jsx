@@ -66,6 +66,17 @@ class ConnectedTask extends React.Component {
     return moment(when);
   }
 
+  isHighlighted() {
+    const { nodes } = this.props;
+    const node = Object.values(nodes).find(node => node.selected);
+    if (!node) return false;
+
+    const { containerID } = this.props.task;
+    const { containers } = node;
+
+    return containers.map(container => container.id).includes(containerID);
+  }
+
   node() {
     const { containerID } = this.props.task;
     const { stack } = this.props;
@@ -97,15 +108,6 @@ class ConnectedTask extends React.Component {
     const current = this.containerStats(node);
     const previous = this.containerStats(node.previous);
     return { current: current || {}, previous: previous || {} };
-  }
-
-  highlightNode(state) {
-    const node = this.node();
-
-    if (!node) return false;
-
-    this.setState({ highlight: state });
-    $(`#node-${node.id}`).toggleClass('highlight', state);
   }
 
   level() {
@@ -181,11 +183,13 @@ class ConnectedTask extends React.Component {
   }
 
   render() {
-    const { highlight } = this.state;
     const tooltip = this.tooltip();
+    const classes = ['task'];
+
+    if (this.isHighlighted()) classes.push('highlighted');
 
     return (
-      <span className={'task ' + (highlight ? 'highlight' : '')}>
+      <span className={classes.join(' ')}>
         {this.renderChart()}
         <span className={'box'}>
           <div className={'info-icons'}>

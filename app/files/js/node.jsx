@@ -8,6 +8,7 @@ import NodeChart from './node_chart';
 
 import store from './redux/store';
 import { requestNodeChart } from './redux/models/charts';
+import { selectNode } from './redux/models/node';
 
 class ConnectedNode extends React.Component {
   constructor(props) {
@@ -155,15 +156,32 @@ class ConnectedNode extends React.Component {
     return version;
   }
 
+  isSelected() {
+    const { nodes } = this.props;
+    const node = nodes[this.hostname()];
+
+    return node && node.selected;
+  }
+
   isHighlighted() {
+    if (this.isSelected()) return false;
+
     const { selectedService } = this.props.dashboard;
     if (!selectedService) return false;
+
     const containerIDs = selectedService.tasks.map(task => task.containerID);
     return containerIDs.some(
       containerID => this.containers()
                          .map(container => container.id)
                          .includes(containerID)
     );
+  }
+
+  toggle(ev) {
+    const { setSelected } = this.props;
+    const { nodes } = this.props;
+
+    setSelected(this.hostname());
   }
 
   renderChart() {
@@ -195,9 +213,12 @@ class ConnectedNode extends React.Component {
     );
 
     if (ping) classes.push('ping');
-    if (this.isHighlighted()) classes.push('highlight');
+    if (this.isHighlighted()) classes.push('highlighted');
+    if (this.isSelected()) classes.push('selected');
     return (
-      <div id={`node-${node.id}`} className={classes.join(' ')}>
+      <div id={`node-${node.id}`}
+           onClick={(ev) => this.toggle(ev)}
+           className={classes.join(' ')}>
         {this.renderChart()}
         <Icon.Power className={'light'} size={'1em'} />
         {this.chartButton()}
@@ -228,5 +249,11 @@ const select = state => {
   return { dashboard: state.dashboard, nodes: state.nodes, charts: state.charts };
 };
 
-const Node = connect(select)(ConnectedNode);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setSelected: (hostname) => dispatch(selectNode(hostname)),
+  }
+}
+
+const Node = connect(select, mapDispatchToProps)(ConnectedNode);
 export default Node;

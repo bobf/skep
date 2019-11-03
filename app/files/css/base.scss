@@ -31,6 +31,7 @@ $status-light-healthy: #bf9208d1;
 
 $highlight-select: #bf9208d1;
 $highlight-select-background: rgba(240,240,102,0.1);
+$highlight-select-background-secondary: rgba(240,240,102,0.05);
 $highlight-select-accent: #375a7e55;
 
 $loader: #ffff00bb;
@@ -70,6 +71,7 @@ html {
 
 .tooltip {
   position: fixed;
+  pointer-events: none; // https://stackoverflow.com/a/48665379
   z-index: 999999999999999999999999999999999999;
   max-width: 500px;
 

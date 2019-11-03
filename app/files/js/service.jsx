@@ -11,11 +11,6 @@ import * as Icon from 'react-feather';
 class ConnectedService extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { highlight: false };
-  }
-
-  highlight(highlight, className) {
-    this.setState({ highlight: highlight, highlightClass: className });
   }
 
   replicas() {
@@ -270,6 +265,18 @@ class ConnectedService extends React.Component {
     return networks;
   }
 
+  isHighlighted() {
+    const { nodes } = this.props;
+    const node = Object.values(nodes).find(node => node.selected);
+    if (!node) return false;
+
+    const { tasks } = this.props.service;
+    const selectedContainerIDs = new Set(node.containers.map(container => container.id));
+    const intersect = tasks.filter(task => selectedContainerIDs.has(task.containerID));
+
+    return intersect.length >= 0;
+  }
+
   isSelected() {
     const { selectedService } = this.props.dashboard;
     if (!selectedService) return false;
@@ -431,6 +438,7 @@ class ConnectedService extends React.Component {
     const networkTooltip = `<div class="tooltip-inner align-left">${networkMessage}</div>`
 
     if (this.isSelected()) classes.push('selected');
+    if (this.isHighlighted()) classes.push('highlighted');
     if (updating) classes.push('updating');
     if (networks.length) classes.push('networked');
 
@@ -518,7 +526,7 @@ const select = (state) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setSelected: serviceName => dispatch(selectService(serviceName))
+    setSelected: serviceName => dispatch(selectService(serviceName)),
   };
 };
 
