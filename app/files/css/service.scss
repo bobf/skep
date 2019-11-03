@@ -68,7 +68,7 @@ a.service-name:hover, a.image:hover {
 
 .service.networked .network-icon {
   visibility: visible;
-  color: rgba(70,120,235,1.0);
+  color: rgba(70,120,235,0.6);
 }
 
 .service {
@@ -268,3 +268,16 @@ tr.service.networked {
   }
 }
 
+.tooltip {
+  .network-name {
+    color: $label-text-dark;
+  }
+
+  .network-id {
+    color: $accent-dark;
+  }
+
+  .punctuation {
+    color: $accent-background;
+  }
+}

@@ -80,11 +80,18 @@ html {
     em {
       color: $label-text-dark !important;
     }
+
+    .nowrap {
+      white-space: nowrap;
+    }
+
+    .align-left {
+      text-align: left;
+    }
   }
 }
 
 .info-tooltip {
-  text-align: left;
   width: auto;
   white-space: nowrap;
 }

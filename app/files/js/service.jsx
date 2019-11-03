@@ -260,27 +260,6 @@ class ConnectedService extends React.Component {
     );
   }
 
-  highlightRelated(highlight) {
-    this.highlightNodes(highlight);
-    this.highlightNetworkedServices(highlight);
-    this.highlight(highlight, 'selected');
-
-    return false;
-  }
-
-  highlightNodes(highlight) {
-    const $nodes = $(this.nodesSelector());
-
-    if (highlight) {
-      // move to Node
-      $('.node').removeClass('highlight');
-      $nodes.addClass('highlight');
-    } else {
-      // move to Node
-      $('.node').removeClass('highlight');
-    }
-  }
-
   name() {
     const { name } = this.props.service;
     return name;
@@ -300,23 +279,43 @@ class ConnectedService extends React.Component {
     return selectedService.id === id;
   }
 
-  isNetworkedService() {
+  commonNetworks() {
     const { selectedService } = this.props.dashboard;
     const { networks, id } = this.props.service;
-    if (!selectedService) return false;
-    if (this.isSelected()) return false;
+    if (!selectedService) return [];
+    if (this.isSelected()) return [];
 
     const { stacks } = this.props.swarm.manifest;
     const service = stacks.map(stack => stack.services)
                           .flat()
                           .find(service => service.id === selectedService.id);
-    if (!service) return false; // should never happen ?
+    if (!service) return []; // should never happen ?
 
     const networkIds = new Set(networks.map(network => network.id));
     const serviceNetworkIds = service.networks.map(network => network.id);
     const intersect = serviceNetworkIds.filter(id => networkIds.has(id));
 
-    return intersect.length > 0;
+    return intersect;
+  }
+
+  networkLabel(network) {
+    return (
+      `<span class="nowrap">
+         <span class='network-name'>${network.name}</span>
+         <span class='punctuation'>&nbsp;[</span>
+         <span class='network-id'>${network.id.substring(6)}</span>
+         <span class='punctuation'>]</span>
+       </span>`
+    );
+  }
+
+  networkNames(networkIDs) {
+    if (!networkIDs.length) return [];
+
+    const idSet = new Set(networkIDs);
+    const { networks } = this.props.swarm.manifest;
+    return networks.filter(network => idSet.has(network.id))
+                   .map(network => this.networkLabel(network));
   }
 
   nodesSelector() {
@@ -427,10 +426,13 @@ class ConnectedService extends React.Component {
     const { name, environment, mounts, updating } = this.props.service;
     const { stack, service, dashboard } = this.props;
     const classes = ['service', 'collapsed'];
+    const networks = this.commonNetworks();
+    const networkMessage = Messages.service.networks(this.networkNames(networks));
+    const networkTooltip = `<div class="tooltip-inner align-left">${networkMessage}</div>`
+
     if (this.isSelected()) classes.push('selected');
-    if (this.isNetworkedService()) classes.push('networked');
     if (updating) classes.push('updating');
-    const networkTooltip = 'Reachable via a Docker network';
+    if (networks.length) classes.push('networked');
 
     return (
       <tr
@@ -440,7 +442,8 @@ class ConnectedService extends React.Component {
         <th className={'service-title'}>
           <span
             className={'network-icon'}
-            title={networkTooltip}
+            data-title={networkTooltip}
+            data-html={'true'}
             data-original-title={networkTooltip}
             data-toggle={'tooltip'}>
             <Icon.Wifi size={'1.4em'} />

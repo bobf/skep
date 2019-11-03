@@ -3,6 +3,7 @@ const Messages = {
     homepage: 'https://github.com/bobf/skep',
   },
   service: {
+    networks: (networks) => `Reachable via the following <em>${networks.length}</em> network(s):<br/>${networks.join('<br/>')}`,
     state: {
       inconsistentImages: 'Tasks are running inconsistent images. Compare task details for more information.',
       unknownDigest: 'Tasks are running image(s) that have not been verified with a remote registry.',
@@ -18,7 +19,7 @@ const Messages = {
       noUpdate: (created) => `Service was <em>created</em> successfully <em>${created}</em>.`,
 
       unrecognized: (state) => `Unrecognized state: ${state}`,
-    }
+    },
   },
   chart: {
     noData: 'Metrics currently unavailable. Try again in a few minutes.',
