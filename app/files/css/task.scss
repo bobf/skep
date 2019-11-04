@@ -6,6 +6,9 @@
   text-align: center;
   display: block;
   margin: 0.4em 0;
+  text-overflow: ellipsis;
+  width: 10em;
+  overflow-x: hidden;
 }
 
 .task .badges {

@@ -13,11 +13,14 @@ class Task(ImageParser):
 
         return self.task['DesiredState']
 
+    def container_status(self):
+        return self.task.get('Status', {}).get('ContainerStatus', {})
+
     def container_id(self):
         if not self.task:
             return None
 
-        return self.task.get('Status', {}).get('ContainerStatus', {}).get('ContainerID', None)
+        return self.container_status().get('ContainerID', None)
 
     def image(self):
         return self.parse_image(self.task['Spec']['ContainerSpec'].get('Image', None))
@@ -28,11 +31,13 @@ class Task(ImageParser):
             return { "id": id, "state": "loading", "message": "loading" }
 
         attrs = self.task
+
         return {
             "id": attrs["ID"],
             "slot": attrs.get("Slot", None),
             "containerID": self.container_id(),
             "nodeID": attrs.get("NodeID", attrs.get("Node", None)),
+            "error": self.container_status().get('Err', None),
             "message": attrs["Status"]["Message"],
             "when": attrs["Status"]["Timestamp"],
             "state": attrs["Status"]["State"],

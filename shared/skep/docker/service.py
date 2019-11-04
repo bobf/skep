@@ -84,7 +84,7 @@ class Service(ImageParser):
 
     def tasks(self):
         tasks = list(filter(
-            lambda x: x.desired_state() == 'running',
+            lambda x: x.desired_state() in ['running', 'ready'],
             [Task(x) for x in self.try_tasks()]
         ))
 
