@@ -274,7 +274,7 @@ class ConnectedService extends React.Component {
     const selectedContainerIDs = new Set(node.containers.map(container => container.id));
     const intersect = tasks.filter(task => selectedContainerIDs.has(task.containerID));
 
-    return intersect.length >= 0;
+    return intersect.length > 0;
   }
 
   isSelected() {
