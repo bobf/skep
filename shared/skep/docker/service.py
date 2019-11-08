@@ -82,10 +82,30 @@ class Service(ImageParser):
             # The service was removed since we started inspecting it
             return []
 
+    def error_slots(self, tasks):
+        error_slots = {}
+        erroring_tasks = list(filter(
+            lambda x: x.desired_state() in ['shutdown'],
+            [Task(x) for x in tasks]
+        ))
+
+        for task in erroring_tasks:
+            slot = task.slot()
+            error = task.error()
+            if slot is None or error is None:
+                continue
+            error_slots.setdefault(slot, []).append(error)
+
+        return error_slots
+
     def tasks(self):
+        all_tasks = self.try_tasks()
+
+        error_slots = self.error_slots(all_tasks)
+
         tasks = list(filter(
             lambda x: x.desired_state() in ['running', 'ready'],
-            [Task(x) for x in self.try_tasks()]
+            [Task(x, error_slots) for x in all_tasks]
         ))
 
         replicas = self.replicas()

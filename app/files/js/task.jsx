@@ -14,8 +14,8 @@ class ConnectedTask extends React.Component {
   }
 
   tooltip() {
-    const { error: errorMessage } = this.props.task;
-    const error = errorMessage ? `Error: <em>${errorMessage}</em>` : null;
+    const { errors } = this.props.task;
+    const error = errors.length ? `Error: <em>${errors.join('<br/>')}</em>` : null;
     const host = `Host: <em>${this.hostname()}</em>`;
 
     if (!this.slotID()) return error;
@@ -23,7 +23,7 @@ class ConnectedTask extends React.Component {
     const slot = `Slot: <em>${this.slotID()}</em>`;
     const name = `Container: <em>${this.containerName()}</em>`;
     const digest = `Digest: <em>${this.digest() || '[none]'}</em>`;
-    const content = [error, error, slot, name, digest].filter(item => item).join('<br/>');
+    const content = [error, slot, name, digest].filter(item => item).join('<br/>');
     return `<div class="align-left info-tooltip">${content}</div>`;
   }
 
@@ -185,7 +185,7 @@ class ConnectedTask extends React.Component {
   render() {
     const tooltip = this.tooltip();
     const classes = ['task'];
-    const { error } = this.props.task;
+    const { errors } = this.props.task;
 
     if (this.isHighlighted()) classes.push('highlighted');
 
@@ -196,7 +196,7 @@ class ConnectedTask extends React.Component {
           <div className={'info-icons'}>
             <Icon.Info
               title={tooltip}
-              className={`icon info ${error ? 'error' : ''}`}
+              className={`icon info ${errors.length ? 'text-danger' : ''}`}
               data-toggle={'tooltip'}
               data-container={'body'}
               data-html={'true'}
