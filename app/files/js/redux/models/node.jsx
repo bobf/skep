@@ -16,11 +16,13 @@ function merge(state, node) {
 }
 
 function mergeSelected(state, hostname) {
-  const node = state[hostname];
-  const newNode = Object.assign({}, node);
-  newNode.selected = !node.selected;
+  const newNodes = {};
+  for (const [key, value] of Object.entries(state)) {
+    newNodes[key] = Object.assign({}, value);
+    newNodes[key].selected = hostname ? !state[key].selected : false;
+  }
 
-  return Object.assign({}, state, { [hostname]: newNode });
+  return newNodes;
 }
 
 export default function reducer(state = {}, action = {}) {

@@ -4,6 +4,7 @@ import Mounts from './mounts';
 import Messages from './messages';
 
 import { selectService } from './redux/models/dashboard';
+import { selectNode } from './redux/models/node';
 
 import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
@@ -526,7 +527,10 @@ const select = (state) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setSelected: serviceName => dispatch(selectService(serviceName)),
+    setSelected: serviceName => {
+      dispatch(selectNode(null));
+      dispatch(selectService(serviceName));
+    },
   };
 };
 

@@ -124,8 +124,6 @@ class ConnectedTask extends React.Component {
   }
 
   loadChart() {
-    const that = this;
-    const token = Skep.token();
     const { containerID } = this.props.task;
 
     this.setState({ chartClosed: false });
