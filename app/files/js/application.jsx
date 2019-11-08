@@ -6,7 +6,7 @@ import Dashboard from './dashboard';
 
 import { Provider } from 'react-redux';
 import store from './redux/store';
-import { updateSwarm } from './redux/models/swarm';
+import { updateSwarm, disconnectSwarm, pingSwarm, unpingSwarm } from './redux/models/swarm';
 import { updateNode, pingNode, unpingNode } from './redux/models/node';
 import { respondChart } from './redux/models/charts';
 
@@ -23,6 +23,12 @@ $(function () {
     setTimeout(() => store.dispatch(unpingNode(data)), 500);
   };
 
+  const updateManifest = data => {
+    store.dispatch(updateSwarm(data));
+    store.dispatch(pingSwarm(data));
+    setTimeout(() => store.dispatch(unpingSwarm(data)), 600);
+  };
+
   const initManifest = (data) => {
     if (!Skep.dashboard) {
       Skep.dashboard = ReactDOM.render(
@@ -32,8 +38,10 @@ $(function () {
         document.getElementById('content')
       );
     }
-    store.dispatch(updateSwarm(data));
+    updateManifest(data);
   };
+
+  const notifyTimeout = () => store.dispatch(disconnectSwarm());
 
   const Skep = {
     chartCallbacks: {},
@@ -63,8 +71,10 @@ $(function () {
   });
 
   socket.on('manifest', function(json) {
+    if (Skep.connectionTimeout) window.clearTimeout(Skep.connectionTimeout);
+    Skep.connectionTimeout = window.setTimeout(() => notifyTimeout(), 60000);
     const data = JSON.parse(json);
-    initManifest(data);
+    updateManifest(data);
   });
 
   socket.on('stats', function (json) {

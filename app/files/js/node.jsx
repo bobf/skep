@@ -8,6 +8,7 @@ import NodeChart from './node_chart';
 
 import store from './redux/store';
 import { requestNodeChart } from './redux/models/charts';
+import { selectService } from './redux/models/dashboard';
 import { selectNode } from './redux/models/node';
 
 class ConnectedNode extends React.Component {
@@ -251,7 +252,10 @@ const select = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setSelected: (hostname) => dispatch(selectNode(hostname)),
+    setSelected: (hostname) => {
+      dispatch(selectService(null));
+      dispatch(selectNode(hostname));
+    },
   }
 }
 

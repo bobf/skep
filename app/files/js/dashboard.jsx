@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
 import store from './redux/store';
+import Messages from './messages';
 import NodeList from './node_list';
 import Overview from './overview';
 import Stack from './stack';
@@ -123,13 +124,46 @@ class ConnectedDashboard extends React.Component {
     }
   }
 
+  renderConnectionError() {
+    return (
+      <span className={'connection-error'}>
+        {Messages.skep.connectionError}
+      </span>
+    );
+  }
+
+  renderPingIcon() {
+    const { connectionLive } = this.props.swarm;
+    const now = moment(Date.now()).seconds();
+    const then = moment(connectionLive).seconds();
+    const message = Messages.skep.connectionLive(now - then);
+
+    return (
+      <span
+        className={'ping-icon'}
+        data-original-title={message}
+        data-html={'true'}
+        data-toggle={'tooltip'}>
+        <Icon.Radio />
+      </span>
+    );
+  }
+
   renderOverviewMinimized() {
     const { overviewVisible } = this.state;
-    const className = overviewVisible ? '' : 'visible';
+    const { connectionLive, ping } = this.props.swarm;
+
+    const classes = ['overview-minimized'];
+    if (overviewVisible) classes.push('visible');
+    if (ping) classes.push('ping');
+    classes.push(connectionLive ? 'connected' : 'disconnected')
+
     return (
       <div
         onMouseEnter={(ev) => this.toggleOverview(ev, true)}
-        className={`overview-minimized ${className}`}>
+        className={classes.join(' ')}>
+        {this.renderConnectionError()}
+        {this.renderPingIcon()}
       </div>
     );
   }

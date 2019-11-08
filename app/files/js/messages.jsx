@@ -1,6 +1,8 @@
 const Messages = {
   skep: {
     homepage: 'https://github.com/bobf/skep',
+    connectionError: 'Connection to Skep server has been lost. Try refreshing the page to reconnect.',
+    connectionLive: (ago) => `Last update: <em>${ago} second(s) ago</em>`,
   },
   service: {
     networks: (networks) => `Reachable via the following <em>${networks.length}</em> network(s):<br/>${networks.join('<br/>')}`,
@@ -10,7 +12,7 @@ const Messages = {
 
       updateStarted: '<em>Update</em> currently in progress.',
       updatePaused: (message) => `<em>Update</em> was paused. Message was: <em>${message}</em>`,
-      updateComplete: (updated, digest) => `<em>Update</em> completed successfully <em>${updated}</em>, verified image digests: <em>${digest}</em>`,
+      updateComplete: (updated, digest) => `Service was <em>updated</em> successfully <em>${updated}</em>, verified image digests: <em>${digest}</em>`,
 
       rollbackStarted: '<em>Rollback</em> currently in progress.',
       rollbackPaused: (message) => `<em>Rollback</em> was paused. Message was: <em>${message}</em>`,

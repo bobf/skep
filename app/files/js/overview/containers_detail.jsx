@@ -43,8 +43,15 @@ class ConnectedContainersDetail extends OverviewDetail {
     return {
       title: state,
       value: tasks.length,
-      state: ['running', 'started'].includes(state) ? 'ok' : null,
+      state: this.containerState(state),
     };
+  }
+
+  containerState(state) {
+    if (['running', 'started'].includes(state)) return 'ok';
+    if (['rejected'].includes(state)) return 'error';
+
+    return null;
   }
 
   render() {
