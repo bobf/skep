@@ -33,10 +33,14 @@
 
   .ping-wrapper {
     padding: 4em;
+    // This div is big but invisible. Since it is a child of the overview, it
+    // triggers the overview-open event. We switch it off here.
     pointer-events: none;
   }
 
   .ping-pulse {
+    // Enable pointer events for tooltip on small ping icon.
+    pointer-events: all;
     width: 1em;
     height: 1em;
     right: 1.4em;
