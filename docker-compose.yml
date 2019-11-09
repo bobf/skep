@@ -46,9 +46,12 @@ services:
     environment:
       SKEP_SECRET:
       SKEP_APP_URL: http://app:8080
-      SKEP_CHARTS_DB_PATH: /charts.db
+      SKEP_CHARTS_DB_PATH: /skep/database/charts.db
       SKEP_CHARTS_DB_PERSIST:
       LOG_LEVEL:
+    # To persist database storage, use a configuration similar to this:
+    # volumes:
+    #   - "/shared/network/storage/skep/:/skep/database/:rw"
 
   monitor:
     image: skep/monitor:${BUILD_TAG:-latest}
