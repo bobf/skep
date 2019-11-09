@@ -1,0 +1,42 @@
+.tooltip {
+  position: fixed;
+  pointer-events: none; // https://stackoverflow.com/a/48665379
+  z-index: 999999999999999999999999999999999999;
+  max-width: 500px;
+
+  .tooltip-inner {
+    max-width: 500px;
+    text-overflow: ellipsis;
+    color: $label-text-light;
+
+    em {
+      color: $label-text-dark;
+    }
+
+    .nowrap {
+      white-space: nowrap;
+    }
+
+    .align-left {
+      text-align: left;
+    }
+  }
+}
+
+.info-tooltip {
+  width: auto;
+  white-space: nowrap;
+}
+
+  .errors {
+    padding-left: 0.2em;
+    font-family: monospace;
+
+    .error-message {
+      color: $danger;
+    }
+
+    .error-tstamp {
+      padding-left: 0.2em;
+    }
+  }

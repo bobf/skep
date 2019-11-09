@@ -4,9 +4,13 @@ import random
 from skep.docker.mixins import ImageParser
 
 class Task(ImageParser):
-    def __init__(self, task, error_slots=None):
+    def __init__(self, task, service=None, error_slots=None):
         self.task = task
+        self.service = service
         self.error_slots = error_slots
+
+    def id(self):
+        return self.task['ID']
 
     def desired_state(self):
         if not self.task:
@@ -21,9 +25,11 @@ class Task(ImageParser):
 
         slot = self.slot()
         try:
-            return self.error_slots[slot]
+            errors = self.error_slots[(self.service.name(), slot)]
         except KeyError:
             return []
+        else:
+            return sorted(errors, key=lambda x: x['since'])
 
     def error(self):
         return self.task["Status"].get("Err", None)
@@ -51,11 +57,11 @@ class Task(ImageParser):
         attrs = self.task
 
         return {
-            "id": attrs["ID"],
+            "id": self.id(),
             "slot": self.slot(),
             "containerID": self.container_id(),
             "nodeID": attrs.get("NodeID", attrs.get("Node", None)),
-            "errors": list(set(self.errors())),
+            "errors": self.errors(),
             "message": attrs["Status"]["Message"],
             "when": attrs["Status"]["Timestamp"],
             "state": attrs["Status"]["State"],

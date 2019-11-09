@@ -88,32 +88,3 @@ html {
 .badge.dense {
   margin: 0 !important;
 }
-
-.tooltip {
-  position: fixed;
-  pointer-events: none; // https://stackoverflow.com/a/48665379
-  z-index: 999999999999999999999999999999999999;
-  max-width: 500px;
-
-  .tooltip-inner {
-    max-width: 500px;
-    color: $label-text-light !important;
-
-    em {
-      color: $label-text-dark !important;
-    }
-
-    .nowrap {
-      white-space: nowrap;
-    }
-
-    .align-left {
-      text-align: left;
-    }
-  }
-}
-
-.info-tooltip {
-  width: auto;
-  white-space: nowrap;
-}

@@ -1,6 +1,10 @@
 import os
+from datetime import datetime
+from datetime import timedelta
 
+import dateutil.parser
 import docker.errors
+import pytz
 
 from skep.docker.environment import Environment
 from skep.docker.task import Task
@@ -91,10 +95,18 @@ class Service(ImageParser):
 
         for task in erroring_tasks:
             slot = task.slot()
-            error = task.error()
-            if slot is None or error is None:
+            message = task.error()
+            if slot is None or message is None:
                 continue
-            error_slots.setdefault(slot, []).append(error)
+
+            then = dateutil.parser.parse(task.attrs()['when'])
+            now = pytz.UTC.localize(datetime.utcnow())
+            if now - then > timedelta(minutes=1):
+                continue
+
+            error = { 'message': message, 'since': (now - then).seconds }
+
+            error_slots.setdefault((self.name(), slot), []).append(error)
 
         return error_slots
 
@@ -105,7 +117,7 @@ class Service(ImageParser):
 
         tasks = list(filter(
             lambda x: x.desired_state() in ['running', 'ready'],
-            [Task(x, error_slots) for x in all_tasks]
+            [Task(x, self, error_slots) for x in all_tasks]
         ))
 
         replicas = self.replicas()

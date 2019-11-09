@@ -1,3 +1,5 @@
+import Messages from './messages';
+
 class MemoryStats {
   constructor(stats) {
     this.stats = stats;
@@ -9,18 +11,17 @@ class MemoryStats {
   }
 
   tooltip() {
+    const row = (label, value) => Messages.node.stats.tooltipRow(label, this.formatNumber(value));
     const labels = [
-      '<b>RAM</b>',
-      `Available: ${this.formatNumber(this.stats.available)}`,
-      `Total: ${this.formatNumber(this.stats.total)}`,
-      `Cache: ${this.formatNumber(this.stats.cached)}`,
-      `Active: ${this.formatNumber(this.stats.active)}`,
-      `Free: ${this.formatNumber(this.stats.free)}`,
-      `Swap (total): ${this.formatNumber(this.stats.swap_total)}`,
-      `Swap (free): ${this.formatNumber(this.stats.swap_free)}`
+      row('Available', this.stats.available),
+      row('Cache', this.stats.cached),
+      row('Active', this.stats.active),
+      row('Free', this.stats.free),
+      row('Swap (total)', this.stats.swap_total),
+      row('Swap (free)', this.stats.swap_free),
     ];
 
-    return labels.join('<br/>');
+    return `<div class="node-stats-tooltip"><h4>RAM</h4>${labels.join('<br/>')}</div>`;
   }
 
   level() {

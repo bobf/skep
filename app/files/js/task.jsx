@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
+import Messages from './messages';
 import TaskStats from './task_stats';
 import TaskChart from './task_chart';
 
@@ -14,17 +15,25 @@ class ConnectedTask extends React.Component {
   }
 
   tooltip() {
-    const { errors } = this.props.task;
-    const error = errors.length ? `Error: <em>${errors.join('<br/>')}</em>` : null;
+    const error = this.formattedErrors();
     const host = `Host: <em>${this.hostname()}</em>`;
 
     if (!this.slotID()) return error;
 
     const slot = `Slot: <em>${this.slotID()}</em>`;
     const name = `Container: <em>${this.containerName()}</em>`;
-    const digest = `Digest: <em>${this.digest() || '[none]'}</em>`;
-    const content = [error, slot, name, digest].filter(item => item).join('<br/>');
+    const digest = `Digest: <em>${this.digest() || '[waiting]'}</em>`;
+    const content = [slot, name, digest, error].filter(item => item).join('<br/>');
     return `<div class="align-left info-tooltip">${content}</div>`;
+  }
+
+  formattedErrors() {
+    const { errors } = this.props.task;
+    if (!errors.length) return null;
+
+    const errorLines = errors.map(error => Messages.task.error(error)).join('<br/>');
+
+    return `Errors:<br/><div class='errors'>${errorLines}</div>`;
   }
 
   containerName() {

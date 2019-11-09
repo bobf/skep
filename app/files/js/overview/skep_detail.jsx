@@ -16,10 +16,18 @@ class ConnectedSkepDetail extends OverviewDetail {
         value: version
       },
       {
-        title: 'Homepage',
+        title: 'Website',
         value: (
           <a target={'_blank'} href={Messages.skep.homepage}>
             {Messages.skep.homepage}
+          </a>
+        )
+      },
+      {
+        title: 'Code',
+        value: (
+          <a target={'_blank'} href={Messages.skep.code}>
+            {Messages.skep.code}
           </a>
         )
       },

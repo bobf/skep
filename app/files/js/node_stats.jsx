@@ -1,9 +1,10 @@
 import * as Icon from 'react-feather';
 
+import CPUStats from './cpu_stats';
 import DiskStats from './disk_stats';
 import FilesystemStats from './filesystem_stats';
 import MemoryStats from './memory_stats';
-import CPUStats from './cpu_stats';
+import Messages from './messages';
 import NetworkStats from './network_stats';
 
 class NodeStats extends React.Component {
@@ -96,15 +97,16 @@ class NodeStats extends React.Component {
 
   renderLoadAverage(index) {
     const title = [
-      '1 Minute Load Average',
-      '10 Minutes Load Average',
-      '15 Minutes Load Average',
+      Messages.node.stats.loadAverage.oneMinute,
+      Messages.node.stats.loadAverage.tenMinutes,
+      Messages.node.stats.loadAverage.fifteenMinutes,
     ][index];
 
     return (
       <span
         title={title}
         data-toggle={'tooltip'}
+        data-html={'true'}
         className={'badge bg-' + this.loadLevel(index)}>
         {numeral(this.load.averages[index]).format('0.00')}
       </span>
@@ -247,6 +249,7 @@ class NodeStats extends React.Component {
       <Icon.HardDrive
         className={`icon disks text-${reducedLevel}`}
         title={tooltip}
+        data-html={'true'}
         data-original-title={tooltip}
         data-toggle={'tooltip'}
       />
@@ -257,9 +260,9 @@ class NodeStats extends React.Component {
     const warnPrefix = 'One or more monitored filesystems are over';
     const okPrefix = 'All monitored filesystems are less than';
     return {
-      danger: `${warnPrefix} ${Skep.thresholds.global.warning}% full`,
-      warning: `${warnPrefix} ${Skep.thresholds.global.success}% full`,
-      success: `${okPrefix} ${Skep.thresholds.global.success}% full`
+      danger: `${warnPrefix} <em>${Skep.thresholds.global.warning}%</em> full`,
+      warning: `${warnPrefix} <em>${Skep.thresholds.global.success}%</em> full`,
+      success: `${okPrefix} <em>${Skep.thresholds.global.success}%</em> full`
     }[level];
   }
 
