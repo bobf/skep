@@ -19,6 +19,7 @@ class ConnectedDashboard extends React.Component {
       modalVisible: false,
       modalHidden: true,
       overviewVisible: false,
+      overviewHidden: true,
       obscured: false
     }
   }
@@ -107,19 +108,16 @@ class ConnectedDashboard extends React.Component {
   toggleOverview(ev, visible) {
     if (Skep.modal) return false;
 
-    this.setState({ overviewVisible: visible });
-
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
 
     if (visible) {
-      this.setState({ modalHidden: false });
-      this.setState({ modalVisible: true });
+      this.setState({ modalHidden: false, modalVisible: true, overviewVisible: true, overviewHidden: false });
     } else {
-      this.setState({ modalHidden: true });
+      this.setState({ modalHidden: true, overviewHidden: true });
       this.timeout = setTimeout(
-        () => this.setState({ modalVisible: false }),
+        () => this.setState({ modalVisible: false, overviewVisible: false }),
         500
       );
     }
@@ -173,11 +171,12 @@ class ConnectedDashboard extends React.Component {
   }
 
   renderOverview() {
-    const { overviewVisible } = this.state;
+    const { overviewVisible, overviewHidden } = this.state;
+    if (!overviewVisible) return null;
 
     return (
       <Overview
-        visible={overviewVisible}
+        visible={!overviewHidden}
         closeCallback={(ev) => this.toggleOverview(ev, false)} />
     );
   }
