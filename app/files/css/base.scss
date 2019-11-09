@@ -79,6 +79,8 @@ $window-height: 100%;
 
 body {
   height: 100%;
+  // Scrolling only occurs within the node and stack views
+  overflow-y: hidden;
 }
 
 html {
