@@ -5,7 +5,7 @@ import Messages from '../messages';
 
 class ConnectedSkepDetail extends OverviewDetail {
   title() {
-    return 'Skep';
+    return Messages.skep.title;
   }
 
   render() {

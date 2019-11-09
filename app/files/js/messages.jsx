@@ -1,6 +1,7 @@
 const Messages = {
   pluralize: (word, count) => `${word}${Math.round(count) !== 1 ? "s" : ""}`,
   skep: {
+    title: 'Skep',
     code: 'https://github.com/bobf/skep',
     homepage: 'https://skepdocker.github.io',
     connectionError: (

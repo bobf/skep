@@ -209,7 +209,10 @@ class ConnectedDashboard extends React.Component {
         <div className={this.state.obscured ? 'obscured' : ''} id={'dashboard'}>
           <div className={'section minimized'} id={'nodes'}>
             <div className={'section-content'}>
-              <h2 className={'section-title'}>Nodes</h2>
+              <h2 className={'section-title'}>
+                <Icon.Server className={'icon'} />
+                {'Nodes'}
+              </h2>
               <NodeList minimized={minimized} nodes={nodes} />
             </div>
           </div>
@@ -219,7 +222,10 @@ class ConnectedDashboard extends React.Component {
 
           <div id={'stacks'} className={'section'}>
             <div className={'section-content'}>
-              <h2 className={'section-title'}>Stacks</h2>
+              <h2 className={'section-title'}>
+                <Icon.Layers className={'icon'} />
+                {'Stacks'}
+              </h2>
               <table className='stacks'>
                 <tbody>
                   {this.manifest().stacks.map(stack => this.renderStack(stack))}

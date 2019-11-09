@@ -11,6 +11,13 @@ h2.section-title {
   opacity: 0.1;
   font-size: 1.4em;
   border-bottom: 1px solid $outline-background;
+
+  .icon {
+    margin: 0 0.2em;
+    height: 1.2em;
+    width: 1.2em;
+    padding-bottom: 0.2em;
+  }
 }
 
 .section:hover h2.section-title {
