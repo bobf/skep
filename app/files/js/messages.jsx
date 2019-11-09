@@ -1,5 +1,5 @@
 const Messages = {
-  pluralize: (word, count) => `${word}${count !== 1 ? "s" : ""}`,
+  pluralize: (word, count) => `${word}${Math.round(count) !== 1 ? "s" : ""}`,
   skep: {
     code: 'https://github.com/bobf/skep',
     homepage: 'https://skepdocker.github.io',
@@ -30,6 +30,7 @@ const Messages = {
   },
 
   node: {
+    lastUpdated: when => `Last updated <em>${Math.round(when)} ${Messages.pluralize('second', when)} ago</em>`,
     stats: {
       tooltipRow: (label, value) => `<span class='node-stats-tooltip-row'><em>${label}</em>: ${value}</span>`,
       loadAverage: {

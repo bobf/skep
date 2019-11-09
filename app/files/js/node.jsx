@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
+import Messages from './messages';
+
 import FilesystemStats from './filesystem_stats';
 import NodeStats from './node_stats';
 import NodeChart from './node_chart';
@@ -16,6 +18,7 @@ class ConnectedNode extends React.Component {
     super(props);
 
     this.state = {
+      tick: 0,
       chartData: null,
       chartClosed: true
     };
@@ -29,7 +32,7 @@ class ConnectedNode extends React.Component {
   agentData() {
     // Data provided by Skep `agent` service
     const { nodes } = this.props;
-    return nodes[this.hostname()];
+    return nodes[this.hostname()] || {};
   }
 
   stats() {
@@ -100,6 +103,49 @@ class ConnectedNode extends React.Component {
         {label}
       </span>
     );
+  }
+
+  tick() {
+    this.setState(prevState => ({ tick: prevState.tick + 1 }));
+  }
+
+  componentDidMount() {
+    this.interval = setInterval(() => this.tick(), 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  icon() {
+    const { tstamp } = this.agentData();
+    const now = Date.now();
+    const since = (now - tstamp) / 1000
+    const message = Messages.node.lastUpdated(since);
+    const classes = ['light'];
+    let icon;
+
+    if (since > Skep.thresholds.global.timeout.danger) {
+      icon = Icon.AlertCircle;
+      classes.push('text-danger');
+      classes.push('pulse');
+    } else if (since > Skep.thresholds.global.timeout.warning) {
+      icon = Icon.AlertCircle;
+      classes.push('text-warning');
+      classes.push('pulse');
+    } else {
+      icon = Icon.Power;
+    }
+
+    const props = {
+      className: classes.join(' '),
+      size: '1em',
+      'data-original-title': message,
+      'data-html': 'true',
+      'data-toggle': 'tooltip',
+   };
+
+    return React.createElement(icon, props, null);
   }
 
   versionBadge() {
@@ -221,7 +267,7 @@ class ConnectedNode extends React.Component {
            onClick={(ev) => this.toggle(ev)}
            className={classes.join(' ')}>
         {this.renderChart()}
-        <Icon.Power className={'light'} size={'1em'} />
+        {this.icon()}
         {this.chartButton()}
         <h2
           className={'hostname'}

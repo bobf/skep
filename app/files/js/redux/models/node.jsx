@@ -36,7 +36,7 @@ export default function reducer(state = {}, action = {}) {
 }
 
 export function pingNode(node) {
-  return { type: UPDATE, payload: Object.assign({ ping: true, healthyAt: Date.now() }, node) };
+  return { type: UPDATE, payload: Object.assign({ ping: true }, node) };
 }
 
 export function unpingNode(node) {

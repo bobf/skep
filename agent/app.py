@@ -73,7 +73,7 @@ class StatRunner:
 
     def ping(self):
         stats = self.stats()
-        stats['tstamp'] = time.time()
+        stats['tstamp'] = time.time() * 1000
         self.log.debug(pprint.pformat(stats))
         self.publish('app', stats)
         self.publish('calculator', stats)

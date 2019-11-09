@@ -51,6 +51,11 @@
   color: $outline-dark;
   opacity: 0.8;
   transition: color 1500ms, opacity 1500ms;
+  border-radius: 0.6em;
+
+  &.pulse {
+    animation: pulse 1s infinite;
+  }
 }
 
 .node.ping .light {

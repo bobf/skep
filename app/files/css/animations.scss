@@ -1,5 +1,4 @@
-@keyframes ping
-{
+@keyframes ping {
   0% {
     box-shadow: 0 0 0 0px rgba($success, 0.4);
     opacity: 0.5;
@@ -21,4 +20,13 @@
   57%  { background-position: 1.2em 0.1em; }
   64%  { background-position: 1.2em 0.2em; }
   100%  { background-position: 1.2em 0.2em; }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0px rgba($warning, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 3em rgba($warning, 0);
+  }
 }
