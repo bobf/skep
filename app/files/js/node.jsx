@@ -44,7 +44,7 @@ class ConnectedNode extends React.Component {
 
   containers() {
     const { current } = this.stats();
-    if (!current) return [];
+    if (!current || !current.containers) return [];
 
     return current.containers;
   }
@@ -119,11 +119,19 @@ class ConnectedNode extends React.Component {
 
   icon() {
     const { tstamp } = this.agentData();
+    const { tooltip: messages } = Messages.node;
     const now = Date.now();
     const since = (now - tstamp) / 1000
-    const message = Messages.node.lastUpdated(since);
+    const rows = [
+      messages.lastUpdated(since),
+      messages.hostname(this.hostname()),
+      messages.version(this.version()),
+      messages.containers(this.containers()),
+    ];
     const classes = ['light'];
     let icon;
+    const tooltip = `<div class="tooltip-inner align-left info-tooltip">${rows.join('<br/>')}</div>`
+
 
     if (since > Skep.thresholds.global.timeout.danger) {
       icon = Icon.AlertCircle;
@@ -140,7 +148,7 @@ class ConnectedNode extends React.Component {
     const props = {
       className: classes.join(' '),
       size: '1em',
-      'data-original-title': message,
+      'data-original-title': tooltip,
       'data-html': 'true',
       'data-toggle': 'tooltip',
    };
@@ -251,12 +259,6 @@ class ConnectedNode extends React.Component {
     const { minimized, node } = this.props;
     const { ping } = this.agentData() || {};
     const classes = ['node'];
-    const tooltip = (
-      `<div class="tooltip-inner align-left info-tooltip">
-         Hostname: <em>${this.hostname()}</em><br/>
-         Docker Engine Version: <em>${this.version()}</em>
-       </div>`
-    );
 
     if (ping) classes.push('ping');
     if (this.isHighlighted()) classes.push('highlighted');
@@ -268,13 +270,12 @@ class ConnectedNode extends React.Component {
         {this.renderChart()}
         {this.icon()}
         {this.chartButton()}
-        <h2
-          className={'hostname'}
-          data-html={'true'}
-          data-original-title={tooltip}
-          data-toggle={'tooltip'}>
+        <h3
+          data-original-title={this.hostname()}
+          data-toggle={'tooltip'}
+          className={'hostname'}>
           {this.hostname()}
-        </h2>
+        </h3>
         <div className={'badges'}>
           {this.leaderBadge()}
           {this.roleBadge()}

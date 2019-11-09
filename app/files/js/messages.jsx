@@ -30,7 +30,12 @@ const Messages = {
   },
 
   node: {
-    lastUpdated: when => `Last updated <em>${Math.round(when)} ${Messages.pluralize('second', when)} ago</em>`,
+    tooltip : {
+      lastUpdated: when => `Last updated <em>${Math.round(when)} ${Messages.pluralize('second', when)} ago</em>`,
+      hostname: hostname => `Hostname: <em>${hostname}</em>`,
+      version:  version => `Docker Engine Version: <em>${version}</em>`,
+      containers: containers => `Active Containers: <em>${containers.length}</em>`,
+    },
     stats: {
       tooltipRow: (label, value) => `<span class='node-stats-tooltip-row'><em>${label}</em>: ${value}</span>`,
       loadAverage: {
