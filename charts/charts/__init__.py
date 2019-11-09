@@ -2,10 +2,10 @@ import logging
 import os
 import sqlite3
 
-logger = logging.getLogger('skep:calculator')
+logger = logging.getLogger('skep:charts')
 
 def create_database(db_path):
-    if 'SKEP_CALCULATOR_DB_PERSIST' not in os.environ:
+    if 'SKEP_CHARTS_DB_PERSIST' not in os.environ:
         _delete_database(db_path)
 
     try:

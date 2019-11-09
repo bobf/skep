@@ -4,7 +4,7 @@ import time
 import traceback
 from operator import itemgetter
 
-from calculator.orm.base import Base as ORMBase
+from charts.orm.base import Base as ORMBase
 
 class Base:
     def __init__(self, db_path, data, publisher):

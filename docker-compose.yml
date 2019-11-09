@@ -11,7 +11,7 @@ services:
       replicas: 1
     environment:
       SKEP_SECRET:
-      SKEP_CALCULATOR_URL: http://calculator:8080/
+      SKEP_CHARTS_URL: http://charts:8080/
 
   agent:
     image: skep/agent
@@ -27,7 +27,7 @@ services:
     environment:
       SKEP_SECRET:
       SKEP_APP_URL: http://app:8080
-      SKEP_CALCULATOR_URL: http://calculator:8080/
+      SKEP_CHARTS_URL: http://charts:8080/
       DISKS:
       FILE_SYSTEMS:
       NETWORK_INTERFACES:
@@ -36,8 +36,8 @@ services:
       LOG_LEVEL:
       SKEP_HOST:
 
-  calculator:
-    image: skep/calculator
+  charts:
+    image: skep/charts
     networks:
       - skep
     deploy:
@@ -46,8 +46,8 @@ services:
     environment:
       SKEP_SECRET:
       SKEP_APP_URL: http://app:8080
-      SKEP_CALCULATOR_DB_PATH: /calculator.db
-      SKEP_CALCULATOR_DB_PERSIST:
+      SKEP_CHARTS_DB_PATH: /charts.db
+      SKEP_CHARTS_DB_PERSIST:
       LOG_LEVEL:
 
   monitor:
@@ -64,7 +64,7 @@ services:
     environment:
       SKEP_SECRET:
       SKEP_APP_URL: http://app:8080
-      SKEP_CALCULATOR_URL: http://calculator:8080/
+      SKEP_CHARTS_URL: http://charts:8080/
       SERVICE_URL_TEMPLATE:
       IMAGE_URL_TEMPLATE: https://hub.docker.com/r/{organization}/{repository}
 

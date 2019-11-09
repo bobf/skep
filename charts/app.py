@@ -12,14 +12,14 @@ from multiprocessing import Pool
 from flask import Flask, request, jsonify
 
 from skep.json import DelegatingJSONEncoder
-from calculator import create_database
-from calculator.charts.container import Container as ContainerChart
-from calculator.charts.node import Node as NodeChart
-from calculator.publisher import Publisher
-from calculator.orm.container_stat import ContainerStat
-from calculator.orm.node_stat import NodeStat
+from charts import create_database
+from charts.charts.container import Container as ContainerChart
+from charts.charts.node import Node as NodeChart
+from charts.publisher import Publisher
+from charts.orm.container_stat import ContainerStat
+from charts.orm.node_stat import NodeStat
 
-logger = logging.getLogger('skep:calculator')
+logger = logging.getLogger('skep:charts')
 log_level = getattr(logging, os.environ.get('LOG_LEVEL', 'info').upper())
 logger.setLevel(log_level)
 handler = logging.StreamHandler()
@@ -32,8 +32,8 @@ else:
     auth = {}
 
 app_url = os.environ.get('SKEP_APP_URL', 'http://app:8080')
-db_path = os.environ.get('SKEP_CALCULATOR_DB_PATH', '/calculator.db')
-pool_size = int(os.environ.get('SKEP_CALCULATOR_CONCURRENCY', '4'))
+db_path = os.environ.get('SKEP_CHARTS_DB_PATH', '/charts.db')
+pool_size = int(os.environ.get('SKEP_CHARTS_CONCURRENCY', '4'))
 
 application = Flask(__name__)
 pool = Pool(pool_size)
@@ -72,5 +72,5 @@ def stats_create():
 
     return 'OK', 200
 
-port = int(os.environ.get('SKEP_CALCULATOR_PORT', '8080'))
+port = int(os.environ.get('SKEP_CHARTS_PORT', '8080'))
 application.run(host='0.0.0.0', port=port)

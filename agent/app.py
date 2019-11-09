@@ -76,7 +76,7 @@ class StatRunner:
         stats['tstamp'] = time.time() * 1000
         self.log.debug(pprint.pformat(stats))
         self.publish('app', stats)
-        self.publish('calculator', stats)
+        self.publish('charts', stats)
 
     def stats(self):
         return {
@@ -237,7 +237,7 @@ if __name__ == '__main__':
     StatRunner(
         hostname=hostname().lower(),
         app_url=os.environ['SKEP_APP_URL'],
-        calculator_url=os.environ['SKEP_CALCULATOR_URL'],
+        charts_url=os.environ['SKEP_CHARTS_URL'],
         disks=list(
             filter(None, os.environ.get('DISKS', '').split(','))
         ),

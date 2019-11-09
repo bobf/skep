@@ -50,7 +50,7 @@ docker-compose -f <your-compose-file.yml> config | docker stack deploy -c - skep
 | Variable | Meaning | Example |
 |-|-|-|
 | `SKEP_SECRET` | Set this to an appropriately complex token to verify agent updates. It is **highly recommended** that you enable this feature. (The same value must be set for the _agent_ and _monitor_ services).  | `averylongandcomplexsecret` |
-| `SKEP_CALCULATOR_URL` | URL that the _calculator_ service will be available on for handling chart requests. | `http://calculator:8080/`
+| `SKEP_CHARTS_URL` | URL that the _charts_ service will be available on for handling chart requests. | `http://charts:8080/`
 
 #### Agent
 
@@ -90,14 +90,14 @@ docker-compose -f <your-compose-file.yml> config | docker stack deploy -c - skep
 | `COLLECT_INTERVAL` | Time in seconds to wait between gathering metrics. | `5` |
 | `SAMPLE_DURATION` | _Minimum_ time in seconds to _monitor_ disk I/O etc. Will accumulate for multiple devices. | `10` |
 
-#### Calculator
+#### Charts
 
 | Variable | Meaning | Example |
 |-|-|-|
 | `SKEP_SECRET` | If provided, will use to authenticate with front end web app when reporting statistics (the same value must be set for the web app service) | `averylongandcomplexsecret` |
 | `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
-| `SKEP_CALCULATOR_DB_PATH` | Path to statistics _SQLite3_ database. Mount a shared storage endpoint to this location if you want to retain data between restarts. | `/calculator.db` _(default/recommended)_ |
-| `SKEP_CALCULATOR_DB_PERSIST` | By default, the statistics database is re-initialised on startup. Set this variable to any value to retain data between restarts. | _(not set)_ |
+| `SKEP_CHARTS_DB_PATH` | Path to statistics _SQLite3_ database. Mount a shared storage endpoint to this location if you want to retain data between restarts. | `/charts.db` _(default/recommended)_ |
+| `SKEP_CHARTS_DB_PERSIST` | By default, the statistics database is re-initialised on startup. Set this variable to any value to retain data between restarts. | _(not set)_ |
 | `LOG_LEVEL` | Application server log level. | `INFO` _(default/recommended)_ |
 
 ## Deployment
@@ -186,12 +186,12 @@ _Skep_ is comprised of four services:
 
 * An _agent_ which is deployed globally (i.e. to all _Swarm_ nodes);
 * A _monitor_ which must be deployed to one manager node;
-* A _calculator_ which stores and calculates chart data which can be deployed to any node and must have only one replica;
+* A _charts_ which stores and calculates chart data which can be deployed to any node and must have only one replica;
 * A web _app_ that can be deployed to any node and must have only one replica.
 
-The _agent_ periodically harvests system and container metrics which are sent to the _calculator_ and _app_ services; the _app_ service forwards the data to the [_React_](https://reactjs.org/) front end using [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) / [socket.io](https://socket.io/). The _calculator_ service retains the data in an [SQLite3](https://www.sqlite.org/version3.html) database.
+The _agent_ periodically harvests system and container metrics which are sent to the _charts_ and _app_ services; the _app_ service forwards the data to the [_React_](https://reactjs.org/) front end using [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) / [socket.io](https://socket.io/). The _charts_ service retains the data in an [SQLite3](https://www.sqlite.org/version3.html) database.
 
-Chart requests are sent to the _app_ which forwards to the _calculator_. A confirmation is immediately returned to the front end while the _calculator_ uses one of its worker processes to render the chart data. When the data has been compiled it is sent back to the front end via a _WebSocket_ event.
+Chart requests are sent to the _app_ which forwards to the _charts_. A confirmation is immediately returned to the front end while the _charts_ uses one of its worker processes to render the chart data. When the data has been compiled it is sent back to the front end via a _WebSocket_ event.
 
 _Redux_ is used in the front end to manage events and data storage/manipulation.
 

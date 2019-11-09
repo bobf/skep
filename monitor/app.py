@@ -87,7 +87,7 @@ class Monitor:
 if __name__ == '__main__':
     Monitor(
         app_url=os.environ['SKEP_APP_URL'],
-        calculator_url=os.environ['SKEP_CALCULATOR_URL'],
+        charts_url=os.environ['SKEP_CHARTS_URL'],
         interval=int(os.environ.get('COLLECT_INTERVAL', '5')),
         duration=int(os.environ.get('SAMPLE_DURATION', '1')),
         log_level=os.environ.get('LOG_LEVEL', 'INFO')

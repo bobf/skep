@@ -1,7 +1,7 @@
 import dateutil.parser
 import sqlite3
 
-from calculator.orm.base import Base
+from charts.orm.base import Base
 
 class ContainerStat(Base):
     def save(self, data, tstamp):

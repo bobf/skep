@@ -36,7 +36,7 @@
 app/.build
 agent/.build
 monitor/.build
-calculator/.build
+charts/.build
 
 app/node_modules
 app/files/bundle.js

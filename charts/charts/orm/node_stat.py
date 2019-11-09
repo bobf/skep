@@ -1,7 +1,7 @@
 import dateutil.parser
 import sqlite3
 
-from calculator.orm.base import Base
+from charts.orm.base import Base
 
 class NodeStat(Base):
     def save(self, data, tstamp):

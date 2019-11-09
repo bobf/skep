@@ -47,15 +47,15 @@ def handle_init():
 
 @socketio.on('chart_request')
 def handle_chart_request(params):
-    url = os.environ['SKEP_CALCULATOR_URL']
+    url = os.environ['SKEP_CHARTS_URL']
     params['sid'] = request.sid
-    calculator_request = Request(
+    charts_request = Request(
         urllib.parse.urljoin(url, 'chart'),
         data=json.dumps(params).encode('utf8'),
         headers={'Content-Type': 'application/json'}
     )
 
-    response = urllib.request.urlopen(calculator_request)
+    response = urllib.request.urlopen(charts_request)
 
 @application.route("/chart_response", methods=["POST"])
 def chart_response_create():
