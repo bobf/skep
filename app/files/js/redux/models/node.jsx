@@ -19,7 +19,7 @@ function mergeSelected(state, hostname) {
   const newNodes = {};
   for (const [key, value] of Object.entries(state)) {
     newNodes[key] = Object.assign({}, value);
-    newNodes[key].selected = hostname ? !state[key].selected : false;
+    newNodes[key].selected = hostname === key ? !state[key].selected : false;
   }
 
   return newNodes;

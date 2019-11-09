@@ -204,10 +204,9 @@ class ConnectedNode extends React.Component {
   }
 
   isSelected() {
-    const { nodes } = this.props;
-    const node = nodes[this.hostname()];
+    const { selected } = this.agentData();
 
-    return node && node.selected;
+    return selected;
   }
 
   isHighlighted() {
