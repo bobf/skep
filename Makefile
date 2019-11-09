@@ -4,7 +4,7 @@ all:
 	cd agent && $(MAKE) dev=${dev}
 	cd monitor && $(MAKE) dev=${dev}
 	cd charts && $(MAKE) dev=${dev}
-ifeq(0,$(dev))
+ifeq (0,$(dev))
 	docker push skep/agent
 	docker push skep/monitor
 	docker push skep/app
