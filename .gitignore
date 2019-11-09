@@ -41,7 +41,6 @@ charts/.build
 app/node_modules
 app/files/bundle.js
 
-linux-metrics
 bin/
 install/
 include/
