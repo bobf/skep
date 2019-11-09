@@ -32,7 +32,7 @@ from .path import Path
 
 
 mapping = {
-    'MemFree', 'free',
+    'MemFree': 'free',
     'MemTotal': 'total',
     'MemAvailable': 'available',
     'Active': 'active',
