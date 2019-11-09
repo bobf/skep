@@ -76,6 +76,24 @@ def disk_reads_writes(device):
         raise DiskError('device not found: %r' % device)
     return (num_reads, num_writes)
 
+def disk_io_operations(device):
+    """Return number of disk io operations (io_operations, weighted)."""
+    with open('/proc/diskstats') as f:
+        content = f.read()
+    sep = '%s ' % device
+    found = False
+    for line in content.splitlines():
+        if sep in line:
+            found = True
+            fields = line.strip().split(sep)[1].split()
+            io_operations = int(fields[8])
+            io_time = int(fields[9])
+            weighted = int(fields[10])
+            break
+    if not found:
+        raise DiskError('device not found: %r' % device)
+    return (io_operations, io_time, weighted)
+
 
 def disk_usage(path):
     """Return disk usage statistics about the given path."""    	

@@ -31,19 +31,21 @@
 from .path import Path
 
 
+mapping = {
+    'MemFree', 'free',
+    'MemTotal': 'total',
+    'MemAvailable': 'available',
+    'Active': 'active',
+    'Cached': 'cached',
+    'SwapTotal': 'swap_total',
+    'SwapFree': 'swap_free'
+}
+
 def mem_stats():
-    with open(Path.proc_meminfo()) as f:
-        for line in f:
-            if line.startswith('MemTotal:'):
-                mem_total = int(line.split()[1]) * 1024
-            elif line.startswith('Active: '):
-                mem_active = int(line.split()[1]) * 1024
-            elif line.startswith('MemFree:'):
-                mem_free = (int(line.split()[1]) * 1024)
-            elif line.startswith('Cached:'):
-                mem_cached = (int(line.split()[1]) * 1024)
-            elif line.startswith('SwapTotal: '):
-                swap_total = (int(line.split()[1]) * 1024)
-            elif line.startswith('SwapFree: '):
-                swap_free = (int(line.split()[1]) * 1024)
-    return (mem_active, mem_total, mem_cached, mem_free, swap_total, swap_free)
+    lines = open(Path.proc_meminfo()).readlines()
+    results = {}
+    for key, value in mapping.items():
+        for line in lines:
+            if line.startswith(key + ': '):
+                results[value] = int(line.split()[1]) * 1024
+    return results
