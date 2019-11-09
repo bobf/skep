@@ -65,7 +65,8 @@ def chart_create():
 def stats_create():
     data = request.get_json()
     containers = data['containers']
-    tstamp = data['tstamp']
+    # Convert JS microseconds to Python milliseconds:
+    tstamp = data['tstamp'] / 1000
     [ContainerStat(db_path).save(container, tstamp) for container in containers]
     NodeStat(db_path).save(data, tstamp)
 
