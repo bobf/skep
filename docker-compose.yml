@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   app:
-    image: skep/app
+    image: skep/app:${BUILD_TAG:-latest}
     networks:
       - skep
     ports:
@@ -14,7 +14,7 @@ services:
       SKEP_CHARTS_URL: http://charts:8080/
 
   agent:
-    image: skep/agent
+    image: skep/agent:${BUILD_TAG:-latest}
     networks:
       - skep
     deploy:
@@ -37,7 +37,7 @@ services:
       SKEP_HOST:
 
   charts:
-    image: skep/charts
+    image: skep/charts:${BUILD_TAG:-latest}
     networks:
       - skep
     deploy:
@@ -51,7 +51,7 @@ services:
       LOG_LEVEL:
 
   monitor:
-    image: skep/monitor
+    image: skep/monitor:${BUILD_TAG:-latest}
     networks:
       - skep
     deploy:
