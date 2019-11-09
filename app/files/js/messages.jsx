@@ -3,8 +3,10 @@ const Messages = {
   skep: {
     code: 'https://github.com/bobf/skep',
     homepage: 'https://skepdocker.github.io',
-    connectionError: 'Connection to Skep server has been lost. Try refreshing the page to reconnect.',
-    connectionLive: (ago) => `Last update: <em>${ago} ${Messages.pluralize('second', ago)} ago</em>`,
+    connectionError: (
+      <span>{'Skep has stopped receiving updates. Try '}<a onClick={() => location.reload()}>{'refreshing the page'}</a>{' to reconnect.'}</span>
+    ),
+    connectionLive: (ago) => `Last update: <em>${Math.round(ago)} ${Messages.pluralize('second', ago)} ago</em>`,
   },
 
   overview: {

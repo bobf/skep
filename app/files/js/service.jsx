@@ -340,11 +340,8 @@ class ConnectedService extends React.Component {
 
   tasks() {
     const { tasks } = this.props.service;
-    const sortBy = (task) => (task.when && moment(task.when) || Infinity);
 
-    return tasks.sort(
-      (a, b) => (sortBy(a) - sortBy(b))
-    );
+    return tasks;
   }
 
   toggle(ev) {

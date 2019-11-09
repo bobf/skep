@@ -31,17 +31,34 @@
     opacity: 0.8;
   }
 
-  .ping-icon {
-    float: right;
-    transition: opacity 0.5s ease;
-    opacity: 0.1;
-    color: $green;
-    margin-right: 0.8em;
+  .ping-wrapper {
+    padding: 4em;
+  }
+
+  .ping-pulse {
+    width: 1em;
+    height: 1em;
+    right: 1.4em;
+    top: 0.8em;
+    position: absolute;
+    background-color: transparent;
+    border-radius: 0.5em;
+    opacity: 0.8;
+
+    .icon {
+      transition: opacity 0.8s ease;
+      height: 2em;
+      width: 2em;
+      left: -0.53em;
+      top: -0.5em;
+      position: absolute;
+      color: $success;
+    }
   }
 
   &.ping {
-    .ping-icon {
-      opacity: 0.5;
+    .ping-pulse {
+      animation: ping 1s 1;
     }
   }
 
@@ -56,6 +73,9 @@
     background-color: #ce4a4a59;
     .connection-error {
       display: block;
+      a {
+        color: $info;
+      }
     }
   }
 }
@@ -257,17 +277,6 @@
   }
 }
 
-
 .bounce-logo {
   animation: bounce-logo 1.5s ease infinite;
-}
-
-@keyframes bounce-logo {
-  0%   { background-position: 1.2em 0.2em; }
-  10%  { background-position: 1.2em 0.2em; }
-  30%  { background-position: 1.2em -0.4em; }
-  50%  { background-position: 1.2em 0.2em; }
-  57%  { background-position: 1.2em 0.1em; }
-  64%  { background-position: 1.2em 0.2em; }
-  100%  { background-position: 1.2em 0.2em; }
 }

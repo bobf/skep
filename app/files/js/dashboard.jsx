@@ -6,6 +6,7 @@ import store from './redux/store';
 import Messages from './messages';
 import NodeList from './node_list';
 import Overview from './overview';
+import PingIcon from './ping_icon';
 import Stack from './stack';
 
 class ConnectedDashboard extends React.Component {
@@ -133,19 +134,8 @@ class ConnectedDashboard extends React.Component {
   }
 
   renderPingIcon() {
-    const { connectionLive } = this.props.swarm;
-    const now = moment(Date.now()).seconds();
-    const then = moment(connectionLive).seconds();
-    const message = Messages.skep.connectionLive(now - then);
-
     return (
-      <span
-        className={'ping-icon'}
-        data-original-title={message}
-        data-html={'true'}
-        data-toggle={'tooltip'}>
-        <Icon.Radio />
-      </span>
+      <PingIcon />
     );
   }
 
@@ -192,6 +182,20 @@ class ConnectedDashboard extends React.Component {
     );
   }
 
+  renderViewSwitchButton() {
+    const { stacksMinimized } = this.state;
+    const classes = ['toggle-section btn btn-secondary'];
+    if (stacksMinimized) classes.push('stacks-minimized');
+
+    return (
+      <button
+        onClick={() => this.toggleStacks()}
+        className={classes.join(' ')}>
+        {stacksMinimized ? <Icon.ChevronsLeft/> : <Icon.ChevronsRight/>}
+      </button>
+    );
+  }
+
   render() {
     if (!this.manifest()) return this.renderManifestMissing();
     const { nodes } = this.manifest();
@@ -205,18 +209,17 @@ class ConnectedDashboard extends React.Component {
         <div className={this.state.obscured ? 'obscured' : ''} id={'dashboard'}>
           <div className={'section minimized'} id={'nodes'}>
             <div className={'section-content'}>
+              <h2 className={'section-title'}>Nodes</h2>
               <NodeList minimized={minimized} nodes={nodes} />
             </div>
           </div>
 
-          <button
-            onClick={() => this.toggleStacks()}
-            className={'toggle-section btn btn-secondary'}>
-            {this.state.stacksMinimized ? <Icon.ChevronsLeft/> : <Icon.ChevronsRight/>}
-          </button>
+          {this.renderViewSwitchButton()}
+          <div className={'divider'}></div>
 
           <div id={'stacks'} className={'section'}>
             <div className={'section-content'}>
+              <h2 className={'section-title'}>Stacks</h2>
               <table className='stacks'>
                 <tbody>
                   {this.manifest().stacks.map(stack => this.renderStack(stack))}

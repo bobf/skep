@@ -27,6 +27,7 @@ class ConnectedNode extends React.Component {
   }
 
   agentData() {
+    // Data provided by Skep `agent` service
     const { nodes } = this.props;
     return nodes[this.hostname()];
   }

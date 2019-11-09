@@ -1,5 +1,6 @@
 import string
 import random
+import dateutil.parser
 
 from skep.docker.mixins import ImageParser
 
@@ -44,10 +45,22 @@ class Task(ImageParser):
         if not self.task:
             return None
 
-        return self.container_status().get('ContainerID', None)
+        id = self.container_status().get('ContainerID', None)
+        if id is None:
+            return None
+
+        # Remove `/` prefix from container name; may be a slight bug in Python
+        # Docker library.
+        return id.strip('/')
 
     def image(self):
         return self.parse_image(self.task['Spec']['ContainerSpec'].get('Image', None))
+
+    def when(self):
+        if not self.task:
+            return None
+
+        return dateutil.parser.parse(self.task["Status"]["Timestamp"])
 
     def attrs(self):
         if not self.task:

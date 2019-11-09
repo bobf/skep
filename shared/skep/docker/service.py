@@ -2,7 +2,6 @@ import os
 from datetime import datetime
 from datetime import timedelta
 
-import dateutil.parser
 import docker.errors
 import pytz
 
@@ -32,7 +31,7 @@ class Service(ImageParser):
             "stateMessage": self.state_message(),
             "ports": self.ports(),
             "image": self.image(),
-            "tasks": self.tasks(),
+            "tasks": sorted(self.tasks(), key=lambda x: (x.slot(), x.when())),
             "networks": self.networks(),
             "environment": self.environment(),
             "mounts": self.mounts(),
@@ -101,12 +100,11 @@ class Service(ImageParser):
             if slot is None or message is None:
                 continue
 
-            then = dateutil.parser.parse(task.attrs()['when'])
-            now = pytz.UTC.localize(datetime.utcnow())
-            if now - then > timedelta(minutes=1):
+            since = pytz.UTC.localize(datetime.utcnow()) - task.when()
+            if since > timedelta(minutes=1):
                 continue
 
-            error = { 'message': message, 'since': (now - then).seconds }
+            error = { 'message': message, 'since': since.seconds }
 
             error_slots.setdefault((self.name(), slot), []).append(error)
 

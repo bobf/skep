@@ -5,17 +5,35 @@
   margin-top: $overview-sticky-height;
 }
 
-h2.section-header {
+h2.section-title {
+  text-align: right;
+  color: $label-text-dark;
+  opacity: 0.1;
   font-size: 1.4em;
-  margin: 0.8em 0;
-  display: inline-block;
+  border-bottom: 1px solid $outline-background;
 }
 
-.toggle-section {
+.section:hover h2.section-title {
+  opacity: 0.5;
+}
+
+button.toggle-section {
+  opacity: 0;
   height: $window-height;
   padding: 0;
   float: left;
   width: 28px; /* In pixels because we use this to calculate screen offsets */
+  transition: opacity 0.8s ease;
+}
+
+button.toggle-section:hover, button.toggle-section.stacks-minimized {
+  opacity: 1;
+}
+
+.divider {
+  height: $window-height;
+  float: left;
+  border-left: 1px solid $outline-background;
 }
 
 .section {

@@ -49,8 +49,12 @@ $(function () {
     thresholds: {
       global: {
         success: 50,
-        warning: 70
-      }
+        warning: 70,
+        timeout: {
+          warning: 30,
+          danger: 60,
+        },
+      },
     },
   };
 
@@ -68,13 +72,14 @@ $(function () {
     const data = JSON.parse(json);
     initManifest(data.manifest);
     Object.values(data.nodes).forEach((node) => initNode(node));
+    Skep.connectionTimeout = window.setTimeout(() => notifyTimeout(), Skep.thresholds.global.timeout.danger * 1000);
   });
 
   socket.on('manifest', function(json) {
     if (Skep.connectionTimeout) window.clearTimeout(Skep.connectionTimeout);
-    Skep.connectionTimeout = window.setTimeout(() => notifyTimeout(), 60000);
     const data = JSON.parse(json);
     updateManifest(data);
+    Skep.connectionTimeout = window.setTimeout(() => notifyTimeout(), Skep.thresholds.global.timeout.danger * 1000);
   });
 
   socket.on('stats', function (json) {

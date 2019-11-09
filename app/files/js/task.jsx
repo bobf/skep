@@ -22,7 +22,7 @@ class ConnectedTask extends React.Component {
 
     const slot = `Slot: <em>${this.slotID()}</em>`;
     const name = `Container: <em>${this.containerName()}</em>`;
-    const digest = `Digest: <em>${this.digest() || '[waiting]'}</em>`;
+    const digest = `Digest: <em>${this.digest(true)}</em>`;
     const content = [slot, name, digest, error].filter(item => item).join('<br/>');
     return `<div class="align-left info-tooltip">${content}</div>`;
   }
@@ -55,14 +55,12 @@ class ConnectedTask extends React.Component {
     return node && node.hostname || "[waiting]";
   }
 
-  digest() {
-    if (!this.props.task.image) {
-      return null;
-    }
-
+  digest(human) {
     const { digest } = this.props.task.image;
 
-    return digest;
+    if (!digest) return human ? '[waiting]' : null;
+
+    return human ? digest.substring(0, 16) : digest;
   }
 
   slotID() {
