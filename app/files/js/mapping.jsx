@@ -89,7 +89,6 @@ class Mapping extends React.Component {
 
     return (
       <button
-        title={tooltip}
         data-original-title={tooltip}
         data-toggle={'tooltip'}
         data-html={'true'}

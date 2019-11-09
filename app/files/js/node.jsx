@@ -79,7 +79,6 @@ class ConnectedNode extends React.Component {
 
     return (
       <span
-        title={tooltip}
         data-original-title={tooltip}
         data-toggle={'tooltip'}
         className={`badge badge-${label.level} role`}>
@@ -225,7 +224,6 @@ class ConnectedNode extends React.Component {
         {this.chartButton()}
         <h2
           className={'hostname'}
-          title={tooltip}
           data-html={'true'}
           data-original-title={tooltip}
           data-toggle={'tooltip'}>

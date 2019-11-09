@@ -16,6 +16,7 @@ class Service(ImageParser):
     def __init__(self, service, swarm):
         self.service = service
         self.swarm = swarm
+        self._tasks = self.tasks(True)
 
     def attrs(self):
         attrs = self.service.attrs
@@ -36,7 +37,8 @@ class Service(ImageParser):
             "environment": self.environment(),
             "mounts": self.mounts(),
             "nameURL": self.name_url(),
-            "imageURL": self.image_url()
+            "imageURL": self.image_url(),
+            "errors": [error for task in self.tasks() for error in task.errors()]
         }
 
     def id(self):
@@ -110,7 +112,10 @@ class Service(ImageParser):
 
         return error_slots
 
-    def tasks(self):
+    def tasks(self, init=False):
+        if not init:
+            return self._tasks
+
         all_tasks = self.try_tasks()
 
         error_slots = self.error_slots(all_tasks)
@@ -123,7 +128,7 @@ class Service(ImageParser):
         replicas = self.replicas()
 
         if replicas is not None and len(tasks) < replicas:
-            tasks = [Task({}) for x in range(replicas - len(tasks))] + tasks
+            return [Task({}) for x in range(replicas - len(tasks))] + tasks
 
         return tasks
 

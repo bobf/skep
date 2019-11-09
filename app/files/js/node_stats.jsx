@@ -39,7 +39,6 @@ class NodeStats extends React.Component {
     return (
       <div className={'progress position-relative ' + className}
            style={{ height: '2em' }}
-           data-title={tooltip}
            data-original-title={tooltip}
            data-html={'true'}
            data-toggle={tooltip ? 'tooltip' : null}>
@@ -248,7 +247,6 @@ class NodeStats extends React.Component {
     return (
       <Icon.HardDrive
         className={`icon disks text-${reducedLevel}`}
-        title={tooltip}
         data-html={'true'}
         data-original-title={tooltip}
         data-toggle={'tooltip'}

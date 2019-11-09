@@ -165,7 +165,6 @@ class ConnectedTask extends React.Component {
     const tooltip = this.when().fromNow();
     return (
       <div
-        title={tooltip}
         data-original-title={tooltip}
         data-toggle={'tooltip'}
         className={'badge bg-primary'}>
@@ -204,7 +203,6 @@ class ConnectedTask extends React.Component {
         <span className={'box'}>
           <div className={'info-icons'}>
             <Icon.Info
-              title={tooltip}
               className={`icon info ${errors.length ? 'text-danger' : ''}`}
               data-toggle={'tooltip'}
               data-container={'body'}

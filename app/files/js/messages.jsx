@@ -1,9 +1,10 @@
 const Messages = {
+  pluralize: (word, count) => `${word}${count !== 1 ? "s" : ""}`,
   skep: {
     code: 'https://github.com/bobf/skep',
     homepage: 'https://skepdocker.github.io',
     connectionError: 'Connection to Skep server has been lost. Try refreshing the page to reconnect.',
-    connectionLive: (ago) => `Last update: <em>${ago} second(s) ago</em>`,
+    connectionLive: (ago) => `Last update: <em>${ago} ${Messages.pluralize('second', ago)} ago</em>`,
   },
 
   overview: {
@@ -38,10 +39,14 @@ const Messages = {
   },
 
   service: {
-    networks: (networks) => `Reachable via the following <em>${networks.length}</em> network(s):<br/>${networks.join('<br/>')}`,
+    networks: (networks) => `Reachable via the following <em>${networks.length}</em> ${Messages.pluralize('network', networks.length)}:<br/>${networks.join('<br/>')}`,
+    replicas: {
+      tooltip: (replicaCount, runningCount, statusSymbol) => `<em>${runningCount} / ${replicaCount}</em> ${Messages.pluralize('replica', runningCount)} running <em>${statusSymbol}</em>`,
+      errors: (errors) => `<span class='text-danger'><em>${errors.length}</em> ${Messages.pluralize('error', errors.length)} reported by tasks in the last <em>60</em> seconds</span>`,
+    },
     state: {
       inconsistentImages: 'Tasks are running inconsistent images. Compare task details for more information.',
-      unknownDigest: 'Tasks are running image(s) that have not been verified with a remote registry.',
+      unknownDigest: 'Tasks are running images that have not been verified with a remote registry.',
 
       updateStarted: '<em>Update</em> currently in progress.',
       updatePaused: (message) => `<em>Update</em> was paused. Message was: <em>${message}</em>`,
@@ -58,7 +63,7 @@ const Messages = {
   },
 
   task: {
-    error: (error) => `<span class='error-message'>${error.message}</span>&nbsp;<span class='error-tstamp'><em>(${error.since} second${error.since !== 1 ? "s" : ""} ago)</em></span>`,
+    error: (error) => `<span class='error-message'>${error.message}</span>&nbsp;<span class='error-tstamp'><em>(${error.since} ${Messages.pluralize('second', error.since)} ago)</em></span>`,
   },
 };
 
