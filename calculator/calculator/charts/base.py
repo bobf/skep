@@ -64,17 +64,23 @@ class Base:
 
         return [self.normalize_chunk(x) for x in zip(*[iter(data)] * nth_element)]
 
+    def pick(self, key, L):
+        return list(filter(lambda x: x is not None, map(itemgetter(key), L)))
+
     def normalize_chunk(self, chunk):
         normalized = {}
 
-        pick = lambda k: map(itemgetter(k), chunk)
-        normalized['tstamp'] = statistics.median(pick('tstamp'))
+        normalized['tstamp'] = statistics.median(self.pick('tstamp', chunk))
         normalized['id'] = chunk[0]['id']
         for key in chunk[0].keys():
             if key in ('tstamp', 'id'):
                 continue
-            # REVIEW: Is median or mean a better average here ?
-            normalized[key] = statistics.mean(pick(key))
+            values = self.pick(key, chunk)
+            if values:
+                # REVIEW: Is median or mean a better average here ?
+                normalized[key] = statistics.mean(values)
+            else:
+                normalized[key] = 0
 
         return normalized
 
