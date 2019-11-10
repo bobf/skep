@@ -1,6 +1,6 @@
 #!/bin/bash
 cd agent
-export SKEP_APP_URL=http://localhost:5000/
+export SKEP_APP_URL=http://localhost:60420/
 export SKEP_CHARTS_URL=http://localhost:5040/
 export HOSTFS_PATH=linux_metrics/test_filesystem/
 export LOG_LEVEL=debug

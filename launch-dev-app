@@ -5,8 +5,9 @@ export FLASK_APP=controller.py
 export FLASK_DEBUG=1
 export SKEP_LISTEN_HOST=0.0.0.0
 export SKEP_CHARTS_URL=http://localhost:5040/
+export SKEP_PRIVATE_PORT=60420
 pipenv run gunicorn app -b 0.0.0.0:5000 \
-                        -b 0.0.0.0:6666 \
+                        -b 0.0.0.0:${SKEP_PRIVATE_PORT} \
                         --workers 1 \
                         --no-sendfile \
                         --worker-class eventlet

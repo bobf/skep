@@ -1,7 +1,7 @@
 #!/bin/sh
 . /assets.sh
 pipenv run gunicorn app -b 0.0.0.0:8080 \
-                        -b 0.0.0.0:6666 \
+                        -b 0.0.0.0:${SKEP_PRIVATE_PORT:-6666} \
                         --workers 1 \
                         --no-sendfile \
                         --worker-class eventlet
