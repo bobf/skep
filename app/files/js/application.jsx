@@ -72,6 +72,7 @@ $(function () {
     const data = JSON.parse(json);
     initManifest(data.manifest);
     Object.values(data.nodes).forEach((node) => initNode(node));
+    if (Skep.connectionTimeout) window.clearTimeout(Skep.connectionTimeout);
     Skep.connectionTimeout = window.setTimeout(() => notifyTimeout(), Skep.thresholds.global.timeout.danger * 1000);
   });
 

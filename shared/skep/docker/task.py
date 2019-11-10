@@ -1,10 +1,9 @@
 import string
 import random
-import dateutil.parser
 
-from skep.docker.mixins import ImageParser
+from skep.docker.mixins import ImageParser, ISO8601TimestampParser
 
-class Task(ImageParser):
+class Task(ImageParser, ISO8601TimestampParser):
     def __init__(self, task, service=None, error_slots=None):
         self.task = task
         self.service = service
@@ -50,11 +49,24 @@ class Task(ImageParser):
     def image(self):
         return self.parse_image(self.task['Spec']['ContainerSpec'].get('Image', None))
 
+    def up_to_date(self):
+        digest = self.image().get('digest', None)
+        if digest is None:
+            return False
+
+        synced = digest == self.service.image().get('digest', None)
+        updated_since = (
+            self.updated_at() >= self.service.updated_at()
+            or not self.service.updating()
+        )
+
+        return synced and updated_since
+
     def when(self):
         if not self.task:
             return None
 
-        return dateutil.parser.parse(self.task["Status"]["Timestamp"])
+        return self.parse_iso8601_timestamp(self.task["Status"]["Timestamp"])
 
     def attrs(self):
         if not self.task:
@@ -73,8 +85,12 @@ class Task(ImageParser):
             "when": attrs["Status"]["Timestamp"],
             "state": attrs["Status"]["State"],
             "environment": attrs['Spec']['ContainerSpec'].get('Env', []),
-            "image": self.image()
+            "image": self.image(),
+            "upToDate": self.up_to_date()
         }
+
+    def updated_at(self):
+        return self.parse_iso8601_timestamp(self.task['UpdatedAt'])
 
     def serializable(self):
         return self.attrs()

@@ -64,6 +64,8 @@ class TaskStats extends React.Component {
   }
 
   calculateDiskActivity(stats) {
+    if (!stats.io_service_bytes_recursive) return 0;
+
     const serviceBytes = stats.io_service_bytes_recursive.find(
       summary => summary.op === 'Total'
     );

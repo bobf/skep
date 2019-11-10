@@ -20,10 +20,11 @@ class ConnectedTask extends React.Component {
 
     if (!this.slotID()) return error;
 
+    const upToDate = `Status: <em>${Messages.task.upToDate(this.isUpToDate())}</em>`;
     const slot = `Slot: <em>${this.slotID()}</em>`;
     const name = `Container: <em>${this.containerName()}</em>`;
     const digest = `Digest: <em>${this.digest(true)}</em>`;
-    const content = [slot, name, digest, error].filter(item => item).join('<br/>');
+    const content = [slot, name, digest, upToDate, error].filter(item => item).join('<br/>');
     return `<div class="align-left info-tooltip">${content}</div>`;
   }
 
@@ -67,6 +68,12 @@ class ConnectedTask extends React.Component {
     const { slot } = this.props.task;
 
     return slot;
+  }
+
+  isUpToDate() {
+    const { upToDate } = this.props.task;
+
+    return upToDate;
   }
 
   when() {
@@ -191,9 +198,14 @@ class ConnectedTask extends React.Component {
   render() {
     const tooltip = this.tooltip();
     const classes = ['task'];
+    const isUpToDate = this.isUpToDate();
     const { errors } = this.props.task;
+    const { updating } = this.props;
 
     if (this.isHighlighted()) classes.push('highlighted');
+    if (!isUpToDate) classes.push('out-of-sync');
+    if (updating && isUpToDate) classes.push('synced');
+    const iconClass = errors.length ? 'text-danger' : (isUpToDate ? '' : 'text-warning');
 
     return (
       <span className={classes.join(' ')}>
@@ -201,7 +213,7 @@ class ConnectedTask extends React.Component {
         <span className={'box'}>
           <div className={'info-icons'}>
             <Icon.Info
-              className={`icon info ${errors.length ? 'text-danger' : ''}`}
+              className={`icon info ${iconClass}`}
               data-toggle={'tooltip'}
               data-container={'body'}
               data-html={'true'}

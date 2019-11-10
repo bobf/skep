@@ -156,21 +156,17 @@ tr.service:hover {
 }
 
 .service.updating {
-  animation: pulse 3s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    background-color: $background-color-translucent;
-  }
-
-  50% {
-    background-color: $background-color-updating;
-  }
-
-  100% {
-    background-color: $background-color-translucent;
-  }
+  &.percent-100 { animation: pulse-percent-0 3s infinite; }
+  &.percent-90 { animation: pulse-percent-10 3s infinite; }
+  &.percent-80 { animation: pulse-percent-20 3s infinite; }
+  &.percent-70 { animation: pulse-percent-30 3s infinite; }
+  &.percent-60 { animation: pulse-percent-40 3s infinite; }
+  &.percent-50 { animation: pulse-percent-50 3s infinite; }
+  &.percent-40 { animation: pulse-percent-60 3s infinite; }
+  &.percent-30 { animation: pulse-percent-70 3s infinite; }
+  &.percent-20 { animation: pulse-percent-80 3s infinite; }
+  &.percent-10 { animation: pulse-percent-90 3s infinite; }
+  &.percent-0 { animation: pulse-percent-100 3s infinite; }
 }
 
 tr.service.selected {

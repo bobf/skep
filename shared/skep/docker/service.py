@@ -9,9 +9,9 @@ from skep.docker.environment import Environment
 from skep.docker.task import Task
 from skep.docker.network import Network
 from skep.docker.mount import Mount
-from skep.docker.mixins import ImageParser
+from skep.docker.mixins import ImageParser, ISO8601TimestampParser
 
-class Service(ImageParser):
+class Service(ImageParser, ISO8601TimestampParser):
     def __init__(self, service, swarm):
         self.service = service
         self.swarm = swarm
@@ -25,7 +25,7 @@ class Service(ImageParser):
             "mode": self.mode(),
             "global": 'Global' in attrs['Spec']['Mode'],
             "replicas": self.replicas(),
-            "updated": attrs['UpdatedAt'],
+            "updated": self.updated_at(),
             "updating": self.updating(),
             "state": self.state(),
             "stateMessage": self.state_message(),
@@ -155,6 +155,9 @@ class Service(ImageParser):
 
     def updating(self):
         return self.state() in ('updating', 'rollback_started')
+
+    def updated_at(self):
+        return self.parse_iso8601_timestamp(self.service.attrs['UpdatedAt'])
 
     def serializable(self):
         return self.attrs()

@@ -1,3 +1,5 @@
+import dateutil.parser
+
 class ImageParser:
     def parse_image(self, spec):
         if spec is None:
@@ -22,3 +24,7 @@ class ImageParser:
             'tag': tag,
             'digest': digest
         }
+
+class ISO8601TimestampParser:
+    def parse_iso8601_timestamp(self, timestamp):
+        return dateutil.parser.parse(timestamp)

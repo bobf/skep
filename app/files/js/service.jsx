@@ -63,10 +63,14 @@ class ConnectedService extends React.Component {
   }
 
   stateIconUpdating(message) {
+    const tasks = this.tasks();
+    const updated = tasks.filter(task => task.upToDate).length;
+    const total = tasks.length;
+    const tooltip = `${message} ${Messages.service.state.updateCount(total, updated)}`;
+
     return (
       <span
-        title={message}
-        data-original-title={message}
+        data-original-title={tooltip}
         className={'service-icon updating'}
         data-html={'true'}
         data-toggle={'tooltip'}>
@@ -153,6 +157,24 @@ class ConnectedService extends React.Component {
     }
 
     return this.stateIcon(this.stateIcon('error', 'unrecognized'));
+  }
+  updatePercentComplete() {
+    const tasks = this.tasks();
+
+    return 100 - (tasks.filter(task => task.upToDate).length / tasks.length * 100);
+  }
+
+  style() {
+    const { updating } = this.props.service;
+    if (!updating) return null;
+    const percent = this.updatePercentComplete();
+
+    // Provides a progress bar-like visual by scaling the transparent part of
+    // the gradient (which allows the flashing update status underneath to be
+    // visible):
+    const css = `linear-gradient(to left, #222, #222 ${percent}%, transparent ${percent}%, transparent)`;
+
+    return { backgroundImage: css };
   }
 
   renderPortsExpanded() {
@@ -444,14 +466,22 @@ class ConnectedService extends React.Component {
 
     if (this.isSelected()) classes.push('selected');
     if (this.isHighlighted()) classes.push('highlighted');
-    if (updating) classes.push('updating');
+    if (updating) {
+      const complete = this.updatePercentComplete();
+      // Our CSS steps at 10% increments only so we round down to nearest 10.
+      const percent = complete - (complete % 10);
+      classes.push('updating');
+      classes.push(`percent-${percent}`);
+    }
+
     if (networks.length) classes.push('networked');
 
     return (
       <tr
         onClick={(ev) => this.toggle(ev)}
         key={`service-collapsed-${service.name}`}
-        className={classes.join(' ')}>
+        className={classes.join(' ')}
+        style={this.style()}>
         <th className={'service-title'}>
           <span
             className={'network-icon'}
@@ -510,6 +540,7 @@ class ConnectedService extends React.Component {
               key={task.id}
               task={task}
               stack={stack}
+              updating={updating}
               manifest={this.props.manifest}
             />
           ))}

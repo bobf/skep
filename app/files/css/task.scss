@@ -1,5 +1,20 @@
 .task {
   width: 12em;
+  border-radius: 12.5%;
+}
+
+.task.out-of-sync {
+  background-color: rgba($warning, 0.2);
+  .box {
+    border-color: rgba($warning, 0.5);
+  }
+}
+
+.task.synced {
+  background-color: rgba($success, 0.2);
+  .box {
+    border-color: rgba($success, 0.5);
+  }
 }
 
 .task .badge {
@@ -64,6 +79,6 @@ span.task {
 
   .box {
     box-shadow: 0px 0px 3px $highlight-select;
-    border-color: $highlight-select;
+    border-color: rgba($highlight-select, 0.5);
   }
 }
