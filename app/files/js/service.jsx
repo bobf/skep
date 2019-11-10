@@ -480,7 +480,7 @@ class ConnectedService extends React.Component {
     if (updating) {
       const complete = this.updatePercentComplete();
       // Our CSS steps at 10% increments only so we round down to nearest 10.
-      const percent = complete - (complete % 10);
+      const percent = complete + (10 - (complete % 10));
       classes.push('updating');
       classes.push(`percent-${percent}`);
     }
