@@ -26,18 +26,13 @@ handler = logging.StreamHandler()
 handler.setLevel(log_level)
 logger.addHandler(handler)
 
-if 'SKEP_SECRET' in os.environ:
-    auth = { 'Authorization': 'Token ' + os.environ['SKEP_SECRET'] }
-else:
-    auth = {}
-
 app_url = os.environ.get('SKEP_APP_URL', 'http://app:8080')
 db_path = os.environ.get('SKEP_CHARTS_DB_PATH', '/charts.db')
 pool_size = int(os.environ.get('SKEP_CHARTS_CONCURRENCY', '4'))
 
 application = Flask(__name__)
 pool = Pool(pool_size)
-publisher = Publisher(app_url, auth, logger)
+publisher = Publisher(app_url, logger)
 create_database(db_path)
 chart_types = {
     'container': ContainerChart,

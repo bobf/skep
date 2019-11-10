@@ -10,7 +10,8 @@ services:
       mode: replicated
       replicas: 1
     environment:
-      SKEP_SECRET:
+      # Used for internal communication only. Do NOT publish this port:
+      SKEP_PRIVATE_PORT: '6666'
       SKEP_CHARTS_URL: http://charts:8080/
 
   agent:
@@ -25,8 +26,7 @@ services:
       - "/proc:/hostfs/proc:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     environment:
-      SKEP_SECRET:
-      SKEP_APP_URL: http://app:8080
+      SKEP_APP_URL: http://app:6666
       SKEP_CHARTS_URL: http://charts:8080/
       DISKS:
       FILE_SYSTEMS:
@@ -44,8 +44,7 @@ services:
       mode: replicated
       replicas: 1
     environment:
-      SKEP_SECRET:
-      SKEP_APP_URL: http://app:8080
+      SKEP_APP_URL: http://app:6666
       SKEP_CHARTS_DB_PATH: /skep/database/charts.db
       SKEP_CHARTS_DB_PERSIST:
       LOG_LEVEL:
@@ -65,8 +64,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     environment:
-      SKEP_SECRET:
-      SKEP_APP_URL: http://app:8080
+      SKEP_APP_URL: http://app:6666
       SKEP_CHARTS_URL: http://charts:8080/
       SERVICE_URL_TEMPLATE:
       IMAGE_URL_TEMPLATE: https://hub.docker.com/r/{organization}/{repository}

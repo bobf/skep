@@ -14,11 +14,6 @@ from skep.docker.swarm import Swarm
 from skep.docker.statistics import Statistics
 from skep.json import DelegatingJSONEncoder
 
-if 'SKEP_SECRET' in os.environ:
-    AUTH = { 'Authorization': 'Token ' + os.environ['SKEP_SECRET'] }
-else:
-    AUTH = {}
-
 class Monitor:
     def __init__(self, **kwargs):
         self.opts = kwargs
@@ -31,7 +26,7 @@ class Monitor:
             time.sleep(self.opts['interval'])
 
     def request(self, url, data):
-        headers = headers={ 'Content-Type': 'application/json', **AUTH }
+        headers = headers={ 'Content-Type': 'application/json' }
         swarm = Swarm()
         swarm.refresh()
         data = {

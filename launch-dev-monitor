@@ -4,7 +4,6 @@ export SERVICE_URL_TEMPLATE='https://github.com/bobf/{name}'
 export IMAGE_URL_TEMPLATE='https://hub.docker.com/r/{organization}/{repository}'
 export SKEP_APP_URL=http://localhost:5000/
 export SKEP_CHARTS_URL=http://localhost:5040/
-export SKEP_SECRET=abc123
 export COLLECT_INTERVAL=5
 export LOG_LEVEL=debug
 

@@ -33,8 +33,6 @@ docker stack rm skep
 
 ### Configuration
 
-**`SKEP_SECRET` should be set for all relevant services (see below).**
-
 The _agent_ service is responsible for harvesting host and container metrics; configure this service as appropriate for your hardware/operating system setup.
 
 See the sections below to configure each of _Skep_'s components. The provided [example docker-compose.yml](docker-compose.yml) can be used as a starting point.
@@ -49,15 +47,14 @@ docker-compose -f <your-compose-file.yml> config | docker stack deploy -c - skep
 
 | Variable | Meaning | Example |
 |-|-|-|
-| `SKEP_SECRET` | Set this to an appropriately complex token to verify agent updates. It is **highly recommended** that you enable this feature. (The same value must be set for the _agent_ and _monitor_ services).  | `averylongandcomplexsecret` |
+| `SKEP_PRIVATE_PORT` | Port used for internal communications between _Skep_ services. Do not publish this port. | `6666` _(default/recommended)_ |
 | `SKEP_CHARTS_URL` | URL that the _charts_ service will be available on for handling chart requests. | `http://charts:8080/`
 
 #### Agent
 
 | Variable | Meaning | Example |
 |-|-|-|
-| `SKEP_SECRET` | If provided, will use to authenticate with front end web app when reporting statistics (the same value must be set for the web app service) | `averylongandcomplexsecret` |
-| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
+| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:6666/` _(default/recommended)_ |
 | `DISKS` | Comma-separated list of disk devices to monitor (disk activity) | `sda,sdc` |
 | `FILE_SYSTEMS` | Comma-separated list of file systems to monitor (available space) | `/hostfs/root,/hostfs/backups` (see [file systems](#file-systems)) |
 | `NETWORK_INTERFACES` | Comma-separated list of network devices to monitor (traffic) **[not yet implemented]** | `eth0,eth3` |
@@ -70,8 +67,7 @@ docker-compose -f <your-compose-file.yml> config | docker stack deploy -c - skep
 
 | Variable | Meaning | Example |
 |-|-|-|
-| `SKEP_SECRET` | If provided, will use to authenticate with front end web app when reporting statistics (the same value must be set for the web app service) | `averylongandcomplexsecret` |
-| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
+| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:6666/` _(default/recommended)_ |
 | `SERVICE_URL_TEMPLATE` | URL template for service names | See [URL templating](#url-templating) |
 | `IMAGE_URL_TEMPLATE` | URL template for image names | See [URL templating](#url-templating) |
 | `LOG_LEVEL` | By default, the monitor only logs initial configuration on launch and errors. Set to `DEBUG` to log all statistics. | `INFO` _(default/recommended)_ |
@@ -82,8 +78,7 @@ docker-compose -f <your-compose-file.yml> config | docker stack deploy -c - skep
 
 | Variable | Meaning | Example |
 |-|-|-|
-| `SKEP_SECRET` | If provided, will use to authenticate with front end web app when reporting statistics (the same value must be set for the web app service) | `averylongandcomplexsecret` |
-| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
+| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:6666/` _(default/recommended)_ |
 | `SERVICE_URL_TEMPLATE` | URL template for service names | See [URL templating](#url-templating) |
 | `IMAGE_URL_TEMPLATE` | URL template for image names | See [URL templating](#url-templating) |
 | `LOG_LEVEL` | By default, the monitor only logs initial configuration on launch and errors. Set to `DEBUG` to log all statistics. | `INFO` _(default/recommended)_ |
@@ -94,8 +89,7 @@ docker-compose -f <your-compose-file.yml> config | docker stack deploy -c - skep
 
 | Variable | Meaning | Example |
 |-|-|-|
-| `SKEP_SECRET` | If provided, will use to authenticate with front end web app when reporting statistics (the same value must be set for the web app service) | `averylongandcomplexsecret` |
-| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:8080/` _(default/recommended)_ |
+| `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:6666/` _(default/recommended)_ |
 | `SKEP_CHARTS_DB_PATH` | Path to statistics _SQLite3_ database. Mount a shared storage endpoint to this location if you want to retain data between restarts. | `/charts.db` _(default/recommended)_ |
 | `SKEP_CHARTS_DB_PERSIST` | By default, the statistics database is re-initialised on startup. Set this variable to any value to retain data between restarts. | _(not set)_ |
 | `LOG_LEVEL` | Application server log level. | `INFO` _(default/recommended)_ |

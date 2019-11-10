@@ -26,8 +26,6 @@ application.json_encoder = DelegatingJSONEncoder
 socketio = SocketIO(application)
 cache = { 'manifest': {}, 'nodes': {} }
 
-SECRET = os.environ.get('SKEP_SECRET', None)
-
 @application.route('/files/<path:path>')
 def files(path):
     return send_from_directory('files', path)
@@ -67,7 +65,7 @@ def chart_response_create():
 
 @application.route("/stats", methods=["POST"])
 def stats_create():
-    if authorize_request(request, SECRET):
+    if authorize_request(request):
         data = request.get_json()
         if 'hostname' in data:
             cache['nodes'][data['hostname']] = data
@@ -79,7 +77,7 @@ def stats_create():
 
 @application.route("/manifest", methods=["POST"])
 def manifest_create():
-    if authorize_request(request, SECRET):
+    if authorize_request(request):
         manifest = request.get_json()
         cache['manifest'] = manifest
         socketio.emit("manifest", json.dumps(manifest), broadcast=True)
@@ -87,16 +85,11 @@ def manifest_create():
 
     return 'Unauthorized', 401
 
-def authorize_request(request, secret):
-    if secret is None:
-        return True
+def authorize_request(request):
+    host, _, port = request.host.partition(':')
 
-    token = 'Token ' + secret
+    return int(port) == int(os.environ.get('SKEP_PRIVATE_PORT', '6666'))
 
-    if token == request.headers.get('Authorization', None):
-        return True
-
-    return False
 
 if __name__ == "__main__":
     socketio.run(application, host=os.environ.get('SKEP_LISTEN_HOST', '127.0.0.1'))

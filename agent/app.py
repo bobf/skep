@@ -24,14 +24,14 @@ import docker.errors
 
 import stats.memory as memory
 
-if 'SKEP_SECRET' in os.environ:
-    AUTH = { 'Authorization': 'Token ' + os.environ['SKEP_SECRET'] }
-else:
-    AUTH = {}
-
 class StatRunner:
     def __init__(self, **kwargs):
         self.opts = kwargs
+        self.connection_errors = (
+            urllib.error.URLError,
+            http.client.RemoteDisconnected,
+            ConnectionResetError
+        )
         self.log = self.logger(kwargs)
         self.log.info('Launching Agent(%s)' % (kwargs,))
 
@@ -57,7 +57,7 @@ class StatRunner:
 
         try:
             response = urllib.request.urlopen(request)
-        except (urllib.error.URLError, http.client.RemoteDisconnected) as e:
+        except self.connection_errors as e:
             self.log.warning(
                 'Could not publish stats: %s (%s)' % (url, e)
             )
@@ -67,7 +67,7 @@ class StatRunner:
             )
 
     def request(self, url, data):
-        headers = { 'Content-Type': 'application/json', **AUTH }
+        headers = { 'Content-Type': 'application/json' }
 
         return Request(url, data=data, headers=headers)
 

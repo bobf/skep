@@ -4,9 +4,8 @@ import urllib.request
 from urllib.request import Request
 
 class Publisher:
-    def __init__(self, app_url, auth, log):
+    def __init__(self, app_url, log):
         self.app_url = app_url
-        self.auth = auth
         self.log = log
 
     def publish(self, period, chart_data, sid, meta):
@@ -27,7 +26,7 @@ class Publisher:
             )
 
     def request(self, url, period, chart_data, sid, meta):
-        headers = { 'Content-Type': 'application/json', **self.auth }
+        headers = { 'Content-Type': 'application/json' }
         params = {
             'sid': sid,
             'period': period,
