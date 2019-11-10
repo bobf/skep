@@ -59,8 +59,12 @@ class Task(ImageParser, ISO8601TimestampParser):
             self.updated_at() >= self.service.updated_at()
             or not self.service.updating()
         )
+        running = self.state() == 'running'
 
-        return synced and updated_since
+        return synced and updated_since and running
+
+    def state(self):
+        return self.task["Status"]["State"]
 
     def when(self):
         if not self.task:
@@ -83,7 +87,7 @@ class Task(ImageParser, ISO8601TimestampParser):
             "errors": self.errors(),
             "message": attrs["Status"]["Message"],
             "when": attrs["Status"]["Timestamp"],
-            "state": attrs["Status"]["State"],
+            "state": self.state(),
             "environment": attrs['Spec']['ContainerSpec'].get('Env', []),
             "image": self.image(),
             "upToDate": self.up_to_date()
