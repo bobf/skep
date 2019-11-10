@@ -1,6 +1,9 @@
 import os
+from datetime import datetime
+from datetime import timedelta
 
 import docker.errors
+import pytz
 
 from skep.docker.environment import Environment
 from skep.docker.task import Task
@@ -12,6 +15,7 @@ class Service(ImageParser):
     def __init__(self, service, swarm):
         self.service = service
         self.swarm = swarm
+        self._tasks = self.tasks(True)
 
     def attrs(self):
         attrs = self.service.attrs
@@ -27,12 +31,13 @@ class Service(ImageParser):
             "stateMessage": self.state_message(),
             "ports": self.ports(),
             "image": self.image(),
-            "tasks": self.tasks(),
+            "tasks": sorted(self.tasks(), key=lambda x: (x.slot(), x.when())),
             "networks": self.networks(),
             "environment": self.environment(),
             "mounts": self.mounts(),
             "nameURL": self.name_url(),
-            "imageURL": self.image_url()
+            "imageURL": self.image_url(),
+            "errors": [error for task in self.tasks() for error in task.errors()]
         }
 
     def id(self):
@@ -82,16 +87,46 @@ class Service(ImageParser):
             # The service was removed since we started inspecting it
             return []
 
-    def tasks(self):
+    def error_slots(self, tasks):
+        error_slots = {}
+        erroring_tasks = list(filter(
+            lambda x: x.desired_state() in ['shutdown'],
+            [Task(x) for x in tasks]
+        ))
+
+        for task in erroring_tasks:
+            slot = task.slot()
+            message = task.error()
+            if slot is None or message is None:
+                continue
+
+            since = pytz.UTC.localize(datetime.utcnow()) - task.when()
+            if since > timedelta(minutes=1):
+                continue
+
+            error = { 'message': message, 'since': since.seconds }
+
+            error_slots.setdefault((self.name(), slot), []).append(error)
+
+        return error_slots
+
+    def tasks(self, init=False):
+        if not init:
+            return self._tasks
+
+        all_tasks = self.try_tasks()
+
+        error_slots = self.error_slots(all_tasks)
+
         tasks = list(filter(
-            lambda x: x.desired_state() == 'running',
-            [Task(x) for x in self.try_tasks()]
+            lambda x: x.desired_state() in ['running', 'ready'],
+            [Task(x, self, error_slots) for x in all_tasks]
         ))
 
         replicas = self.replicas()
 
         if replicas is not None and len(tasks) < replicas:
-            tasks = [Task({}) for x in range(replicas - len(tasks))] + tasks
+            return [Task({}) for x in range(replicas - len(tasks))] + tasks
 
         return tasks
 

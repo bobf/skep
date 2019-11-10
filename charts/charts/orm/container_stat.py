@@ -1,7 +1,7 @@
 import dateutil.parser
 import sqlite3
 
-from calculator.orm.base import Base
+from charts.orm.base import Base
 
 class ContainerStat(Base):
     def save(self, data, tstamp):
@@ -43,7 +43,8 @@ class ContainerStat(Base):
     def disk_ops(self, container):
         ops = [
             x['value']
-            for x in container['blkio_stats']['io_service_bytes_recursive']
+            for x in container.get('blkio_stats', {})
+                              .get('io_service_bytes_recursive', []) or []
             if x['op'] == 'Total'
         ]
         if not ops:
@@ -54,7 +55,7 @@ class ContainerStat(Base):
     def network_bytes(self, container):
         return sum(
             network['rx_bytes'] + network['tx_bytes']
-            for network in container['networks'].values()
+            for network in container.get('networks', {}).values()
         )
 
     def period(self, data):

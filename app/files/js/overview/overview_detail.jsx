@@ -27,7 +27,7 @@ class OverviewDetail extends React.Component {
     const mappedState = {
       ok: 'success',
       warn: 'warning',
-      error: 'error'
+      error: 'danger'
     }[state];
 
     const attributes = {
@@ -44,7 +44,7 @@ class OverviewDetail extends React.Component {
       case 'warn':
         return <Icon.AlertTriangle {...attributes} />;
       case 'error':
-        return <Icon.CheckCircle {...attributes} />;
+        return <Icon.AlertOctagon {...attributes} />;
     }
   }
 

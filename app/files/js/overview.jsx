@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as Icon from 'react-feather';
 
 import ContainersDetail from './overview/containers_detail';
 import NetworksDetail from './overview/networks_detail';

@@ -4,12 +4,18 @@
   width: 21em;
   padding: 1em;
   overflow-y: scroll;
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+}
+
+#nodes::-webkit-scrollbar {
+  width: 0 !important;
 }
 
 .node {
   padding: 0.4em;
   margin-bottom: 1em;
-  width: 18em;
+  width: 19em;
   white-space: nowrap;
 }
 
@@ -45,6 +51,11 @@
   color: $outline-dark;
   opacity: 0.8;
   transition: color 1500ms, opacity 1500ms;
+  border-radius: 0.6em;
+
+  &.pulse {
+    animation: pulse 1s infinite;
+  }
 }
 
 .node.ping .light {
@@ -96,23 +107,26 @@
   background-color: $highlight-select-background;
 }
 
-.node h2 {
+.node h3 {
   font-size: 1rem;
   padding-left: 0.4em;
   padding-right: 0.4em;
   clear: both;
 }
 
-.node h2.hostname {
+.node h3.hostname {
   width: 12.8em;
   max-width: 12.8em;
   font-size: 1.2em;
   overflow-x: hidden;
   text-overflow: ellipsis;
   margin-left: 1.4em;
+  display: inline-block;
+  color: $label-text-dark;
+  padding: 0.2em 0.4em;
 }
 
-.maximized .node h2.hostname {
+.maximized .node h3.hostname {
   display: inline-block;
   width: 15em;
   max-width: 15em;
@@ -126,11 +140,6 @@
 .node .hostname {
   text-transform: uppercase;
   font-family: monospace;
-}
-
-.node h2.hostname {
-  display: inline-block;
-  color: $label-text;
 }
 
 .node .chart-button {

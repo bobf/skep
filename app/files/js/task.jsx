@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
+import Messages from './messages';
 import TaskStats from './task_stats';
 import TaskChart from './task_chart';
 
@@ -14,15 +15,25 @@ class ConnectedTask extends React.Component {
   }
 
   tooltip() {
+    const error = this.formattedErrors();
     const host = `Host: <em>${this.hostname()}</em>`;
 
-    if (!this.slotID()) return host;
+    if (!this.slotID()) return error;
 
     const slot = `Slot: <em>${this.slotID()}</em>`;
     const name = `Container: <em>${this.containerName()}</em>`;
-    const digest = `Digest: <em>${this.digest() || '[none]'}</em>`;
-    const content = [host, slot, name, digest].join('<br/>');
-    return `<div class="info-tooltip">${content}</div>`;
+    const digest = `Digest: <em>${this.digest(true)}</em>`;
+    const content = [slot, name, digest, error].filter(item => item).join('<br/>');
+    return `<div class="align-left info-tooltip">${content}</div>`;
+  }
+
+  formattedErrors() {
+    const { errors } = this.props.task;
+    if (!errors.length) return null;
+
+    const errorLines = errors.map(error => Messages.task.error(error)).join('<br/>');
+
+    return `Errors:<br/><div class='errors'>${errorLines}</div>`;
   }
 
   containerName() {
@@ -44,14 +55,12 @@ class ConnectedTask extends React.Component {
     return node && node.hostname || "[waiting]";
   }
 
-  digest() {
-    if (!this.props.task.image) {
-      return null;
-    }
-
+  digest(human) {
     const { digest } = this.props.task.image;
 
-    return digest;
+    if (!digest) return human ? '[waiting]' : null;
+
+    return human ? digest.substring(0, 16) : digest;
   }
 
   slotID() {
@@ -122,8 +131,6 @@ class ConnectedTask extends React.Component {
   }
 
   loadChart() {
-    const that = this;
-    const token = Skep.token();
     const { containerID } = this.props.task;
 
     this.setState({ chartClosed: false });
@@ -156,7 +163,6 @@ class ConnectedTask extends React.Component {
     const tooltip = this.when().fromNow();
     return (
       <div
-        title={tooltip}
         data-original-title={tooltip}
         data-toggle={'tooltip'}
         className={'badge bg-primary'}>
@@ -185,6 +191,7 @@ class ConnectedTask extends React.Component {
   render() {
     const tooltip = this.tooltip();
     const classes = ['task'];
+    const { errors } = this.props.task;
 
     if (this.isHighlighted()) classes.push('highlighted');
 
@@ -194,8 +201,7 @@ class ConnectedTask extends React.Component {
         <span className={'box'}>
           <div className={'info-icons'}>
             <Icon.Info
-              title={tooltip}
-              className={'icon info'}
+              className={`icon info ${errors.length ? 'text-danger' : ''}`}
               data-toggle={'tooltip'}
               data-container={'body'}
               data-html={'true'}

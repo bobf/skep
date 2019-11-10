@@ -1,7 +1,3 @@
-.node-stats {
-  padding-top: 0.4em;
-}
-
 .node-stats table {
   width: 100%;
 }
@@ -71,7 +67,7 @@
 
 .minimized .load-averages .badge {
   display: inline-block;
-  width: 3.2em;
+  width: 3.6em;
 }
 
 
@@ -81,4 +77,19 @@
 .minimized .node-stats .progress .label .icon {
   width: 1.3em;
   height: 1.3em;
+}
+
+
+.node-stats-tooltip {
+  text-align: left;
+
+  h4 {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 0.4em;
+    text-align: center;
+  }
+
+  .node-stats-tooltip-row {
+  }
 }

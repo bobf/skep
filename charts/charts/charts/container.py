@@ -2,7 +2,7 @@ import random
 import time
 import traceback
 
-from calculator.charts.base import Base
+from charts.charts.base import Base
 
 class Container(Base):
     def __init__(self, db_path, data, publisher):

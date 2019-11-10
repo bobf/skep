@@ -6,7 +6,7 @@ import Dashboard from './dashboard';
 
 import { Provider } from 'react-redux';
 import store from './redux/store';
-import { updateSwarm } from './redux/models/swarm';
+import { updateSwarm, disconnectSwarm, pingSwarm, unpingSwarm } from './redux/models/swarm';
 import { updateNode, pingNode, unpingNode } from './redux/models/node';
 import { respondChart } from './redux/models/charts';
 
@@ -23,6 +23,12 @@ $(function () {
     setTimeout(() => store.dispatch(unpingNode(data)), 500);
   };
 
+  const updateManifest = data => {
+    store.dispatch(updateSwarm(data));
+    store.dispatch(pingSwarm(data));
+    setTimeout(() => store.dispatch(unpingSwarm(data)), 600);
+  };
+
   const initManifest = (data) => {
     if (!Skep.dashboard) {
       Skep.dashboard = ReactDOM.render(
@@ -32,8 +38,10 @@ $(function () {
         document.getElementById('content')
       );
     }
-    store.dispatch(updateSwarm(data));
+    updateManifest(data);
   };
+
+  const notifyTimeout = () => store.dispatch(disconnectSwarm());
 
   const Skep = {
     chartCallbacks: {},
@@ -41,17 +49,13 @@ $(function () {
     thresholds: {
       global: {
         success: 50,
-        warning: 70
-      }
+        warning: 70,
+        timeout: {
+          warning: 30,
+          danger: 60,
+        },
+      },
     },
-    token: function() {
-      // https://gist.github.com/6174/6062387
-      return Math.random()
-                 .toString(36)
-                 .substring(2, 15) + Math.random()
-                                         .toString(36)
-                                         .substring(2, 15);
-    }
   };
 
   window.Skep = Skep;
@@ -68,11 +72,14 @@ $(function () {
     const data = JSON.parse(json);
     initManifest(data.manifest);
     Object.values(data.nodes).forEach((node) => initNode(node));
+    Skep.connectionTimeout = window.setTimeout(() => notifyTimeout(), Skep.thresholds.global.timeout.danger * 1000);
   });
 
   socket.on('manifest', function(json) {
+    if (Skep.connectionTimeout) window.clearTimeout(Skep.connectionTimeout);
     const data = JSON.parse(json);
-    initManifest(data);
+    updateManifest(data);
+    Skep.connectionTimeout = window.setTimeout(() => notifyTimeout(), Skep.thresholds.global.timeout.danger * 1000);
   });
 
   socket.on('stats', function (json) {

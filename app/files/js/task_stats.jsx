@@ -101,7 +101,6 @@ class TaskStats extends React.Component {
     return (
       <div className={'progress position-relative'}
            style={{ height: '2em' }}
-           title={tooltip}
            data-original-title={tooltip}
            data-toggle={'tooltip'}>
         <div className={'progress-bar bg-' + level}

@@ -1,4 +1,24 @@
-$primary: #51a764;
+$blue: #375a7f;
+$indigo: #6610f2;
+$purple: #6f42c1;
+$pink: #e83e8c;
+$red: #E74C3C;
+$orange: #fd7e14;
+$yellow: #F39C12;
+$green: #51a764;
+$teal: #20c997;
+$cyan: #3498DB;
+$white: #fff;
+$gray: #999;
+$gray-dark: #303030;
+$primary: #375a7f;
+$secondary: #444;
+$success: #51a764;
+$info: #3498DB;
+$warning: #F39C12;
+$danger: #E74C3C;
+$light: #303030;
+$dark: #adb5bd;
 
 $overview-sticky-height: 2.4em;
 $overview-height: 8.5em;
@@ -11,7 +31,7 @@ $overview-count-select: #ffffff77;
 
 $transparent: #00000000;
 
-$port-published: $primary;
+$port-published: $green;
 $port-target: #999;
 
 $mount-button: #824747;
@@ -59,6 +79,8 @@ $window-height: 100%;
 
 body {
   height: 100%;
+  // Scrolling only occurs within the node and stack views
+  overflow-y: hidden;
 }
 
 html {
@@ -67,33 +89,4 @@ html {
 
 .badge.dense {
   margin: 0 !important;
-}
-
-.tooltip {
-  position: fixed;
-  pointer-events: none; // https://stackoverflow.com/a/48665379
-  z-index: 999999999999999999999999999999999999;
-  max-width: 500px;
-
-  .tooltip-inner {
-    max-width: 500px;
-    color: $label-text-light !important;
-
-    em {
-      color: $label-text-dark !important;
-    }
-
-    .nowrap {
-      white-space: nowrap;
-    }
-
-    .align-left {
-      text-align: left;
-    }
-  }
-}
-
-.info-tooltip {
-  width: auto;
-  white-space: nowrap;
 }

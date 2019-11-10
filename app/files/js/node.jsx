@@ -2,12 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
+import Messages from './messages';
+
 import FilesystemStats from './filesystem_stats';
 import NodeStats from './node_stats';
 import NodeChart from './node_chart';
 
 import store from './redux/store';
 import { requestNodeChart } from './redux/models/charts';
+import { selectService } from './redux/models/dashboard';
 import { selectNode } from './redux/models/node';
 
 class ConnectedNode extends React.Component {
@@ -15,6 +18,7 @@ class ConnectedNode extends React.Component {
     super(props);
 
     this.state = {
+      tick: 0,
       chartData: null,
       chartClosed: true
     };
@@ -26,8 +30,9 @@ class ConnectedNode extends React.Component {
   }
 
   agentData() {
+    // Data provided by Skep `agent` service
     const { nodes } = this.props;
-    return nodes[this.hostname()];
+    return nodes[this.hostname()] || {};
   }
 
   stats() {
@@ -39,7 +44,7 @@ class ConnectedNode extends React.Component {
 
   containers() {
     const { current } = this.stats();
-    if (!current) return [];
+    if (!current || !current.containers) return [];
 
     return current.containers;
   }
@@ -78,7 +83,6 @@ class ConnectedNode extends React.Component {
 
     return (
       <span
-        title={tooltip}
         data-original-title={tooltip}
         data-toggle={'tooltip'}
         className={`badge badge-${label.level} role`}>
@@ -99,6 +103,57 @@ class ConnectedNode extends React.Component {
         {label}
       </span>
     );
+  }
+
+  tick() {
+    this.setState(prevState => ({ tick: prevState.tick + 1 }));
+  }
+
+  componentDidMount() {
+    this.interval = setInterval(() => this.tick(), 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  icon() {
+    const { tstamp } = this.agentData();
+    const { tooltip: messages } = Messages.node;
+    const now = Date.now();
+    const since = (now - tstamp) / 1000
+    const rows = [
+      messages.lastUpdated(since),
+      messages.hostname(this.hostname()),
+      messages.version(this.version()),
+      messages.containers(this.containers()),
+    ];
+    const classes = ['light'];
+    let icon;
+    const tooltip = `<div class="tooltip-inner align-left info-tooltip">${rows.join('<br/>')}</div>`
+
+
+    if (since > Skep.thresholds.global.timeout.danger) {
+      icon = Icon.AlertCircle;
+      classes.push('text-danger');
+      classes.push('pulse');
+    } else if (since > Skep.thresholds.global.timeout.warning) {
+      icon = Icon.AlertCircle;
+      classes.push('text-warning');
+      classes.push('pulse');
+    } else {
+      icon = Icon.Power;
+    }
+
+    const props = {
+      className: classes.join(' '),
+      size: '1em',
+      'data-original-title': tooltip,
+      'data-html': 'true',
+      'data-toggle': 'tooltip',
+   };
+
+    return React.createElement(icon, props, null);
   }
 
   versionBadge() {
@@ -157,10 +212,9 @@ class ConnectedNode extends React.Component {
   }
 
   isSelected() {
-    const { nodes } = this.props;
-    const node = nodes[this.hostname()];
+    const { selected } = this.agentData();
 
-    return node && node.selected;
+    return selected;
   }
 
   isHighlighted() {
@@ -205,12 +259,6 @@ class ConnectedNode extends React.Component {
     const { minimized, node } = this.props;
     const { ping } = this.agentData() || {};
     const classes = ['node'];
-    const tooltip = (
-      `<div class="tooltip-inner align-left info-tooltip">
-         Hostname: <em>${this.hostname()}</em><br/>
-         Docker Engine Version: <em>${this.version()}</em>
-       </div>`
-    );
 
     if (ping) classes.push('ping');
     if (this.isHighlighted()) classes.push('highlighted');
@@ -220,16 +268,14 @@ class ConnectedNode extends React.Component {
            onClick={(ev) => this.toggle(ev)}
            className={classes.join(' ')}>
         {this.renderChart()}
-        <Icon.Power className={'light'} size={'1em'} />
+        {this.icon()}
         {this.chartButton()}
-        <h2
-          className={'hostname'}
-          title={tooltip}
-          data-html={'true'}
-          data-original-title={tooltip}
-          data-toggle={'tooltip'}>
+        <h3
+          data-original-title={this.hostname()}
+          data-toggle={'tooltip'}
+          className={'hostname'}>
           {this.hostname()}
-        </h2>
+        </h3>
         <div className={'badges'}>
           {this.leaderBadge()}
           {this.roleBadge()}
@@ -251,7 +297,10 @@ const select = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setSelected: (hostname) => dispatch(selectNode(hostname)),
+    setSelected: (hostname) => {
+      dispatch(selectService(null));
+      dispatch(selectNode(hostname));
+    },
   }
 }
 

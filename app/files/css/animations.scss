@@ -1,0 +1,32 @@
+@keyframes ping {
+  0% {
+    box-shadow: 0 0 0 0px rgba($success, 0.4);
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    box-shadow: 0 0 0 3em rgba($success, 0);
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce-logo {
+  0%   { background-position: 1.2em 0.2em; }
+  10%  { background-position: 1.2em 0.2em; }
+  30%  { background-position: 1.2em -0.4em; }
+  50%  { background-position: 1.2em 0.2em; }
+  57%  { background-position: 1.2em 0.1em; }
+  64%  { background-position: 1.2em 0.2em; }
+  100%  { background-position: 1.2em 0.2em; }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0px rgba($warning, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 3em rgba($warning, 0);
+  }
+}

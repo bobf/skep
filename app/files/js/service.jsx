@@ -4,6 +4,7 @@ import Mounts from './mounts';
 import Messages from './messages';
 
 import { selectService } from './redux/models/dashboard';
+import { selectNode } from './redux/models/node';
 
 import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
@@ -188,9 +189,13 @@ class ConnectedService extends React.Component {
   }
 
   level() {
-    const { tasks } = this.props.service;
+    const { tasks, errors } = this.props.service;
     const running = this.runningCount();
     const total = this.replicas();
+
+    if (errors.length) {
+      return 'danger';
+    }
 
     switch (running) {
       case 0:
@@ -214,15 +219,18 @@ class ConnectedService extends React.Component {
   }
 
   countBadge() {
-    const { tasks } = this.props.service;
-    const tooltip = `<em>${this.runningCount()} / ${this.replicas()}</em> replicas running <em>${this.statusSymbol()}</em>`;
+    const { tasks, errors } = this.props.service;
+    const message = Messages.service.replicas.tooltip(
+      this.replicas(), this.runningCount(), this.statusSymbol()
+    );
+    const tooltip = [message];
+    if (errors.length) tooltip.push(Messages.service.replicas.errors(errors));
 
     return (
       <span
         className={`badge bg-${this.level()}`}
-        title={tooltip}
         data-html={'true'}
-        data-original-title={tooltip}
+        data-original-title={`<div class='align-left'>${tooltip.join('<br/>')}</div>`}
         data-toggle={'tooltip'}>
         {this.runningCount()}
       </span>
@@ -274,7 +282,7 @@ class ConnectedService extends React.Component {
     const selectedContainerIDs = new Set(node.containers.map(container => container.id));
     const intersect = tasks.filter(task => selectedContainerIDs.has(task.containerID));
 
-    return intersect.length >= 0;
+    return intersect.length > 0;
   }
 
   isSelected() {
@@ -332,11 +340,8 @@ class ConnectedService extends React.Component {
 
   tasks() {
     const { tasks } = this.props.service;
-    const sortBy = (task) => (task.when && moment(task.when) || Infinity);
 
-    return tasks.sort(
-      (a, b) => (sortBy(a) - sortBy(b))
-    );
+    return tasks;
   }
 
   toggle(ev) {
@@ -526,7 +531,10 @@ const select = (state) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setSelected: serviceName => dispatch(selectService(serviceName)),
+    setSelected: serviceName => {
+      dispatch(selectNode(null));
+      dispatch(selectService(serviceName));
+    },
   };
 };
 

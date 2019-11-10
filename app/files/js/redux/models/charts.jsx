@@ -2,8 +2,8 @@ const REQUEST = 'skep/chart/REQUEST';
 const RESPONSE = 'skep/chart/RESPONSE';
 export const NO_DATA = 'skep/chart/NO_DATA';
 
-function requestChart(type, calculatorParams) {
-  const params = { chartType: type, params: calculatorParams };
+function requestChart(type, chartsParams) {
+  const params = { chartType: type, params: chartsParams };
 
   Skep.socket.emit('chart_request', params);
 

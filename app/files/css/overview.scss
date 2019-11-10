@@ -15,8 +15,9 @@
   width: 100%;
   z-index: 999999999999999;
   border-bottom: 1px solid $outline-dark;
-  padding-top: 0.2em;
+  padding-top: 0.4em;
   visibility: visible;
+  transition: background-color 0.3s ease;
 
   &.visible {
     visibility: visible;
@@ -29,13 +30,66 @@
     color: $url-hover-color;
     opacity: 0.8;
   }
+
+  .ping-wrapper {
+    padding: 4em;
+    // This div is big but invisible. Since it is a child of the overview, it
+    // triggers the overview-open event. We switch it off here.
+    pointer-events: none;
+  }
+
+  .ping-pulse {
+    // Enable pointer events for tooltip on small ping icon.
+    pointer-events: all;
+    width: 1em;
+    height: 1em;
+    right: 1.4em;
+    top: 0.8em;
+    position: absolute;
+    background-color: transparent;
+    border-radius: 0.5em;
+    opacity: 0.8;
+
+    .icon {
+      transition: opacity 0.8s ease;
+      height: 2em;
+      width: 2em;
+      left: -0.53em;
+      top: -0.5em;
+      position: absolute;
+      color: $success;
+    }
+  }
+
+  &.ping {
+    .ping-pulse {
+      animation: ping 1s 1;
+    }
+  }
+
+  &.connected {
+    .connection-error {
+      display: none;
+    }
+  }
+
+  &.disconnected {
+    text-align: center;
+    background-color: #ce4a4a59;
+    .connection-error {
+      display: block;
+      a {
+        color: $info;
+      }
+    }
+  }
 }
 
 .overview {
   border-bottom: 3px solid $outline-dark;
   background-image: url('../images/logo.svg');
   background-repeat: no-repeat;
-  background-size: auto $overview-height - 1em;;
+  background-size: auto $overview-height - 1em;
   background-position: 1.2em 0.1em;
   min-height: $overview-height;
   max-height: $overview-height;
@@ -63,6 +117,12 @@
     display: inline-block;
     float: left;
     height: $overview-height;
+    opacity: 0.3;
+    background-color: $light;
+  }
+
+  &.bounce-logo .spacer {
+    opacity: 0;
   }
 
   .headers {
@@ -149,13 +209,14 @@
     h3 {
       font-size: 1em;
       color: $label-text;
-      margin-bottom: 0;
+      margin-bottom: 0.4em;
     }
 
     display: table;
     padding-left: 1em;
     margin-top: -1em;
     height: $overview-height;
+    line-height: 1.3em;
 
     .row-chunk {
       display: inline;
@@ -221,17 +282,6 @@
   }
 }
 
-
 .bounce-logo {
   animation: bounce-logo 1.5s ease infinite;
-}
-
-@keyframes bounce-logo {
-  0%   { background-position: 1.2em 0.2em; }
-  10%  { background-position: 1.2em 0.2em; }
-  30%  { background-position: 1.2em -0.4em; }
-  50%  { background-position: 1.2em 0.2em; }
-  57%  { background-position: 1.2em 0.1em; }
-  64%  { background-position: 1.2em 0.2em; }
-  100%  { background-position: 1.2em 0.2em; }
 }

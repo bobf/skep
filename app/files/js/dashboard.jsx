@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
 import store from './redux/store';
+import Messages from './messages';
 import NodeList from './node_list';
 import Overview from './overview';
+import PingIcon from './ping_icon';
 import Stack from './stack';
 
 class ConnectedDashboard extends React.Component {
@@ -17,6 +19,7 @@ class ConnectedDashboard extends React.Component {
       modalVisible: false,
       modalHidden: true,
       overviewVisible: false,
+      overviewHidden: true,
       obscured: false
     }
   }
@@ -105,31 +108,50 @@ class ConnectedDashboard extends React.Component {
   toggleOverview(ev, visible) {
     if (Skep.modal) return false;
 
-    this.setState({ overviewVisible: visible });
-
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
 
     if (visible) {
-      this.setState({ modalHidden: false });
-      this.setState({ modalVisible: true });
+      this.setState({ modalHidden: false, modalVisible: true, overviewVisible: true, overviewHidden: false });
     } else {
-      this.setState({ modalHidden: true });
+      this.setState({ modalHidden: true, overviewHidden: true });
       this.timeout = setTimeout(
-        () => this.setState({ modalVisible: false }),
+        () => this.setState({ modalVisible: false, overviewVisible: false }),
         500
       );
     }
   }
 
+  renderConnectionError() {
+    return (
+      <span className={'connection-error'}>
+        {Messages.skep.connectionError}
+      </span>
+    );
+  }
+
+  renderPingIcon() {
+    return (
+      <PingIcon />
+    );
+  }
+
   renderOverviewMinimized() {
     const { overviewVisible } = this.state;
-    const className = overviewVisible ? '' : 'visible';
+    const { connectionLive, ping } = this.props.swarm;
+
+    const classes = ['overview-minimized'];
+    if (overviewVisible) classes.push('visible');
+    if (ping) classes.push('ping');
+    classes.push(connectionLive ? 'connected' : 'disconnected')
+
     return (
       <div
         onMouseEnter={(ev) => this.toggleOverview(ev, true)}
-        className={`overview-minimized ${className}`}>
+        className={classes.join(' ')}>
+        {this.renderConnectionError()}
+        {this.renderPingIcon()}
       </div>
     );
   }
@@ -149,12 +171,27 @@ class ConnectedDashboard extends React.Component {
   }
 
   renderOverview() {
-    const { overviewVisible } = this.state;
+    const { overviewVisible, overviewHidden } = this.state;
+    if (!overviewVisible) return null;
 
     return (
       <Overview
-        visible={overviewVisible}
+        visible={!overviewHidden}
         closeCallback={(ev) => this.toggleOverview(ev, false)} />
+    );
+  }
+
+  renderViewSwitchButton() {
+    const { stacksMinimized } = this.state;
+    const classes = ['toggle-section btn btn-secondary'];
+    if (stacksMinimized) classes.push('stacks-minimized');
+
+    return (
+      <button
+        onClick={() => this.toggleStacks()}
+        className={classes.join(' ')}>
+        {stacksMinimized ? <Icon.ChevronsLeft/> : <Icon.ChevronsRight/>}
+      </button>
     );
   }
 
@@ -171,18 +208,23 @@ class ConnectedDashboard extends React.Component {
         <div className={this.state.obscured ? 'obscured' : ''} id={'dashboard'}>
           <div className={'section minimized'} id={'nodes'}>
             <div className={'section-content'}>
+              <h2 className={'section-title'}>
+                <Icon.Server className={'icon'} />
+                {'Nodes'}
+              </h2>
               <NodeList minimized={minimized} nodes={nodes} />
             </div>
           </div>
 
-          <button
-            onClick={() => this.toggleStacks()}
-            className={'toggle-section btn btn-secondary'}>
-            {this.state.stacksMinimized ? <Icon.ChevronsLeft/> : <Icon.ChevronsRight/>}
-          </button>
+          {this.renderViewSwitchButton()}
+          <div className={'divider'}></div>
 
           <div id={'stacks'} className={'section'}>
             <div className={'section-content'}>
+              <h2 className={'section-title'}>
+                <Icon.Layers className={'icon'} />
+                {'Stacks'}
+              </h2>
               <table className='stacks'>
                 <tbody>
                   {this.manifest().stacks.map(stack => this.renderStack(stack))}

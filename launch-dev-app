@@ -5,5 +5,5 @@ export SKEP_ENV=development
 export FLASK_APP=controller.py
 export FLASK_DEBUG=1
 export SKEP_LISTEN_HOST=0.0.0.0
-export SKEP_CALCULATOR_URL=http://localhost:5040/
+export SKEP_CHARTS_URL=http://localhost:5040/
 pipenv run python app.py
