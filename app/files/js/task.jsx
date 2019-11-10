@@ -24,7 +24,7 @@ class ConnectedTask extends React.Component {
     const slot = `Slot: <em>${this.slotID()}</em>`;
     const name = `Container: <em>${this.containerName()}</em>`;
     const digest = `Digest: <em>${this.digest(true)}</em>`;
-    const content = [slot, name, digest, upToDate, error].filter(item => item).join('<br/>');
+    const content = [host, slot, name, digest, upToDate, error].filter(item => item).join('<br/>');
     return `<div class="align-left info-tooltip">${content}</div>`;
   }
 
