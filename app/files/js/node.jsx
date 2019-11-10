@@ -135,12 +135,10 @@ class ConnectedNode extends React.Component {
 
     if (since > Skep.thresholds.global.timeout.danger) {
       icon = Icon.AlertCircle;
-      classes.push('text-danger');
-      classes.push('pulse');
+      classes.push('error');
     } else if (since > Skep.thresholds.global.timeout.warning) {
       icon = Icon.AlertCircle;
-      classes.push('text-warning');
-      classes.push('pulse');
+      classes.push('warning');
     } else {
       icon = Icon.Power;
     }

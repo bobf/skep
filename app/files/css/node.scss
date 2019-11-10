@@ -53,8 +53,14 @@
   transition: color 1500ms, opacity 1500ms;
   border-radius: 0.6em;
 
-  &.pulse {
-    animation: pulse-warning 1s infinite;
+  &.warning {
+    animation: pulse-warning-loop 5s infinite;
+    color: $warning;
+  }
+
+  &.error {
+    animation: pulse-error-loop 5s infinite;
+    color: $danger;
   }
 }
 

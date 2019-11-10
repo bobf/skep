@@ -31,6 +31,15 @@
   }
 }
 
+@keyframes pulse-error-loop {
+  0% {
+    box-shadow: 0 0 0 0px rgba($danger, 0.4);
+  }
+  20% {
+    box-shadow: 0 0 0 3em rgba($danger, 0);
+  }
+}
+
 @keyframes pulse-warning {
   0% {
     box-shadow: 0 0 0 0px rgba($warning, 0.4);
@@ -40,11 +49,29 @@
   }
 }
 
+@keyframes pulse-warning-loop {
+  0% {
+    box-shadow: 0 0 0 0px rgba($warning, 0.4);
+  }
+  20% {
+    box-shadow: 0 0 0 3em rgba($warning, 0);
+  }
+}
+
 @keyframes pulse-success {
   0% {
     box-shadow: 0 0 0 0px rgba($success, 0.4);
   }
   100% {
+    box-shadow: 0 0 0 3em rgba($success, 0);
+  }
+}
+
+@keyframes pulse-success-loop {
+  0% {
+    box-shadow: 0 0 0 0px rgba($success, 0.4);
+  }
+  20% {
     box-shadow: 0 0 0 3em rgba($success, 0);
   }
 }
