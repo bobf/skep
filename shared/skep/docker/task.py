@@ -45,13 +45,7 @@ class Task(ImageParser):
         if not self.task:
             return None
 
-        id = self.container_status().get('ContainerID', None)
-        if id is None:
-            return None
-
-        # Remove `/` prefix from container name; may be a slight bug in Python
-        # Docker library.
-        return id.strip('/')
+        return self.container_status().get('ContainerID', None)
 
     def image(self):
         return self.parse_image(self.task['Spec']['ContainerSpec'].get('Image', None))

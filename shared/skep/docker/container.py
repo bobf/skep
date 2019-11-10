@@ -2,7 +2,9 @@ class Container:
     def __init__(self, container):
         self.attrs = container.attrs
         self.id = container.id
-        self.name = container.name
+        # Remove `/` prefix from container name; may be a slight bug in Python
+        # Docker library.
+        self.name = container.name.strip('/')
         self.image = container.attrs['Image']
 
     def error(self):

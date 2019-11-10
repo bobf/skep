@@ -122,6 +122,9 @@ class StatRunner:
             try:
                 container_id, stats = q.get(block=False)
                 stats['id'] = container_id
+                # Remove `/` prefix from container name; may be a slight bug in
+                # Python Docker library.
+                stats['name'] = stats['name'].strip('/')
                 containers.append(stats)
             except queue.Empty:
                 break
