@@ -3,6 +3,10 @@
   position: absolute;
   top: 0;
   margin-top: $overview-sticky-height;
+
+  .section-content {
+    margin-bottom: 3em;
+  }
 }
 
 h2.section-title {
