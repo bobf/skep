@@ -295,16 +295,25 @@ class ConnectedService extends React.Component {
     return networks;
   }
 
-  isHighlighted() {
+  selectedNode() {
     const { nodes } = this.props;
-    const node = Object.values(nodes).find(node => node.selected);
+
+    return Object.values(nodes).find(node => node.selected);
+  }
+
+  tasksOnSelectedNode() {
+    const node = this.selectedNode();
     if (!node) return false;
 
     const { tasks } = this.props.service;
     const selectedContainerIDs = new Set(node.containers.map(container => container.id));
     const intersect = tasks.filter(task => selectedContainerIDs.has(task.containerID));
 
-    return intersect.length > 0;
+    return intersect;
+  }
+
+  isSynced() {
+    return this.tasks().every(task => task.upToDate);
   }
 
   isSelected() {
@@ -463,9 +472,11 @@ class ConnectedService extends React.Component {
     const networks = this.commonNetworks();
     const networkMessage = Messages.service.networks(this.networkNames(networks));
     const networkTooltip = `<div class="tooltip-inner align-left">${networkMessage}</div>`
+    const highlightedTasks = this.tasksOnSelectedNode();
+    const nodeTooltip = Messages.service.node(name, highlightedTasks, this.selectedNode());
 
     if (this.isSelected()) classes.push('selected');
-    if (this.isHighlighted()) classes.push('highlighted');
+    if (highlightedTasks.length) classes.push('highlighted');
     if (updating) {
       const complete = this.updatePercentComplete();
       // Our CSS steps at 10% increments only so we round down to nearest 10.
@@ -489,7 +500,15 @@ class ConnectedService extends React.Component {
             data-html={'true'}
             data-original-title={networkTooltip}
             data-toggle={'tooltip'}>
-            <Icon.Wifi size={'1.4em'} />
+            <Icon.Link size={'1.4em'} />
+          </span>
+          <span
+            className={'node-icon'}
+            data-title={nodeTooltip}
+            data-html={'true'}
+            data-original-title={nodeTooltip}
+            data-toggle={'tooltip'}>
+            <Icon.Server size={'1.4em'} />
           </span>
           {this.countBadge()}
           {this.renderMode()}
@@ -513,9 +532,13 @@ class ConnectedService extends React.Component {
   renderExpanded() {
     const { name, image, environment, mounts, updating } = this.props.service;
     const { stack } = this.props;
+    const classes = ['service'];
+
+    if (updating && this.isSynced()) classes.push('synced');
+    if (updating) classes.push('updating');
 
     return (
-      <div className={'service ' + (updating ? 'updating' : '')}>
+      <div className={classes.join(' ')}>
         <div className={'service-badges'}>
           {this.countBadge()}
           {this.renderMode()}

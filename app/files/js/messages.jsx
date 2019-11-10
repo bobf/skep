@@ -48,6 +48,7 @@ const Messages = {
   },
 
   service: {
+    node: (service, tasks, node) => `<em>${service}</em> has <em>${tasks.length}</em> ${Messages.pluralize('task', tasks.length)} running on <em>${node && node.hostname}</em>.`,
     networks: (networks) => `Reachable via the following <em>${networks.length}</em> ${Messages.pluralize('network', networks.length)}:<br/>${networks.join('<br/>')}`,
     replicas: {
       tooltip: (replicaCount, runningCount, statusSymbol) => `<em>${runningCount} / ${replicaCount}</em> ${Messages.pluralize('replica', runningCount)} running <em>${statusSymbol}</em>`,

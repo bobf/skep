@@ -58,7 +58,7 @@ a.service-name:hover, a.image:hover {
   opacity: 1;
 }
 
-.service .network-icon {
+.service .network-icon, .service .node-icon {
   visibility: hidden;
   position: absolute;
   left: 0.3em;
@@ -69,6 +69,11 @@ a.service-name:hover, a.image:hover {
 .service.networked .network-icon {
   visibility: visible;
   color: rgba(70,120,235,0.6);
+}
+
+.service.highlighted .node-icon {
+  visibility: visible;
+  color: rgba(240,240,102,0.3);
 }
 
 .service {
@@ -153,6 +158,12 @@ tr.service:hover {
   .mapping.btn {
     visibility: visible;
   }
+}
+
+.service.synced {
+  background-color: rgba($success, 0.1);
+  border-color: rgba($success, 0.5);
+  animation: pulse-success 1.5s ease 1;
 }
 
 .service.updating {

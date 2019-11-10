@@ -204,6 +204,7 @@ class ConnectedTask extends React.Component {
 
     if (this.isHighlighted()) classes.push('highlighted');
     if (!isUpToDate) classes.push('out-of-sync');
+    if (errors.length) classes.push('error');
     if (updating && isUpToDate) classes.push('synced');
     const iconClass = errors.length ? 'text-danger' : (isUpToDate ? '' : 'text-warning');
 

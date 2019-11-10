@@ -22,12 +22,30 @@
   100%  { background-position: 1.2em 0.2em; }
 }
 
-@keyframes pulse {
+@keyframes pulse-error {
+  0% {
+    box-shadow: 0 0 0 0px rgba($danger, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 3em rgba($danger, 0);
+  }
+}
+
+@keyframes pulse-warning {
   0% {
     box-shadow: 0 0 0 0px rgba($warning, 0.4);
   }
   100% {
     box-shadow: 0 0 0 3em rgba($warning, 0);
+  }
+}
+
+@keyframes pulse-success {
+  0% {
+    box-shadow: 0 0 0 0px rgba($success, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 3em rgba($success, 0);
   }
 }
 
