@@ -56,15 +56,16 @@ def handle_init():
 
 @socketio.on('chart_request')
 def handle_chart_request(params):
-    log('chart_request [{type}] for [sid: {sid}]',
-        dict(type=params['chartType'], sid=request.sid))
-    url = os.environ['SKEP_CHARTS_URL']
+    url = urllib.parse.urljoin(os.environ['SKEP_CHARTS_URL'], 'chart')
     params['sid'] = request.sid
     charts_request = Request(
-        urllib.parse.urljoin(url, 'chart'),
+        url,
         data=json.dumps(params).encode('utf8'),
         headers={'Content-Type': 'application/json'}
     )
+
+    log('chart_request [{type}] for [sid: {sid}] [{url}]',
+        dict(type=params['chartType'], sid=request.sid, url=url))
 
     response = urllib.request.urlopen(charts_request)
 
