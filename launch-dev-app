@@ -10,4 +10,6 @@ pipenv run gunicorn app -b 0.0.0.0:5000 \
                         -b 0.0.0.0:${SKEP_PRIVATE_PORT} \
                         --workers 1 \
                         --no-sendfile \
-                        --worker-class eventlet
+                        --worker-class eventlet \
+                        --error-logfile - \
+                        --access-logfile -

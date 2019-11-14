@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import urllib.parse
 from urllib.request import Request
@@ -26,6 +27,16 @@ application.json_encoder = DelegatingJSONEncoder
 socketio = SocketIO(application)
 cache = { 'manifest': {}, 'nodes': {} }
 
+logger = logging.getLogger('skep:app')
+log_level = getattr(logging, os.environ.get('LOG_LEVEL', 'info').upper())
+logger.setLevel(log_level)
+handler = logging.StreamHandler()
+handler.setLevel(log_level)
+logger.addHandler(handler)
+
+def log(msg, params=None, level='INFO'):
+    getattr(logger, level.lower())(msg.format(**(params or {})))
+
 @application.route('/files/<path:path>')
 def files(path):
     return send_from_directory('files', path)
@@ -45,6 +56,8 @@ def handle_init():
 
 @socketio.on('chart_request')
 def handle_chart_request(params):
+    log('chart_request [{type}] for [sid: {sid}]',
+        dict(type=params['chartType'], sid=request.sid))
     url = os.environ['SKEP_CHARTS_URL']
     params['sid'] = request.sid
     charts_request = Request(
@@ -59,6 +72,8 @@ def handle_chart_request(params):
 def chart_response_create():
     data = request.get_json()
     sid = data.pop('sid')
+    log('chart_response {meta} for [sid: {sid}]',
+        dict(meta=data['meta'], sid=sid))
     socketio.emit('chart_response', data, room=sid)
 
     return 'OK', 200
