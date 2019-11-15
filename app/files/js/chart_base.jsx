@@ -100,6 +100,14 @@ class ChartBase extends React.Component {
     );
   }
 
+  renderError() {
+    return (
+      <div>
+        {Messages.chart.error}
+      </div>
+    );
+  }
+
   renderChartContent(chart) {
     return (
       <div className={'chart-content'}>
@@ -109,13 +117,14 @@ class ChartBase extends React.Component {
   }
 
   render() {
-    const { chart } = this.props.data || {};
+    const { chart, error } = this.props.data || {};
     const { closeCallback } = this.props;
-    const className = chart ? 'ready' : 'loading';
+    const className = chart ? 'ready' : (error ? 'error' : 'loading');
+    const content = error ? this.renderError() : this.renderChartContent(chart);
 
     return (
       <Modal
-        content={this.renderChartContent(chart)}
+        content={content}
         closeCallback={closeCallback}
         wrapperClass={'chart-wrapper'}
         contentClass={`chart ${className}`}

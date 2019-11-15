@@ -150,7 +150,8 @@ class ConnectedTask extends React.Component {
 
   chartData() {
     const { containerID } = this.props.task;
-    const { container } = this.props.charts;
+    const { container, error } = this.props.charts;
+    if (error) return { error: true };
 
     return container[containerID];
   }

@@ -30,6 +30,13 @@
     border-bottom: 1px solid $outline-dark;
     margin-bottom: 1em;
   }
+
+  .error {
+    font-size: 1.2em;
+    color: $danger;
+    opacity: 0.5;
+    text-align: center;
+  }
 }
 
 .modal-content:hover {

@@ -190,7 +190,8 @@ class ConnectedNode extends React.Component {
   }
 
   chartData() {
-    const { node } = this.props.charts;
+    const { node, error } = this.props.charts;
+    if (error) return { error: true };
 
     return node[this.hostname()];
   }

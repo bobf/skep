@@ -13,6 +13,8 @@ function requestChart(type, chartsParams) {
 function reduceResponse(state, action) {
   const newState = {};
   const { payload } = action;
+  if (payload.error) return { error: true };
+
   const { type, id } = payload.meta;
 
   newState.node = Object.assign({}, state.nodes, {});

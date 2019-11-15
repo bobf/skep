@@ -68,7 +68,20 @@ def handle_chart_request(params):
              sid=request.sid,
              url=charts_request.full_url))
 
-    response = urllib.request.urlopen(charts_request)
+    try:
+        response = urllib.request.urlopen(charts_request)
+    except urllib.error.HTTPError as e:
+        log('chart_request:failure [{url}] [{headers}] [{url}] [{status} {reason}]'.format(
+             url=e.url,
+             headers=e.headers.items(),
+             status=e.status,
+             reason=e.reason))
+        chart = dict(
+            meta=params.get('params'),
+            chartType=params.get('chartType'),
+            error=True
+        )
+        socketio.emit('chart_response', chart)
 
 @application.route("/chart_response", methods=["POST"])
 def chart_response_create():

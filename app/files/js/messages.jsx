@@ -28,6 +28,7 @@ const Messages = {
   chart: {
     noData: 'Metrics currently unavailable. Try again in a few minutes.',
     loading: 'Loading chart data ...',
+    error: 'An error occurred requesting chart data.',
   },
 
   node: {
@@ -52,7 +53,7 @@ const Messages = {
     networks: (networks) => `Reachable via the following <em>${networks.length}</em> ${Messages.pluralize('network', networks.length)}:<br/>${networks.join('<br/>')}`,
     replicas: {
       tooltip: (replicaCount, runningCount, statusSymbol) => `<em>${runningCount} / ${replicaCount}</em> ${Messages.pluralize('replica', runningCount)} running <em>${statusSymbol}</em>`,
-      errors: (errors) => `<span class='text-danger'><em>${errors.length}</em> ${Messages.pluralize('error', errors.length)} reported by tasks in the last <em>60</em> seconds</span>`,
+      errors: (errors) => `<span class='text-danger'><em>${errors.length}</em> ${Messages.pluralize('error', errors.length)} reported by tasks in the last <em>${errors[errors.length - 1].since}</em> ${Messages.pluralize('second', errors[errors.length - 1].since)}</span>`,
     },
     state: {
       inconsistentImages: 'Tasks are running inconsistent images. Compare task details for more information.',
