@@ -14,7 +14,7 @@ class Base:
         return db, cursor
 
     def compact(self, cursor):
-        if random.randrange(1, 1000) != 666:
+        if random.randrange(1, 100000) != 666:
             return
 
         for table in ('nodes', 'containers'):

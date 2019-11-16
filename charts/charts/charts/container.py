@@ -5,14 +5,13 @@ import traceback
 from charts.charts.base import Base
 
 class Container(Base):
-    def __init__(self, db_path, data, publisher):
+    def __init__(self, db_path, data, publisher, logger):
         self.id = data.get('containerID', None)
         self.table = 'containers'
         self.columns = ['tstamp', 'id', 'cpu', 'system_cpu',
                         'ram_usage', 'ram_limit', 'disk_ops', 'network_bytes']
         self.meta = { 'id': self.id, 'type': 'container' }
-
-        super().__init__(db_path, data, publisher)
+        super().__init__(db_path, data, publisher, logger)
 
     def titles(self):
         return ('Time', 'Disk', 'Network', 'RAM', 'CPU')
