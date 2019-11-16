@@ -30,7 +30,7 @@ class NodeStat(Base):
         total = data['memory'].get('total', 0)
         available = data['memory'].get('available', 0)
 
-        return available / total
+        return 1 - (available / total)
 
     def load(self, data):
         return data['load']['averages'][0]
