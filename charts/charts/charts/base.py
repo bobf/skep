@@ -7,11 +7,12 @@ from operator import itemgetter
 from charts.orm.base import Base as ORMBase
 
 class Base:
-    def __init__(self, db_path, data, publisher):
+    def __init__(self, db_path, data, publisher, logger):
         self.db_path = db_path
         self.time_indices, self.data = self.fetch_data(data)
         self.period = self.calculate_period()
         self.publisher = publisher
+        self.logger = logger
 
     def titles(self):
         raise NotImplementedError
@@ -40,7 +41,7 @@ class Base:
         return { 'titles': self.titles(), 'data': self.chart_data() }
 
     def connect(self):
-        return ORMBase(self.db_path).connect()
+        return ORMBase(self.db_path, self.logger).connect()
 
     def fetch_data(self, data):
         now = time.time()

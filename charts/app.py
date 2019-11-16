@@ -51,7 +51,7 @@ def chart_create():
 
     params = data['params']
     chart_type = data['chartType']
-    chart = chart_types[chart_type](db_path, params, publisher)
+    chart = chart_types[chart_type](db_path, params, publisher, logger)
     _result = pool.apply_async(chart.build, (data['sid'],))
 
     return 'OK', 200
@@ -62,8 +62,8 @@ def stats_create():
     containers = data['containers']
     # Convert JS microseconds to Python milliseconds:
     tstamp = data['tstamp'] / 1000
-    [ContainerStat(db_path).save(container, tstamp) for container in containers]
-    NodeStat(db_path).save(data, tstamp)
+    [ContainerStat(db_path, logger).save(container, tstamp) for container in containers]
+    NodeStat(db_path, logger).save(data, tstamp)
 
     return 'OK', 200
 
