@@ -21,4 +21,15 @@ class Base:
             values=', '.join(['?'] * len(values))
         )
         sql = "INSERT INTO {table} ({columns}) VALUES ({values})".format(**params)
-        return cursor.execute(sql, values)
+
+        return try_execute(cursor, sql, values)
+
+    def try_execute(self, cursor, sql, values, attempts=0):
+        try:
+            return cursor.execute(sql, values, e)
+        except sqlite3.OperationalError as e:
+            if attempts == 5:
+                return None
+
+            return self.try_execute(cursor, sql, values, attempts + 1)
+
