@@ -18,9 +18,9 @@ class Base:
             return
 
         for table in ('nodes', 'containers'):
-            query = "DELETE FROM {table} WHERE tstamp < DATETIME('now', '-30 days')".format(table=table)
+            sql = "DELETE FROM {table} WHERE tstamp < DATETIME('now', '-30 days')".format(table=table)
             self.logger.warn('Compacting database: {query}'.format(query=query))
-            self.try_execute(cursor, query)
+            self.execute(cursor, query)
 
     def database(self):
         return sqlite3.connect(self.db_path)
@@ -34,14 +34,4 @@ class Base:
         )
         sql = "INSERT INTO {table} ({columns}) VALUES ({values})".format(**params)
 
-        return self.try_execute(cursor, sql, values)
-
-    def try_execute(self, cursor, sql, values=(), attempts=0):
-        try:
-            return cursor.execute(sql, values)
-        except sqlite3.OperationalError as e:
-            if attempts == 5:
-                raise
-
-            return self.try_execute(cursor, sql, values, attempts + 1)
-
+        return self.execute(cursor, sql, values)
