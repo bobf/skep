@@ -45,7 +45,9 @@
 }
 
 .node .light {
-  position: absolute;
+  position: relative;
+  display: inline;
+  float: left;
   height: 1.2em;
   width: 1.2em;
   color: $outline-dark;
@@ -126,7 +128,6 @@
   font-size: 1.2em;
   overflow-x: hidden;
   text-overflow: ellipsis;
-  margin-left: 1.4em;
   display: inline-block;
   color: $label-text-dark;
   padding: 0.2em 0.4em;
@@ -134,8 +135,8 @@
 
 .maximized .node h3.hostname {
   display: inline-block;
-  width: 15em;
-  max-width: 15em;
+  width: 17em;
+  max-width: 17em;
   margin-top: -0.2em;
 }
 
