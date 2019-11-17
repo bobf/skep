@@ -18,9 +18,9 @@ class Base:
             return
 
         for table in ('nodes', 'containers'):
-            sql = "DELETE FROM {table} WHERE tstamp < DATETIME('now', '-30 days')".format(table=table)
-            self.logger.warn('Compacting database: {query}'.format(query=query))
-            self.execute(cursor, query)
+            sql = "DELETE FROM {table} WHERE DATETIME(tstamp, 'unixepoch') < DATETIME('now', '-30 days')".format(table=table)
+            self.logger.warn('Compacting database: {sql}'.format(sql=sql))
+            cursor.execute(sql)
 
     def database(self):
         return sqlite3.connect(self.db_path)
@@ -34,4 +34,4 @@ class Base:
         )
         sql = "INSERT INTO {table} ({columns}) VALUES ({values})".format(**params)
 
-        return self.execute(cursor, sql, values)
+        return cursor.execute(sql, values)
