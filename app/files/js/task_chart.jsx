@@ -48,6 +48,9 @@ class TaskChart extends ChartBase {
           textStyle: { color: '#999' },
           titleTextStyle: { color: '#aaa' },
           title: 'Network / Disk bps',
+          viewWindow: {
+            min: 0,
+          },
           gridlines: {
             color: '#333'
           }
