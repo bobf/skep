@@ -76,7 +76,7 @@ const Messages = {
 
   task: {
     error: (error) => `<span class='error-message'>${error.message}</span>&nbsp;<span class='error-tstamp'><em>(${error.since} ${Messages.pluralize('second', error.since)} ago)</em></span>`,
-    upToDate: (upToDate) => upToDate ? `Task is up-to-date with service specification. ✓` : `Task is pending an update or is otherwise running an incorrect image.`,
+    upToDate: (upToDate) => upToDate ? `Task is up-to-date with service specification. ✓` : `Task is waiting to update/paused updating.`,
   },
 };
 
