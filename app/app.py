@@ -115,6 +115,11 @@ def manifest_create():
 
     return 'Unauthorized', 401
 
+# Catch-all for favicon etc.
+@application.route('/<path:path>')
+def default(path):
+    return send_from_directory('files/root', path)
+
 def authorize_request(request):
     host, _, port = request.host.partition(':')
 
