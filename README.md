@@ -19,9 +19,7 @@ You may find _Skep_ to be a useful addition to your toolbox along with projects 
 
 Launch _Skep_ using the default configuration by running the following command on any _Swarm_ manager:
 ```
-curl -sSL https://raw.githubusercontent.com/bobf/skep/master/docker-compose.yml |\
-docker-compose -f - config |\
-docker stack deploy -c - skep
+curl -sSL https://raw.githubusercontent.com/bobf/skep/master/docker-compose.yml | docker-compose -f - config | docker stack deploy -c - skep
 ```
 
 _Skep_ will be available on any _Swarm_ node on port `8080`.
