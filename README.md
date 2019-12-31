@@ -180,12 +180,12 @@ _Skep_ is comprised of four services:
 
 * An _agent_ which is deployed globally (i.e. to all _Swarm_ nodes);
 * A _monitor_ which must be deployed to one manager node;
-* A _charts_ which stores and calculates chart data which can be deployed to any node and must have only one replica;
+* A _charts_ service which stores and calculates chart data which can be deployed to any node and must have only one replica;
 * A web _app_ that can be deployed to any node and must have only one replica.
 
 The _agent_ periodically harvests system and container metrics which are sent to the _charts_ and _app_ services; the _app_ service forwards the data to the [_React_](https://reactjs.org/) front end using [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) / [socket.io](https://socket.io/). The _charts_ service retains the data in an [SQLite3](https://www.sqlite.org/version3.html) database.
 
-Chart requests are sent to the _app_ which forwards to the _charts_. A confirmation is immediately returned to the front end while the _charts_ uses one of its worker processes to render the chart data. When the data has been compiled it is sent back to the front end via a _WebSocket_ event.
+Chart requests are sent to the _app_ which forwards to the _charts_ service. A confirmation is immediately returned to the front end while the _charts_ service uses one of its worker processes to render the chart data. When the data has been compiled it is sent back to the front end via a _WebSocket_ event.
 
 _Redux_ is used in the front end to manage events and data storage/manipulation.
 
@@ -195,7 +195,7 @@ All services are written in _Python 3_.
 
 _Skep_ utilises the excellent [Docker SDK for Python](https://docker-py.readthedocs.io/en/stable/index.html) extensively.
 
-The web application is also written in _Python_ using the equally excellent [Flask](http://flask.pocoo.org/) web framework and [Flask-SocketIO](https://flask-socketio.readthedocs.io/en/latest/).
+The web application uses the equally excellent [Flask](http://flask.pocoo.org/) web framework and [Flask-SocketIO](https://flask-socketio.readthedocs.io/en/latest/).
 
 The front end is read-only. No changes to a swarm can be made via the web application. A best-effort approach to filter sensitive data (e.g. passwords in environment configurations) is implemented using simple heuristics. Regardless, as with all similar systems, it is highly recommended that you run _Skep_ behind a firewall and/or an authentication layer.
 
