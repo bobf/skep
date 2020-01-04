@@ -2,7 +2,8 @@
 
 _Skep_ is a monitoring dashboard for [_Docker Swarm_](https://docs.docker.com/engine/swarm/).
 
-See [skepdocker.github.io](https://skepdocker.github.io/) for features, screenshots, etc..
+![Skep](doc/images/screenshot.png)
+See [skepdocker.github.io](https://skepdocker.github.io/) for more screenshots, features, etc..
 
 You may find _Skep_ to be a useful addition to your toolbox along with projects like these:
 
