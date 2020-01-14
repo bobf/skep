@@ -7,6 +7,7 @@ import secrets
 
 from flask import Flask, render_template, request, send_from_directory, jsonify
 from flask_socketio import SocketIO, emit
+import requests
 
 from skep.json import DelegatingJSONEncoder
 
@@ -57,19 +58,16 @@ def handle_init():
 @socketio.on('chart_request')
 def handle_chart_request(params):
     params['sid'] = request.sid
-    charts_request = Request(
-        urllib.parse.urljoin(os.environ['SKEP_CHARTS_URL'], 'chart'),
-        data=json.dumps(params).encode('utf8'),
-        headers={'Content-Type': 'application/json'}
-    )
+
+    url = urllib.parse.urljoin(os.environ['SKEP_CHARTS_URL'], 'chart')
+    data = json.dumps(params).encode('utf8')
+    headers={'Content-Type': 'application/json'}
 
     log('chart_request [{type}] for [sid: {sid}] [{url}]',
-        dict(type=params['chartType'],
-             sid=request.sid,
-             url=charts_request.full_url))
+        dict(type=params['chartType'], sid=request.sid, url=url))
 
     try:
-        response = urllib.request.urlopen(charts_request)
+        response = requests.post(url, data=data, headers=headers)
     except urllib.error.HTTPError as e:
         log('chart_request:failure [{url}] [{headers}] [{url}] [{status} {reason}]'.format(
              url=e.url,
