@@ -7,6 +7,7 @@ import pprint
 import os
 import secrets
 import time
+import urllib
 from multiprocessing import Pool
 
 from flask import Flask, request, jsonify
@@ -64,6 +65,13 @@ def stats_create():
     tstamp = data['tstamp'] / 1000
     [ContainerStat(db_path, logger).save(container, tstamp) for container in containers]
     NodeStat(db_path, logger).save(data, tstamp)
+    try:
+        urllib.request.urlopen(
+            urllib.parse.urljoin(app_url, 'charts_ping'),
+            data=urllib.parse.urlencode(dict(port=port)).encode()
+        )
+    except urllib.error.URLError as e:
+        logger.warning('Unable to reach app container: ping failed ({e})'.format(e=e))
 
     return 'OK', 200
 

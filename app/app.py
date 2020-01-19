@@ -11,6 +11,11 @@ import requests
 
 from skep.json import DelegatingJSONEncoder
 
+env = {
+    # Will be overwritten when charts container pings us:
+    'CHARTS_URL': 'http://skep_charts:8080/chart'
+}
+
 application = Flask(
     __name__,
     template_folder=os.path.join(
@@ -59,15 +64,14 @@ def handle_init():
 def handle_chart_request(params):
     params['sid'] = request.sid
 
-    url = urllib.parse.urljoin(os.environ['SKEP_CHARTS_URL'], 'chart')
     data = json.dumps(params).encode('utf8')
     headers={'Content-Type': 'application/json'}
 
     log('chart_request [{type}] for [sid: {sid}] [{url}]',
-        dict(type=params['chartType'], sid=request.sid, url=url))
+        dict(type=params['chartType'], sid=request.sid, url=env['CHARTS_URL']))
 
     try:
-        response = requests.post(url, data=data, headers=headers)
+        response = requests.post(env['CHARTS_URL'], data=data, headers=headers)
     except urllib.error.HTTPError as e:
         log('chart_request:failure [{url}] [{headers}] [{url}] [{status} {reason}]'.format(
              url=e.url,
@@ -80,6 +84,20 @@ def handle_chart_request(params):
             error=True
         )
         socketio.emit('chart_response', chart)
+
+@application.route("/charts_ping", methods=["POST"])
+def charts_ping():
+    port = request.form.get('port', '8080')
+    ip = request.remote_addr
+    env['CHARTS_URL'] = (
+        '{scheme}://{ip}:{port}/chart'.format(
+            scheme=request.scheme,
+            port=port,
+            ip=ip
+        )
+    )
+
+    return 'OK', 200
 
 @application.route("/chart_response", methods=["POST"])
 def chart_response_create():
