@@ -4,6 +4,7 @@ import os
 import urllib.parse
 from urllib.request import Request
 import secrets
+import socket
 
 from flask import Flask, render_template, request, send_from_directory, jsonify
 from flask_socketio import SocketIO, emit
@@ -13,7 +14,7 @@ from skep.json import DelegatingJSONEncoder
 
 env = {
     # Will be overwritten when charts container pings us:
-    'CHARTS_URL': 'http://skep_charts:8080/chart'
+    'CHARTS_URL': os.environ['SKEP_CHARTS_URL']
 }
 
 application = Flask(
@@ -88,10 +89,11 @@ def handle_chart_request(params):
 @application.route("/charts_ping", methods=["POST"])
 def charts_ping():
     port = request.form.get('port', '8080')
-    ip = request.remote_addr
+    url = urllib.parse.urlparse(os.environ['SKEP_CHARTS_URL'])
+    ip = socket.gethostbyname(url.hostname)
     env['CHARTS_URL'] = (
         '{scheme}://{ip}:{port}/chart'.format(
-            scheme=request.scheme,
+            scheme=url.scheme,
             port=port,
             ip=ip
         )

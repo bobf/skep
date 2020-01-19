@@ -48,6 +48,7 @@ docker-compose -f <your-compose-file.yml> config | docker stack deploy -c - skep
 | Variable | Meaning | Example |
 |-|-|-|
 | `SKEP_PRIVATE_PORT` | Port used for internal communications between _Skep_ services. Do not publish this port. | `6666` _(default/recommended)_ |
+| `SKEP_CHARTS_URL` | URL that the _charts_ service will be available on for handling chart requests. | `http://charts:8080/`
 
 #### Agent
 
