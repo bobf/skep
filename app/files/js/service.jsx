@@ -3,6 +3,7 @@ import Environment from './environment';
 import Mounts from './mounts';
 import Messages from './messages';
 
+import copyTextToClipboard from './copy';
 import { selectService } from './redux/models/dashboard';
 import { selectNode } from './redux/models/node';
 
@@ -12,6 +13,7 @@ import * as Icon from 'react-feather';
 class ConnectedService extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {};
   }
 
   replicas() {
@@ -451,18 +453,37 @@ class ConnectedService extends React.Component {
 
   imageLink() {
     const { imageURL } = this.props.service;
+    const { copyImageVisible: showCopy } = this.state;
 
+    const copyIcon = showCopy ? <Icon.Copy onClick={(ev) => this.copyImage(ev)} className="icon copy" /> : null;
     if (!imageURL) return (
       <span className={'image'}>
         {this.imageLabel()}
+        {copyIcon}
       </span>
     );
 
     return (
       <a className={'image'} href={imageURL} target={'_blank'}>
         {this.imageLabel()}
+        {copyIcon}
       </a>
     );
+  }
+
+  copyImage(ev) {
+    const { organization, repository, tag } = this.props.service.image;
+    ev.preventDefault();
+    ev.stopPropagation();
+    copyTextToClipboard(`${organization}/${repository}:${tag}`);
+  }
+
+  showCopyImage() {
+    this.setState({ copyImageVisible: true });
+  }
+
+  hideCopyImage() {
+    this.setState({ copyImageVisible: false });
   }
 
   renderCollapsed() {
@@ -520,7 +541,12 @@ class ConnectedService extends React.Component {
           <Environment compact={true} serviceName={name} environment={environment} />
           <Mounts compact={true} serviceName={name} mounts={mounts} />
           {this.updateStatus()}
-          <span className={'image-id'}>{this.imageLink()}</span>
+          <span
+            onMouseEnter={() => this.showCopyImage()}
+            onMouseLeave={() => this.hideCopyImage()}
+            className={'image-id'}>
+            {this.imageLink()}
+          </span>
         </td>
         <td className={'ports'}>
           {this.renderPortsCollapsed()}

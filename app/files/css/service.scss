@@ -290,3 +290,13 @@ tr.service.networked {
     color: $accent-background;
   }
 }
+
+.service .image .icon.copy {
+  color: $white;
+  width: 1.2em;
+  height: 1.2em;
+
+  &:hover {
+    color: $cyan;
+  }
+}
