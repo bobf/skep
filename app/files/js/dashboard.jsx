@@ -59,7 +59,7 @@ class ConnectedDashboard extends React.Component {
   renderManifestMissing() {
     return (
       <div className="waiting-data">
-        {'Waiting for data'}
+        {'Waiting for data...'}
       </div>
     );
   }
