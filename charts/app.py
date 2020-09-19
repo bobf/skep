@@ -6,6 +6,7 @@ import logging
 import pprint
 import os
 import secrets
+import socket
 import time
 import urllib
 from multiprocessing import Pool
@@ -28,6 +29,7 @@ handler.setLevel(log_level)
 logger.addHandler(handler)
 
 app_url = os.environ.get('SKEP_APP_URL', 'http://app:8080')
+charts_url = os.environ.get('SKEP_CHARTS_URL', 'http://charts:8080')
 db_path = os.environ.get('SKEP_CHARTS_DB_PATH', '/charts.db')
 pool_size = int(os.environ.get('SKEP_CHARTS_CONCURRENCY', '4'))
 
@@ -65,15 +67,22 @@ def stats_create():
     tstamp = data['tstamp'] / 1000
     [ContainerStat(db_path, logger).save(container, tstamp) for container in containers]
     NodeStat(db_path, logger).save(data, tstamp)
+
     try:
         urllib.request.urlopen(
             urllib.parse.urljoin(app_url, 'charts_ping'),
-            data=urllib.parse.urlencode(dict(port=port)).encode()
+            data=urllib.parse.urlencode(dict(url=charts_url())).encode()
         )
     except urllib.error.URLError as e:
         logger.warning('Unable to reach app container: ping failed ({e})'.format(e=e))
 
     return 'OK', 200
+
+def charts_url():
+    # Generate URL with resolved IP address to pass to main app to mitigate strange DNS issues.
+    url = urllib.parse.urlparse(os.environ['SKEP_CHARTS_URL'])
+    ip = socket.gethostbyname(url.hostname)
+    return '{scheme}://{ip}:{port}/chart'.format(scheme=url.scheme, port=url.port, ip=ip)
 
 port = int(os.environ.get('SKEP_CHARTS_PORT', '8080'))
 application.run(host='0.0.0.0', port=port)

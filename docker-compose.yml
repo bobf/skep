@@ -12,7 +12,6 @@ services:
     environment:
       # Used for internal communication only. Do NOT publish this port:
       SKEP_PRIVATE_PORT: '6666'
-      SKEP_CHARTS_URL: http://charts:8080
 
   agent:
     image: skep/agent:${BUILD_TAG:-latest}
@@ -45,6 +44,7 @@ services:
       replicas: 1
     environment:
       SKEP_APP_URL: http://app:6666
+      SKEP_CHARTS_URL: http://charts:8080
       SKEP_CHARTS_DB_PATH: /skep/database/charts.db
       SKEP_CHARTS_DB_PERSIST:
       LOG_LEVEL:

@@ -48,7 +48,6 @@ docker-compose -f <your-compose-file.yml> config | docker stack deploy -c - skep
 | Variable | Meaning | Example |
 |-|-|-|
 | `SKEP_PRIVATE_PORT` | Port used for internal communications between _Skep_ services. Do not publish this port. | `6666` _(default/recommended)_ |
-| `SKEP_CHARTS_URL` | URL that the _charts_ service will be available on for handling chart requests. | `http://charts:8080/`
 
 #### Agent
 
@@ -90,6 +89,7 @@ docker-compose -f <your-compose-file.yml> config | docker stack deploy -c - skep
 | Variable | Meaning | Example |
 |-|-|-|
 | `SKEP_APP_URL` | URL that agent containers will use to send metrics to _Skep_ web application | `http://app:6666/` _(default/recommended)_ |
+| `SKEP_CHARTS_URL` | URL that the _charts_ service will be available on for handling chart requests. Sent to _App_ service every time charts are updated. | `http://charts:8080/`
 | `SKEP_CHARTS_DB_PATH` | Path to statistics _SQLite3_ database. Mount a shared storage endpoint to this location if you want to retain data between restarts. | `/charts.db` _(default/recommended)_ |
 | `SKEP_CHARTS_DB_PERSIST` | By default, the statistics database is re-initialised on startup. Set this variable to any value to retain data between restarts. | _(not set)_ |
 | `LOG_LEVEL` | Application server log level. | `INFO` _(default/recommended)_ |
