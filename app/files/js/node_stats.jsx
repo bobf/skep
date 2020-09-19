@@ -38,9 +38,11 @@ class NodeStats extends React.Component {
 
     return (
       <div className={'progress position-relative ' + className}
-           style={{ height: '2em' }}
+           style={{ height: minimized ? '2em' : '2.5em' }}
            data-original-title={tooltip}
            data-html={'true'}
+           data-placement="bottom"
+           data-boundary="window"
            data-toggle={tooltip ? 'tooltip' : null}>
         <div className={'progress-bar bg-' + level}
              style={{ width: percent }}>
@@ -63,6 +65,20 @@ class NodeStats extends React.Component {
       label: minimized ? 'RAM' : this.memory.label(),
       level: this.memory.level(),
       className: 'memory'
+    });
+  }
+
+  renderSwap() {
+    if (!this.memory) return null;
+
+    const { minimized } = this.props;
+
+    return this.progress({
+      percent: this.memory.swapPercent(),
+      tooltip: this.memory.swapTooltip(),
+      label: minimized ? 'Swap' : `${this.memory.swapUsage()} / ${this.memory.swapTotal()}`,
+      level: this.memory.swapLevel(),
+      className: 'swap'
     });
   }
 
@@ -106,6 +122,9 @@ class NodeStats extends React.Component {
         title={title}
         data-toggle={'tooltip'}
         data-html={'true'}
+        data-placement="bottom"
+        data-container="body"
+        data-boundary="window"
         className={'badge bg-' + this.loadLevel(index)}>
         {numeral(this.load.averages[index]).format('0.00')}
       </span>
@@ -172,6 +191,7 @@ class NodeStats extends React.Component {
       percent: filesystem.percent(),
       label: filesystem.label(),
       level: filesystem.level(),
+      tooltip: filesystem.tooltip(),
       className: 'filesystem'
     });
   }
@@ -179,12 +199,19 @@ class NodeStats extends React.Component {
   renderMinimized() {
     return (
       <div className={'node-stats'}>
-        {this.diskStatus()}
-        <div className={'meter memory'}>
-          {this.renderMemory()}
+        <div className="disks-group">
+          {this.diskStatus()}
         </div>
-        <div className={'meter cpu'}>
-          {this.renderCPU()}
+        <div className="meters">
+          <div className={'meter memory'}>
+            {this.renderMemory()}
+          </div>
+          <div className={'meter swap'}>
+            {this.renderSwap()}
+          </div>
+          <div className={'meter cpu'}>
+            {this.renderCPU()}
+          </div>
         </div>
         <div className={'load-averages'}>
           {this.renderLoad()}
@@ -196,7 +223,9 @@ class NodeStats extends React.Component {
   renderMaximized() {
     return (
       <div className={'node-stats'}>
-        {this.diskStatus()}
+        <div className="disks-group">
+          {this.diskStatus()}
+        </div>
         <table>
           <tbody>
             <tr className={'memory'}>
@@ -205,6 +234,14 @@ class NodeStats extends React.Component {
               </th>
               <td>
                 {this.renderMemory()}
+              </td>
+            </tr>
+            <tr className={'swap'}>
+              <th>
+                {'Swap'}
+              </th>
+              <td>
+                {this.renderSwap()}
               </td>
             </tr>
             <tr className={'cpu'}>
@@ -232,25 +269,25 @@ class NodeStats extends React.Component {
   }
 
   diskStatus() {
-    const { stats } = this.props;
+    const { nodeID, minimized } = this.props;
     const { filesystems } = this.props.stats;
     if (!filesystems) return null;
-    const levels = filesystems.map(
-      filesystem => new FilesystemStats(filesystem).level()
-    );
-    const danger = levels.find(level => level === 'danger');
-    const warning = levels.find(level => level === 'warning');
-    const success = levels.find(level => level === 'success');
-    const reducedLevel = danger || warning || success;
-    const tooltip = this.diskStatusMessage(reducedLevel);
 
-    return (
-      <Icon.HardDrive
-        className={`icon disks text-${reducedLevel}`}
-        data-html={'true'}
-        data-original-title={tooltip}
-        data-toggle={'tooltip'}
-      />
+    return filesystems.map(
+      filesystem => {
+        const stats = new FilesystemStats(filesystem);
+        return (
+          <Icon.HardDrive
+            key={`${nodeID}-${filesystem.path}`}
+            className={`icon disks text-${stats.level()}`}
+            data-html={'true'}
+            data-placement="right"
+            data-boundary="window"
+            data-original-title={stats.tooltip()}
+            data-toggle={'tooltip'}
+          />
+        )
+      }
     );
   }
 

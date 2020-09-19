@@ -89,7 +89,7 @@ class ConnectedStack extends React.Component {
   }
 
   renderService(service, collapsed) {
-   const { manifest } = this.props;
+    const { manifest } = this.props;
     return (
       <Service
         collapsed={collapsed}
@@ -104,6 +104,9 @@ class ConnectedStack extends React.Component {
 
   renderCollapsed() {
     const { name } = this.props.stack;
+    const { fullyCollapsed } = this.props;
+    if (fullyCollapsed) return [this.headerRow()];
+
     const services = this.sortedServices().map(service => this.renderService(service, true));
 
     services.unshift(this.headerRow());

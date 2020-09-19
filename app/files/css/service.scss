@@ -289,6 +289,17 @@ tr.service.networked {
   .punctuation {
     color: $accent-background;
   }
+
+  .network-alias-punctuation {
+    color: lighten($accent-background, 10%);
+    font-weight: bold;
+  }
+
+  .network-alias {
+    color: lighten($accent-dark, 10%);
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+  }
 }
 
 .service .image .icon.copy {

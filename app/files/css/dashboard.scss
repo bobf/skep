@@ -9,12 +9,21 @@
   }
 }
 
+.waiting-data {
+  font-size: 2em;
+  padding: 2em;
+}
+
 h2.section-title {
   text-align: right;
   color: $label-text-dark;
   opacity: 0.1;
   font-size: 1.4em;
   border-bottom: 1px solid $outline-background;
+
+  &.collapsed {
+    color: lighten($label-text-dark, 30%);
+  }
 
   .icon {
     margin: 0 0.2em;

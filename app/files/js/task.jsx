@@ -114,9 +114,15 @@ class ConnectedTask extends React.Component {
 
     if (!nodeStats) return null;
 
-    return (nodeStats.containers || []).find(
+    const stats = (nodeStats.containers || []).find(
       container => container.id === containerID
     );
+    const averagedCpuStats = (nodeStats.containers_averaged_cpu || {})[containerID];
+    const averagedNetworkStats = (nodeStats.containers_averaged_network_io || {})[containerID];
+    const averagedDiskStats = (nodeStats.containers_averaged_disk_io || {})[containerID];
+    const statsStart = nodeStats.containers_stats_start;
+    const statsEnd = nodeStats.containers_stats_end;
+    return { ...stats, averagedCpuStats, averagedNetworkStats, statsStart, statsEnd };
   }
 
   stats() {

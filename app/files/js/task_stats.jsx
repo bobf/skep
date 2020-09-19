@@ -6,7 +6,7 @@ class TaskStats extends React.Component {
     // The values that we consider to represent extremely I/O usage.
     // (Sum of transmitted/received bytes per second). If a container exceeds
     // exceeds these values then the relevant meter will be at 100%.
-    this.networkCap = 1024 * 1024 * 10; // 10mb
+    this.networkCap = 1024 * 1024 * 100; // 100mb
     this.diskCap = 1024 * 1024 * 10; // 10mb
   }
 
@@ -20,68 +20,33 @@ class TaskStats extends React.Component {
   }
 
   cpuUsage() {
-    return this.cpuTotalUsage() / this.cpuSystemTotalUsage();
-  }
-
-  cpuTotalUsage() {
-    const { cpu_stats: current } = this.props.stats.current;
-    const { cpu_stats: previous } = this.props.stats.previous;
-    return current.cpu_usage.total_usage - previous.cpu_usage.total_usage;
-  }
-
-  cpuSystemTotalUsage() {
-    const { cpu_stats: current } = this.props.stats.current;
-    const { cpu_stats: previous } = this.props.stats.previous;
-    return current.system_cpu_usage - previous.system_cpu_usage;
+    const { averagedCpuStats } = this.props.stats.current;
+    if (!averagedCpuStats) return 0;
+    return averagedCpuStats;
   }
 
   memoryUsage() {
     const { memory_stats } = this.props.stats.current;
+    if (!memory_stats) return 0;
     return memory_stats.usage;
   }
 
   memoryLimit() {
     const { memory_stats } = this.props.stats.current;
+    if (!memory_stats) return 0;
     return memory_stats.limit;
   }
 
-  calculateNetworkActivity(networks) {
-    const stats = Object.values(networks);
-    const rx = stats.reduce((val, network) => val + network.rx_bytes, 0);
-    const tx = stats.reduce((val, network) => val + network.tx_bytes, 0);
-    return (rx + tx) / this.period();
-  }
-
   networkActivity() {
-    const { networks: current } = this.props.stats.current;
-    const { networks: previous } = this.props.stats.previous;
-
-    if (!current || !previous) return null;
-
-    const currentTotal = this.calculateNetworkActivity(current);
-    const previousTotal = this.calculateNetworkActivity(previous);
-    return currentTotal - previousTotal;
-  }
-
-  calculateDiskActivity(stats) {
-    if (!stats.io_service_bytes_recursive) return 0;
-
-    const serviceBytes = stats.io_service_bytes_recursive.find(
-      summary => summary.op === 'Total'
-    );
-    return ((serviceBytes && serviceBytes.value) || 0);
+    const { averagedNetworkStats } = this.props.stats.current;
+    if (!averagedNetworkStats) return 0;
+    return averagedNetworkStats;
   }
 
   diskActivity() {
-    const { blkio_stats: current } = this.props.stats.current;
-    const { blkio_stats: previous } = this.props.stats.previous;
-
-    if (!current || !previous) return null;
-
-    const currentTotal = this.calculateDiskActivity(current);
-    const previousTotal = this.calculateDiskActivity(previous);
-
-    return (currentTotal - previousTotal) / this.period();
+    const { averagedDiskStats } = this.props.stats.current;
+    if (!averagedDiskStats) return 0;
+    return averagedDiskStats;
   }
 
   level(usage) {
@@ -116,14 +81,20 @@ class TaskStats extends React.Component {
   }
 
   dataTransferTooltip(activity) {
-    if (!this.period() || activity === null) return '[Waiting for analytics]';
-    const bytesPerSecond = numeral(activity).format('0.00b');
-    return `${bytesPerSecond} per second (last ${this.period(true)} seconds)`;
+    if (activity === null) return '[Waiting for analytics]';
+
+    const { statsEnd, statsStart } = this.props.stats.current;
+    if (!statsStart) return 'Waiting for metrics';
+    const duration = Math.round((statsEnd - statsStart) / 1000);
+    const bytes = numeral(activity).format('0.00b');
+    return `${bytes} transferred in ${duration} seconds`;
   }
 
   dataTransferLabel(activity) {
-    if (!this.period() || activity === null) return '';
-    const bytesPerSecond = numeral(activity).format('0.00b');
+    if (activity === null) return '';
+    const { statsEnd, statsStart } = this.props.stats.current;
+    const duration = (statsEnd - statsStart) / 1000;
+    const bytesPerSecond = numeral(activity / duration).format('0.00b');
     return `${bytesPerSecond}/s`;
   }
 
@@ -167,10 +138,13 @@ class TaskStats extends React.Component {
   }
 
   renderNetwork() {
-    const activity = this.networkActivity() / this.period();
+    const activity = this.networkActivity();
     const tooltip = this.dataTransferTooltip(activity);
     const label = this.dataTransferLabel(activity);
-    const usage = Math.min(activity, this.networkCap) / this.networkCap;
+    const { statsEnd, statsStart } = this.props.stats.current;
+    const duration = (statsEnd - statsStart) / 1000;
+    const bytesPerSecond = activity / duration;
+    const usage = Math.min(bytesPerSecond, this.networkCap) / this.networkCap;
 
     return (
       <div className={'network'}>
@@ -184,7 +158,10 @@ class TaskStats extends React.Component {
     const activity = this.diskActivity() / this.period();
     const tooltip = this.dataTransferTooltip(activity);
     const label = this.dataTransferLabel(activity);
-    const usage = Math.min(activity, this.diskCap) / this.diskCap;
+    const { statsEnd, statsStart } = this.props.stats.current;
+    const duration = (statsEnd - statsStart) / 1000;
+    const bytesPerSecond = activity / duration;
+    const usage = Math.min(bytesPerSecond, this.diskCap) / this.diskCap;
 
     return (
       <div className={'network'}>

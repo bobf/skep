@@ -32,6 +32,7 @@ class Service(ImageParser, ISO8601TimestampParser):
             "ports": self.ports(),
             "image": self.image(),
             "tasks": sorted(self.tasks(), key=lambda x: (x.slot(), x.when())),
+            "aliases": self.aliases(),
             "networks": self.networks(),
             "environment": self.environment(),
             "mounts": self.mounts(),
@@ -57,6 +58,15 @@ class Service(ImageParser, ISO8601TimestampParser):
         attrs = self.service.attrs
         mounts = attrs['Spec']['TaskTemplate']['ContainerSpec'].get('Mounts', [])
         return [Mount(mount) for mount in mounts]
+
+    def aliases(self):
+        attrs = self.service.attrs
+        if 'Networks' not in attrs['Spec']['TaskTemplate']:
+            return {}
+        return dict(
+            (network['Target'], network['Aliases'])
+            for network in attrs['Spec']['TaskTemplate']['Networks']
+        )
 
     def networks(self):
         attrs = self.service.attrs

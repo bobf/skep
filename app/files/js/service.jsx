@@ -346,6 +346,14 @@ class ConnectedService extends React.Component {
     return intersect;
   }
 
+  aliasesLabel(network) {
+    const { aliases } = this.props.service;
+    if (!aliases[network.id]) return null;
+    return aliases[network.id].map(
+      alias => `<span class='network-alias'>${alias}</span>`
+    ).join("<span class='network-alias-punctuation'>/</span>");
+  }
+
   networkLabel(network) {
     return (
       `<span class="nowrap">
@@ -353,6 +361,7 @@ class ConnectedService extends React.Component {
          <span class='punctuation'>&nbsp;[</span>
          <span class='network-id'>${network.id.substring(6)}</span>
          <span class='punctuation'>]</span>
+         ${this.aliasesLabel(network)}
        </span>`
     );
   }

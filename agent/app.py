@@ -13,6 +13,7 @@ import sys
 import shutil
 import threading
 import time
+import collections
 import urllib.parse
 import urllib.request
 from urllib.request import Request
@@ -25,6 +26,8 @@ import docker.errors
 import stats.memory as memory
 
 class StatRunner:
+    cache = collections.deque([], 10)
+
     def __init__(self, **kwargs):
         self.opts = kwargs
         self.connection_errors = (
@@ -74,8 +77,10 @@ class StatRunner:
     def ping(self):
         stats = self.stats()
         stats['tstamp'] = time.time() * 1000
+
+        self.cache.append(stats)
         self.log.debug(pprint.pformat(stats))
-        self.publish('app', stats)
+        self.publish('app', self.stats_with_averaged_container_stats(stats))
         self.publish('charts', stats)
 
     def stats(self):
@@ -89,6 +94,65 @@ class StatRunner:
             'cpu': self.cpu(),
             'load': self.load()
         }
+
+    def stats_with_averaged_container_stats(self, stats):
+        copy = dict((k, v) for k, v in stats.items())
+        copy['containers_averaged_cpu'] = self.containers_averaged_cpu(stats)
+        copy['containers_averaged_network_io'] = self.containers_averaged_network_io(stats)
+        copy['containers_averaged_disk_io'] = self.containers_averaged_disk_io(stats)
+        copy['containers_stats_start'] = self.cache[0]['tstamp']
+        copy['containers_stats_end'] = self.cache[-1]['tstamp']
+        return copy
+
+    def containers_averaged_disk_io(self, stats):
+        averages = {}
+        def io(container):
+            return sum(
+                x['value']
+                for x in (container['blkio_stats']['io_service_bytes_recursive'] or [])
+                if x['op'] == 'Total'
+            )
+
+        for key in [c['id'] for c in stats['containers']]:
+            values = [
+                io(c)
+                for stat in self.cache
+                for c in stat['containers']
+                if c['id'] == key
+            ]
+            if values:
+                averages[key] = values[-1] - values[0]
+            else:
+                averages[key] = 0
+        return averages
+
+    def containers_averaged_network_io(self, stats):
+        averages = {}
+        for key in [c['id'] for c in stats['containers']]:
+            values = [
+                sum(n['rx_bytes'] + n['tx_bytes'] for n in c['networks'].values())
+                for stat in self.cache for c in stat['containers']
+                if c['id'] == key and 'networks' in c
+            ]
+            if values:
+                averages[key] = values[-1] - values[0]
+            else:
+                averages[key] = 0
+        return averages
+
+    def containers_averaged_cpu(self, stats):
+        averages = {}
+        for key in [c['id'] for c in stats['containers']]:
+            values = [
+                c['cpu_stats']['cpu_usage']['total_usage'] / c['cpu_stats']['system_cpu_usage']
+                for stat in self.cache for c in stat['containers']
+                if c['id'] == key and 'system_cpu_usage' in c['cpu_stats']
+            ]
+            if values:
+                averages[key] = sum(values) / len(values)
+            else:
+                averages[key] = 0
+        return averages
 
     def container_stats(self, q, container_id):
         def stats():

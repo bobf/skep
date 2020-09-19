@@ -39,12 +39,16 @@ class ConnectedDashboard extends React.Component {
   }
 
   renderStack(stack) {
+    const { fullyCollapsed } = this.state;
+
     return (
       <Stack
         key={`stack-${stack.name}`}
         stack={stack}
         manifest={this.manifest()}
-        collapsed={this.isCollapsed(stack.name)} />
+        collapsed={this.isCollapsed(stack.name)}
+        fullyCollapsed={fullyCollapsed}
+      />
     );
   }
 
@@ -54,7 +58,7 @@ class ConnectedDashboard extends React.Component {
 
   renderManifestMissing() {
     return (
-      <div className={'error'}>
+      <div className="waiting-data">
         {'Waiting for data'}
       </div>
     );
@@ -148,7 +152,7 @@ class ConnectedDashboard extends React.Component {
 
     return (
       <div
-        onMouseEnter={(ev) => this.toggleOverview(ev, true)}
+        onClick={(ev) => this.toggleOverview(ev, true)}
         className={classes.join(' ')}>
         {this.renderConnectionError()}
         {this.renderPingIcon()}
@@ -198,7 +202,7 @@ class ConnectedDashboard extends React.Component {
   render() {
     if (!this.manifest()) return this.renderManifestMissing();
     const { nodes } = this.manifest();
-    const { nodesMinimized: minimized } = this.state;
+    const { nodesMinimized: minimized, fullyCollapsed } = this.state;
 
     return (
       <div className={'dashboard-overview-wrapper'}>
@@ -221,7 +225,10 @@ class ConnectedDashboard extends React.Component {
 
           <div id={'stacks'} className={'section'}>
             <div className={'section-content'}>
-              <h2 className={'section-title'}>
+              <h2
+                onClick={() => this.setState({ fullyCollapsed: !fullyCollapsed })}
+                className={`clickable section-title ${fullyCollapsed ? 'collapsed' : 'expanded'}`}
+              >
                 <Icon.Layers className={'icon'} />
                 {'Stacks'}
               </h2>

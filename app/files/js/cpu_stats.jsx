@@ -6,7 +6,7 @@ class CPUStats {
   }
 
   tooltip() {
-    return `<b>CPU</b><br/>${this.percent()}`;
+    return `<b>CPU</b><br/><span class='text-${this.level()}'>${this.percent()}</span>`;
   }
 
   label() {

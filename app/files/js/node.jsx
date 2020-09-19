@@ -282,6 +282,7 @@ class ConnectedNode extends React.Component {
         </div>
         <NodeStats
           key={'node_' + node.id + '_stats'}
+          nodeID={node.id}
           minimized={minimized}
           stats={this.stats().current}
         />

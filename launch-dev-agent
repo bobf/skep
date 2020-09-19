@@ -5,5 +5,9 @@ export SKEP_CHARTS_URL=http://localhost:5040/
 export HOSTFS_PATH=linux_metrics/test_filesystem/
 export LOG_LEVEL=debug
 export SKEP_HOST=DOCKER-DESKTOP
-export FILE_SYSTEMS=/
+if [ -z "${FILE_SYSTEMS}" ]
+then
+  export FILE_SYSTEMS=/
+fi
+
 pipenv run python app.py
