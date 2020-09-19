@@ -45,7 +45,7 @@ class MemoryStats {
   }
 
   swapPercent() {
-    return numeral(this.swapUsage() / this.swapTotal()).format('0.00%');
+    return numeral((this.stats.swap_total - this.stats.swap_free) / this.stats.swap_total).format('0.00%');
   }
 
   swapLevel() {
@@ -61,6 +61,7 @@ class MemoryStats {
        <span class='syntax'>(</span><span class='text-${this.swapLevel()}'>${this.swapPercent()}</span><span class='syntax'>)</span>`
     );
   }
+
   percent() {
     return numeral(this.stats.unavailable / this.stats.total).format('0.00%');
   }

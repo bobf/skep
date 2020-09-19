@@ -5,6 +5,7 @@ import json
 import logging
 import multiprocessing
 import os
+import os.path
 import queue
 import random
 import pprint
@@ -213,6 +214,7 @@ class StatRunner:
         usages = [
             (path, shutil.disk_usage(path))
             for path in self.opts['filesystems']
+            if os.path.isdir(path)
         ]
 
         return [
