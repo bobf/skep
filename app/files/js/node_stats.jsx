@@ -38,7 +38,7 @@ class NodeStats extends React.Component {
 
     return (
       <div className={'progress position-relative ' + className}
-           style={{ height: minimized ? '2em' : '2.5em' }}
+           style={{ height: minimized ? '2.2em' : '3.5em' }}
            data-original-title={tooltip}
            data-html={'true'}
            data-placement="bottom"

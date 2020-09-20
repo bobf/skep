@@ -35,6 +35,8 @@
     }
 
     &.syntax {
+      margin-left: 1em;
+      margin-right: 0.2em;
       min-width: 1em;
       max-width: 1em;
     }
@@ -45,8 +47,13 @@
     }
 
     &.overview-badges {
-      min-width: 25em;
-      max-width: 25em;
+      min-width: 20em;
+      text-align: right;
+      max-width: 20em;
+      margin-right: 3em;
+      .badge {
+        color: $label-text-light;
+      }
     }
   }
 
@@ -71,6 +78,7 @@
 .stack-overview.badge {
   color: $white;
   margin: 0 0.2em;
+  padding: 0.2em 0.5em;
 }
 
 .collapsed .services {
@@ -103,9 +111,9 @@
 
 .stack.header th.name {
   padding: 0.5rem;
-  color: $label-text-light;
+  letter-spacing: 1px;
+  color: $label-text;
   text-transform: uppercase;
-
 }
 
 .expanded th.name {

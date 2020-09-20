@@ -8,6 +8,10 @@
   font-size: 0.9em;
 }
 
+.maximized .load .badge {
+  padding: 1em 0.8em;
+}
+
 .maximized .node-stats table {
   margin-top: 0.4em;
 }
@@ -99,7 +103,7 @@
 }
 
 .minimized .node-stats .meters {
-  display: inline;
+  margin-bottom: 0.1em;
 }
 
 .minimized .node-stats .meter.memory {
@@ -128,7 +132,7 @@
 .load {
   white-space: nowrap;
   .badge {
-    width: 30%;
+    width: 31%;
   }
 }
 

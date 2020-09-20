@@ -100,7 +100,7 @@ class ConnectedStack extends React.Component {
         const runningCount = service.tasks.filter(task => task.state === 'running').length;
         const expectedCount = service.replicas === null ? Object.values(nodes).length : service.replicas;
         const level = runningCount === expectedCount ? 'success' : (runningCount === 0 ? 'danger' : 'warning');
-        const tooltip = `<div class='align-left'><em>${service.name}</em>: ${runningCount}<em>/</em>${expectedCount} <em>replicas running.</em></div>`;
+        const tooltip = `<div class='align-left'><em><b>${service.name}<b></em><br/>${runningCount}<em>/</em>${expectedCount} <em>replicas running.</em></div>`;
         return (
           <span
             key={`${service.name}-overview-badges`}
