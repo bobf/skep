@@ -12,5 +12,5 @@ else
 	git show HEAD:agent/Pipfile.lock > .build/Pipfile.lock
 	git archive --format tar -o .build/build.tar HEAD
 	cp -r ../shared/skep .build/skep
-	cd .build/ && docker build . -t skep/agent
+	cd .build/ && docker build . -t skep/agent:latest -t skep/agent:${tag}
 endif

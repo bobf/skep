@@ -12,5 +12,5 @@ else
 	git show HEAD:monitor/Pipfile.lock > .build/Pipfile.lock
 	git archive --format tar -o .build/build.tar HEAD
 	cp -r ../shared/skep .build/skep
-	cd .build/ && docker build . -t skep/monitor
+	cd .build/ && docker build . -t skep/monitor:latest -t skep/monitor:${tag}
 endif
