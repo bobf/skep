@@ -241,7 +241,7 @@
 
     .detail-value {
       color: $label-text;
-      font-family: monospace;
+      font-family: $monospace;
 
       a {
         color: $url-hover-color;

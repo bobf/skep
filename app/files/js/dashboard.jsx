@@ -20,7 +20,8 @@ class ConnectedDashboard extends React.Component {
       modalHidden: true,
       overviewVisible: false,
       overviewHidden: true,
-      obscured: false
+      obscured: false,
+      fullyCollapsed: true,
     }
   }
 
@@ -46,7 +47,6 @@ class ConnectedDashboard extends React.Component {
         key={`stack-${stack.name}`}
         stack={stack}
         manifest={this.manifest()}
-        collapsed={this.isCollapsed(stack.name)}
         fullyCollapsed={fullyCollapsed}
       />
     );
@@ -84,29 +84,6 @@ class ConnectedDashboard extends React.Component {
       $nodes.addClass('minimized');
       this.setState({ stacksMinimized: false, nodesMinimized: true });
     }
-  }
-
-  collapseAll(options = {}) {
-    const { stacks } = this.manifest();
-    const stackNames = stacks.map(stack => stack.name);
-    const toCollapse = stackNames.filter(
-      name => !options.except || name !== options.except
-    );
-
-    this.setState({ collapsedStacks: toCollapse })
-  }
-
-  collapse(stackName) {
-    const { stacks } = this.manifest();
-    this.setState({ collapsedStacks: stacks.map(stack => stack.name) });
-  }
-
-  isCollapsed(stackName) {
-    const { collapsedStacks } = this.state;
-
-    if (collapsedStacks === null) return true;
-
-    return collapsedStacks.includes(stackName);
   }
 
   toggleOverview(ev, visible) {
@@ -226,12 +203,18 @@ class ConnectedDashboard extends React.Component {
           <div id={'stacks'} className={'section'}>
             <div className={'section-content'}>
               <h2
-                onClick={() => this.setState({ fullyCollapsed: !fullyCollapsed })}
-                className={`clickable section-title ${fullyCollapsed ? 'collapsed' : 'expanded'}`}
+                className={'clickable section-title'}
               >
                 <Icon.Layers className={'icon'} />
                 {'Stacks'}
               </h2>
+              <button
+                onClick={() => this.setState({ fullyCollapsed: !fullyCollapsed })}
+                type="button"
+                className="expand-collapse-stacks btn btn-primary"
+              >
+                { fullyCollapsed ? <Icon.Maximize size="1em"/> : <Icon.Minimize size="1em" /> }
+              </button>
               <table className='stacks'>
                 <tbody>
                   {this.manifest().stacks.map(stack => this.renderStack(stack))}

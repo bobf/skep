@@ -6,7 +6,7 @@ class TaskStats extends React.Component {
     // The values that we consider to represent extremely I/O usage.
     // (Sum of transmitted/received bytes per second). If a container exceeds
     // exceeds these values then the relevant meter will be at 100%.
-    this.networkCap = 1024 * 1024 * 100; // 100mb
+    this.networkCap = 1024 * 1024 * 10; // 10mb
     this.diskCap = 1024 * 1024 * 10; // 10mb
   }
 
@@ -21,7 +21,7 @@ class TaskStats extends React.Component {
 
   cpuUsage() {
     const { averagedCpuStats } = this.props.stats.current;
-    if (!averagedCpuStats) return 0;
+    if (!averagedCpuStats || isNaN(averagedCpuStats)) return 0;
     return averagedCpuStats;
   }
 

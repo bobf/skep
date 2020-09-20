@@ -10,6 +10,69 @@
   height: 100%;
 }
 
+.stack-summary-wrapper {
+  position: absolute;
+  width: 100%;
+  margin-top: -1.5em;
+}
+
+.stack-summary {
+  position: absolute;
+  position: absolute;
+  right: 0;
+  top: 0.2em;
+
+  .syntax {
+    color: $accent-dark;
+  }
+
+  .cell {
+    display: inline-block;
+
+    &.tasks-summary {
+      min-width: 5em;
+      max-width: 5em;
+    }
+
+    &.syntax {
+      min-width: 1em;
+      max-width: 1em;
+    }
+
+    &.services-summary {
+      min-width: 5em;
+      max-width: 5em;
+    }
+
+    &.overview-badges {
+      min-width: 25em;
+      max-width: 25em;
+    }
+  }
+
+  .stack-overview {
+    color: $outline;
+    font-size: 0.8em;
+
+    span {
+    }
+
+    em {
+      color: $label-text-dark;
+      margin-left: 0.5em;
+    }
+  }
+}
+
+.services-summary-cell, .tasks-summary-cell {
+  width: 5.5em
+}
+
+.stack-overview.badge {
+  color: $white;
+  margin: 0 0.2em;
+}
+
 .collapsed .services {
   margin-top: 0.8em;
 }
@@ -33,7 +96,7 @@
 
 .stack.header th {
   font-size: 1.4em;
-  font-family: monospace;
+  font-family: $monospace;
   color: $outline-dark;
   margin: 0.4em 1em;
 }
@@ -54,11 +117,27 @@ tr.collapsed div.stack {
   padding-top: 0.2em;
 }
 
+tr.collapsed.darken {
+  .overlay {
+    width: 10em;
+    position: absolute;
+    background-color: #171517a6;
+    min-width: calc(100% - 2.4em);
+    padding: 0.9em 0;
+    z-index: 10;
+    margin-top: -0.3em;
+    left: 1.8em;
+  }
+
+}
+
 button.stack {
   padding: 0.2em 0.4em;
   text-transform: uppercase;
   font-size: 0.2em;
   float: left;
+  position: relative;
+  z-index: 11;
 }
 
 table.stacks {
@@ -73,7 +152,7 @@ table.stacks {
 }
 
 .collapsed td.ports {
-  font-family: monospace;
+  font-family: $monospace;
   font-size: 1.2em;
   margin: 0 0.2em;
 }

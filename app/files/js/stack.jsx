@@ -50,9 +50,9 @@ class ConnectedStack extends React.Component {
   }
 
   collapseIcon(expanded) {
-    if (expanded) return <Icon.Minimize className={'icon expand'} />
+    if (expanded) return <Icon.ChevronUp className={'icon expand'} />
 
-    return <Icon.Maximize className={'icon expand'} />
+    return <Icon.ChevronDown className={'icon expand'} />
   }
 
   collapseButton() {
@@ -70,16 +70,79 @@ class ConnectedStack extends React.Component {
     );
   }
 
+  tasksSummary() {
+    const { services } = this.props.stack;
+    const tasks = services.map(service => service.tasks).flat();
+    return (
+      <span className="stack-overview tasks summary">
+        <span>Tasks</span>
+        <em>{services.length}</em>
+      </span>
+    );
+  }
+
+  servicesSummary() {
+    const { services } = this.props.stack;
+    return (
+      <span className="stack-overview services summary">
+        <span>Services</span>
+        <em>{services.length}</em>
+      </span>
+    );
+  }
+
+  overviewBadges() {
+    const { services } = this.props.stack;
+    const { nodes } = this.props.manifest;
+
+    return services.map(
+      service => {
+        const runningCount = service.tasks.filter(task => task.state === 'running').length;
+        const expectedCount = service.replicas === null ? Object.values(nodes).length : service.replicas;
+        const level = runningCount === expectedCount ? 'success' : (runningCount === 0 ? 'danger' : 'warning');
+        const tooltip = `<div class='align-left'><em>${service.name}</em>: ${runningCount}<em>/</em>${expectedCount} <em>replicas running.</em></div>`;
+        return (
+          <span
+            key={`${service.name}-overview-badges`}
+            className={`stack-overview badge bg-${level}`}
+            data-html={'true'}
+            data-original-title={tooltip}
+            data-toggle={'tooltip'}>
+            {runningCount}
+          </span>
+        );
+      }
+    );
+  }
+
+  summary() {
+    return (
+      <div className="stack-summary-wrapper">
+        <div className="stack-summary">
+          <div className="cell services-summary">{this.servicesSummary()}</div>
+          <div className="cell syntax">|</div>
+          <div className="cell tasks-summary">{this.tasksSummary()}</div>
+          <div className="cell overview-badges">{this.overviewBadges()}</div>
+        </div>
+      </div>
+    );
+  }
+
   headerRow() {
     const { name } = this.props.stack;
-    const { collapsed } = this.props;
-    const className = collapsed ? 'collapsed' : 'expanded';
+    const { fullyCollapsed, dashboard } = this.props;
+    const showSummary = fullyCollapsed && !this.isExpanded();
+    const classes = ['collapsed'];
+    const darken = dashboard.selectedStack && !this.isExpanded()
+    if (darken) classes.push('darken');
 
     return (
-      <tr key={`stack-${name}-header-row`} className={`stack header ${className}`}>
+      <tr key={`stack-${name}-header-row`} className={`stack header ${classes.join(' ')}`}>
         <th colSpan={4} className={'name'}>
+          {darken ? <div className="overlay"></div> : null}
           <span className={'name'}>{name}</span>
           {this.collapseButton()}
+          {showSummary ? this.summary() : null}
         </th>
         <th></th>
         <th></th>

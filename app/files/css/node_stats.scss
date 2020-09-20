@@ -4,7 +4,7 @@
 
 .node-stats th {
   padding: 0.2em;
-  font-family: monospace;
+  font-family: $monospace;
   font-size: 0.9em;
 }
 
@@ -74,7 +74,7 @@
 }
 
 .disk-stats .label {
-  font-family: monospace;
+  font-family: $monospace;
 }
 
 .maximized .badges .badge {

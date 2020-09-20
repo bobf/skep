@@ -29,7 +29,7 @@
 
   .errors {
     padding-left: 0.2em;
-    font-family: monospace;
+    font-family: $monospace;
 
     .error-message {
       color: $danger;

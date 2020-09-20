@@ -222,10 +222,10 @@ class ConnectedService extends React.Component {
     }
 
     switch (running) {
-      case 0:
-        return 'danger'
       case total:
         return 'success'
+      case 0:
+        return 'danger'
       default:
         return 'warning'
     }
