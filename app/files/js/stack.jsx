@@ -76,7 +76,7 @@ class ConnectedStack extends React.Component {
     return (
       <span className="stack-overview tasks summary">
         <span>Tasks</span>
-        <em>{services.length}</em>
+        <em>{tasks.length}</em>
       </span>
     );
   }
