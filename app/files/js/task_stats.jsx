@@ -21,7 +21,7 @@ class TaskStats extends React.Component {
 
   cpuUsage() {
     const { averagedCpuStats } = this.props.stats.current;
-    if (!averagedCpuStats || isNaN(parseInt(averagedCpuStats))) return 0;
+    if (!averagedCpuStats) return 0;
     return averagedCpuStats;
   }
 
@@ -62,7 +62,7 @@ class TaskStats extends React.Component {
 
   progress(title, usage, customTooltip, label) {
     const level = this.level(usage);
-    const percentage = numeral(usage).format('0.00%');
+    const percentage = numeral(isNaN(usage) ? 0 : usage).format('0.00%');
     const tooltip = `${title}: ${customTooltip || percentage}`;
 
     return (
@@ -99,8 +99,8 @@ class TaskStats extends React.Component {
   }
 
   renderCpu() {
-    const usage = Math.min(this.cpuUsage(), 1);
-    const percentage = numeral(usage).format('0.00%');
+    const usage = this.cpuUsage();
+    const percentage = numeral(isNaN(usage) ? 0 : usage).format('0.00%');
     const tooltip = `${percentage} of total system CPU usage`;
     return (
       <div className={'cpu'}>
