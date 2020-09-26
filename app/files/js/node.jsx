@@ -7,11 +7,13 @@ import Messages from './messages';
 import FilesystemStats from './filesystem_stats';
 import NodeStats from './node_stats';
 import NodeChart from './node_chart';
+import NodeInspect from './node_inspect';
 
 import store from './redux/store';
 import { requestNodeChart } from './redux/models/charts';
 import { selectService } from './redux/models/dashboard';
 import { selectNode } from './redux/models/node';
+import { inspectNode } from './redux/models/node_inspect';
 
 class ConnectedNode extends React.Component {
   constructor(props) {
@@ -168,19 +170,47 @@ class ConnectedNode extends React.Component {
     );
   }
 
-  chartButton() {
+  inspectNode(ev) {
+    ev.stopPropagation();
+    ev.preventDefault();
+    const { node } = this.props;
+    store.dispatch(inspectNode(node.id));
+  }
+
+  inspectButton() {
     return (
-      <Icon.BarChart2
-        className={'icon chart-button'}
-        size={'1.2em'}
-        title={'View activity'}
-        data-toggle={'tooltip'}
-        onClick={() => this.loadChart()}
-      />
+      <button
+        onClick={(ev) => this.inspectNode(ev)}
+        className="float-button btn btn-primary inspect-button"
+      >
+        <Icon.ZoomIn
+          className="icon"
+          size="1.2em"
+          title="Inspect containers"
+          data-toggle="tooltip"
+        />
+      </button>
     );
   }
 
-  loadChart() {
+  chartButton() {
+    return (
+      <button
+        onClick={(ev) => this.loadChart(ev)}
+        className="float-button btn btn-primary chart-button"
+      >
+        <Icon.BarChart2
+          className="icon"
+          size="1.2em"
+          title="View activity"
+          data-toggle="tooltip"
+        />
+      </button>
+    );
+  }
+
+  loadChart(ev) {
+    ev.stopPropagation();
     this.setState({ chartClosed: false });
     store.dispatch(requestNodeChart(this.hostname()));
   }
@@ -231,6 +261,7 @@ class ConnectedNode extends React.Component {
   }
 
   toggle(ev) {
+    if (ev.target.className.includes('modal')) return null;
     const { setSelected } = this.props;
     const { nodes } = this.props;
 
@@ -254,6 +285,20 @@ class ConnectedNode extends React.Component {
     );
   }
 
+  renderInspect() {
+    const { node, nodeInspect } = this.props;
+    const inspectOpen = nodeInspect.inspectedNode === node.id;
+
+    console.log(inspectOpen, nodeInspect.inspectedNode);
+    if (!inspectOpen) {
+      return null;
+    }
+
+    return (
+      <NodeInspect nodeID={node.id} hostname={node.hostname} />
+    );
+  }
+
   render() {
     const { minimized, node } = this.props;
     const { ping } = this.agentData() || {};
@@ -267,8 +312,10 @@ class ConnectedNode extends React.Component {
            onClick={(ev) => this.toggle(ev)}
            className={classes.join(' ')}>
         {this.renderChart()}
+        {this.renderInspect()}
         {this.icon()}
         {this.chartButton()}
+        {this.inspectButton()}
         <h3
           data-original-title={this.hostname()}
           data-toggle={'tooltip'}
@@ -292,7 +339,12 @@ class ConnectedNode extends React.Component {
 }
 
 const select = state => {
-  return { dashboard: state.dashboard, nodes: state.nodes, charts: state.charts };
+  return {
+    dashboard: state.dashboard,
+    nodes: state.nodes,
+    nodeInspect: state.nodeInspect,
+    charts: state.charts,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {

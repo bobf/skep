@@ -1,9 +1,9 @@
-.chart-button {
+.chart-button, .inspect-button {
   color: $label-text;
 }
 
-.chart-button:hover {
-  color: $accent-dark;
+.chart-button:hover, .inspect-button:hover {
+  color: $accent;
   cursor: pointer;
 }
 
@@ -11,6 +11,10 @@
   z-index: 9999999999;
   width: 62em;
   min-height: 35em;
+
+  .header {
+    width: 62em;
+  }
 
   .viewport {
     overflow-y: hidden;

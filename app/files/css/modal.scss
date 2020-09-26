@@ -2,6 +2,15 @@
   display: none;
 }
 
+.modal-close {
+  float: left;
+  color: $label-text-dark;
+  cursor: pointer;
+  &:hover {
+    color: $accent-dark;
+  }
+}
+
 .modal-wrapper.modal {
   display: block;
   position: fixed;
@@ -18,15 +27,13 @@
 .modal-content {
   cursor: initial;
   background-color: $modal-background-color;
-  height: auto;
-  max-height: 60%;
   width: 80%;
   margin: 5em auto;
   border: 2px solid $outline-dark;
   box-shadow: 0px 0px 5px $background-color;
 
   .viewport {
-    overflow-y: scroll;
+    top: 4em;
     border-bottom: 1px solid $outline-dark;
     margin-bottom: 1em;
   }
@@ -43,7 +50,15 @@
   background-color: $modal-background-hover-color;
 }
 
+.modal-content-body {
+  margin-top: 4em;
+  overflow-y: scroll;
+  max-height: 60vh;
+}
+
 .modal .header {
+  position: fixed;
+  width: 80%;
   height: 4em;
   padding: 1em;
   border-bottom: 1px solid $outline-dark;
@@ -56,12 +71,11 @@
 
 
 .modal .subtitle {
-  text-align: right;
   color: $label-text-dark;
   display: block;
   font-family: $monospace;
-  width: 100%;
   margin-top: -1.8em;
   font-style: oblique;
   opacity: 0.5;
+  float: right;
 }

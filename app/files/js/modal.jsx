@@ -1,3 +1,4 @@
+import * as Icon from 'react-feather';
 import React from 'react';
 
 class Modal extends React.Component {
@@ -29,15 +30,21 @@ class Modal extends React.Component {
     return (
       <div onClick={(ev) => this.callbackWrapper(ev, closeCallback)}
            className={'modal-wrapper modal'}>
-        <div className={`modal-content ${wrapperClass || ''}`}>
+        <div
+          className={`modal-content ${wrapperClass || ''}`}
+          onClick={(ev) => { ev.stopPropagation() }}
+        >
           <div className={'viewport'}>
             <div className={'header'}>
+              <div className="modal-close">
+                <Icon.X onClick={() => closeCallback && closeCallback()} />
+              </div>
               <h5>{title}</h5>
               <div className={'subtitle'}>
                 {subtitle}
               </div>
             </div>
-            <div className={contentClass || ''}>
+            <div className={`modal-content-body ${contentClass}`}>
               {content}
             </div>
           </div>

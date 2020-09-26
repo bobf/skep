@@ -149,7 +149,9 @@
   font-family: $monospace;
 }
 
-.node .chart-button {
+.node .float-button {
+  padding: 0;
+  margin: 0.2em;
   float: right;
 }
 

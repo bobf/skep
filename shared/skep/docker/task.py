@@ -89,6 +89,7 @@ class Task(ImageParser, ISO8601TimestampParser):
             "when": attrs["Status"]["Timestamp"],
             "state": self.state(),
             "environment": attrs['Spec']['ContainerSpec'].get('Env', []),
+            "serviceName": self.service.name(),
             "image": self.image(),
             "upToDate": self.up_to_date()
         }

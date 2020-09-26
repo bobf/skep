@@ -95,7 +95,6 @@ class ConnectedTask extends React.Component {
 
   node() {
     const { containerID } = this.props.task;
-    const { stack } = this.props;
     const { nodes } = this.props;
 
     return Object.values(nodes).find(
@@ -202,11 +201,41 @@ class ConnectedTask extends React.Component {
     );
   }
 
+  renderChartButton() {
+    return (
+      <button
+        onClick={(ev) => this.loadChart(ev)}
+        className="float-button btn btn-primary chart-button"
+      >
+        <Icon.BarChart2
+          className="icon"
+          title="View activity"
+          data-toggle="tooltip"
+        />
+      </button>
+    );
+  }
+
+  renderTaskID() {
+    const { id } = this.props.task;
+
+    return (
+      <span
+        className="task-id"
+        data-toggle={'tooltip'}
+        data-container={'body'}
+        data-html={'true'}
+        data-original-title={this.tooltip()}
+      >
+        {id}
+      </span>
+    );
+  }
+
   render() {
-    const tooltip = this.tooltip();
     const classes = ['task'];
     const isUpToDate = this.isUpToDate();
-    const { errors } = this.props.task;
+    const { errors, serviceName } = this.props.task;
     const { updating } = this.props;
 
     if (this.isHighlighted()) classes.push('highlighted');
@@ -217,23 +246,18 @@ class ConnectedTask extends React.Component {
 
     return (
       <span className={classes.join(' ')}>
+        <div
+          data-toggle="tooltip"
+          data-original-title={serviceName}
+          data-tooltip-placement="top"
+          className="service-name"
+        >
+          {serviceName}
+        </div>
         {this.renderChart()}
         <span className={'box'}>
-          <div className={'info-icons'}>
-            <Icon.Info
-              className={`icon info ${iconClass}`}
-              data-toggle={'tooltip'}
-              data-container={'body'}
-              data-html={'true'}
-              data-original-title={tooltip} />
-            <br />
-            <Icon.BarChart2
-              title={'View activity'}
-              data-toggle={'tooltip'}
-              onClick={() => this.loadChart()}
-              className={'icon chart-button'}
-            />
-          </div>
+          {this.renderChartButton()}
+          {this.renderTaskID()}
           <div className={'badges'}>
             {this.renderState()}
             {this.renderMessage()}

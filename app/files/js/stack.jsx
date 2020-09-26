@@ -133,7 +133,7 @@ class ConnectedStack extends React.Component {
     const { fullyCollapsed, dashboard } = this.props;
     const showSummary = fullyCollapsed && !this.isExpanded();
     const classes = ['collapsed'];
-    const darken = dashboard.selectedStack && !this.isExpanded()
+    const darken = dashboard.selectedStack && !this.isExpanded() && fullyCollapsed;
     if (darken) classes.push('darken');
 
     return (

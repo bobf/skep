@@ -1,5 +1,5 @@
 .task {
-  width: 12em;
+  max-width: 14em;
   border-radius: 12.5%;
   .box {
     transition: background-color 3s ease, border-color 3s ease;
@@ -29,29 +29,26 @@
   }
 }
 
+.task-stats {
+  float: left;
+  width: 10.9em;
+}
+
 .task .badge {
   text-align: center;
   display: block;
   margin: 0.4em 0;
   text-overflow: ellipsis;
-  width: 10em;
+  width: 14em;
   overflow-x: hidden;
 }
 
 .task .badges {
-  vertical-align: middle;
-  margin-left: 1.4em;
-  margin-bottom: 1em;
-  margin-top: -0.6em;
-  opacity: 0.8;
-}
-
-.task .info-icons {
   float: left;
-  text-align: left;
-  position: absolute;
-  margin-left: -0.6em;
-  margin-top: -0.4em;
+  vertical-align: middle;
+  margin-bottom: 0.6em;
+  margin-top: 0.2em;
+  opacity: 0.8;
 }
 
 span.task {
@@ -83,7 +80,24 @@ span.task {
   display: block;
   // Do not pulse background if parent service is updating
   background-color: $background-color;
-  height: 10.4em;
+  height: 12.2em;
+  padding-top: 0.6em;
+
+  .task-id {
+    font-family: $monospace;
+    width: 11em;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    font-size: 0.8em;
+    color: $label-text-dark;
+  }
+
+  .chart-button {
+    float: right;
+    padding: 0;
+    width: 1.6em;
+  }
 }
 
 .task.highlighted {
@@ -92,5 +106,57 @@ span.task {
   .box {
     box-shadow: 0px 0px 3px $highlight-select;
     border-color: rgba($highlight-select, 0.5);
+  }
+}
+
+.task .service-name {
+  display: none;
+}
+
+.node-inspect-wrapper {
+  max-height: 80%;
+}
+
+.node-inspect {
+  .tasks {
+    margin-left: 2em;
+  }
+
+  .task .service-name {
+    display: block;
+    margin-left: 1em;
+    margin-top: 1em;
+    max-width: 14em;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+  }
+
+  .task {
+    display: inline-block;
+    float: left;
+    margin-left: 1em;
+
+    .badges {
+      margin-top: 0;
+    }
+
+    .chart-button {
+      margin-right: -0.2em;
+    }
+
+    .task-id {
+      width: 10em;
+      margin-top: 0.2em;
+    }
+
+    .task-stats {
+      margin-left: -0.4em;
+      width: 10.7em;
+    }
+
+    .box {
+      padding-top: 0.4em;
+    }
   }
 }
