@@ -289,7 +289,6 @@ class ConnectedNode extends React.Component {
     const { node, nodeInspect } = this.props;
     const inspectOpen = nodeInspect.inspectedNode === node.id;
 
-    console.log(inspectOpen, nodeInspect.inspectedNode);
     if (!inspectOpen) {
       return null;
     }
@@ -322,7 +321,7 @@ class ConnectedNode extends React.Component {
           className={'hostname'}>
           {this.hostname()}
         </h3>
-        <div className={'badges'}>
+        <div className={'node-badges'}>
           {this.leaderBadge()}
           {this.roleBadge()}
           {this.versionBadge()}

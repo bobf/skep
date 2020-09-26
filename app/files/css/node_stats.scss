@@ -30,10 +30,8 @@
     margin-right: 0.3em;
     min-width: 5em;
     max-width: 5em;
-    position: absolute;
-    right: 0;
-    margin-top: 1.5em;
     margin-right: 0.2em;
+    float: right;
   }
 
   .icon.disks {
@@ -47,8 +45,8 @@
 .maximized .node .disks-group {
   float: none;
   position: relative;
-  min-width: 8em;
-  max-width: 8em;
+  min-width: 7em;
+  max-width: 7em;
 
   .icon {
     width: 1.3rem;
@@ -85,7 +83,7 @@
   font-family: $monospace;
 }
 
-.maximized .badges .badge {
+.maximized .node-badges .badge {
   padding: 0.5em 0.5em;
 }
 

@@ -25,7 +25,7 @@
   padding-top: 0.8em;
   min-width: 20em;
 
-  .badges {
+  .node-badges {
     margin-top: 0.2em;
   }
 }
@@ -123,7 +123,7 @@
 }
 
 .node h3.hostname {
-  width: 12.8em;
+  width: 11.7em;
   max-width: 12.8em;
   font-size: 1.2em;
   overflow-x: hidden;
@@ -135,8 +135,8 @@
 
 .maximized .node h3.hostname {
   display: inline-block;
-  width: 17em;
-  max-width: 17em;
+  width: 15em;
+  max-width: 15em;
   margin-top: -0.2em;
 }
 
@@ -155,7 +155,7 @@
   float: right;
 }
 
-.node .badges {
+.node .node-badges {
   float: right;
   display: inline;
 }
