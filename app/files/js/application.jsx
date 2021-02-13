@@ -51,8 +51,8 @@ $(function () {
         success: 50,
         warning: 70,
         timeout: {
-          warning: 30,
-          danger: 60,
+          warning: 300,
+          danger: 600,
         },
       },
     },
