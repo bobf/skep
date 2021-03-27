@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from 'jquery';
 import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
