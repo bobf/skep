@@ -23,7 +23,6 @@ $(function () {
   const initNode = (data) => {
     store.dispatch(updateNode(data));
     store.dispatch(pingNode(data));
-    setTimeout(() => store.dispatch(unpingNode(data)), 500);
   };
 
   const updateManifest = data => {

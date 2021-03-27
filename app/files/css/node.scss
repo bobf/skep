@@ -68,7 +68,7 @@
 
 .node.ping .light {
   opacity: 1;
-  color: $status-light-healthy;
+  color: $success;
   transition: color 700ms ease, opacity 700ms;
 }
 

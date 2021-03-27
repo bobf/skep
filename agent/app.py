@@ -12,7 +12,6 @@ import pprint
 import string
 import sys
 import shutil
-import threading
 import time
 import collections
 import urllib.parse
@@ -38,6 +37,7 @@ class StatRunner:
         )
         self.log = self.logger(kwargs)
         self.log.info('Launching Agent(%s)' % (kwargs,))
+        self.polled_containers = set()
 
     def docker(self):
         # Host Docker socket must be mounted in agent containers here:
@@ -46,7 +46,6 @@ class StatRunner:
     def run(self):
         while True:
             self.ping()
-            time.sleep(self.opts['interval'])
 
     def url(self, type):
         return urllib.parse.urljoin(
@@ -63,11 +62,11 @@ class StatRunner:
             response = urllib.request.urlopen(request)
         except self.connection_errors as e:
             self.log.warning(
-                'Could not publish stats: %s (%s)' % (url, e)
+                'Could not publish %s stats: %s (%s)' % (type, url, e)
             )
         else:
             self.log.debug(
-                'Published stats: %s %s' % (response.getcode(), response.read())
+                'Published %s stats: %s %s' % (type, response.getcode(), response.read())
             )
 
     def request(self, url, data):
@@ -82,6 +81,7 @@ class StatRunner:
         self.cache.append(stats)
         self.log.debug(pprint.pformat(stats))
         self.publish('app', self.stats_with_averaged_container_stats(stats))
+        stats['containers'] = [c for c in stats['containers'] if c['polled']]
         self.publish('charts', stats)
 
     def stats(self):
@@ -114,12 +114,15 @@ class StatRunner:
                 if x['op'] == 'Total'
             )
 
-        for key in [c['id'] for c in stats['containers']]:
+        for container in stats['containers']:
+            if not container['polled']:
+                continue
+            key = container['id']
             values = [
                 io(c)
                 for stat in self.cache
                 for c in stat['containers']
-                if c['id'] == key
+                if c['id'] == key and c['polled']
             ]
             if values:
                 averages[key] = values[-1] - values[0]
@@ -129,11 +132,14 @@ class StatRunner:
 
     def containers_averaged_network_io(self, stats):
         averages = {}
-        for key in [c['id'] for c in stats['containers']]:
+        for container in stats['containers']:
+            if not container['polled']:
+                continue
+            key = container['id']
             values = [
                 sum(n['rx_bytes'] + n['tx_bytes'] for n in c['networks'].values())
                 for stat in self.cache for c in stat['containers']
-                if c['id'] == key and 'networks' in c
+                if c['id'] == key and c['polled'] and 'networks' in c
             ]
             if values:
                 averages[key] = values[-1] - values[0]
@@ -143,11 +149,14 @@ class StatRunner:
 
     def containers_averaged_cpu(self, stats):
         averages = {}
-        for key in [c['id'] for c in stats['containers']]:
+        for container in stats['containers']:
+            if not container['polled']:
+                continue
+            key = container['id']
             values = [
                 c['cpu_stats']['cpu_usage']['total_usage'] / c['cpu_stats']['system_cpu_usage']
                 for stat in self.cache for c in stat['containers']
-                if c['id'] == key and 'system_cpu_usage' in c['cpu_stats']
+                if c['id'] == key and c['polled'] and 'system_cpu_usage' in c['cpu_stats']
             ]
             if values:
                 averages[key] = sum(values) / len(values)
@@ -155,13 +164,14 @@ class StatRunner:
                 averages[key] = 0
         return averages
 
-    def container_stats(self, q, container_id):
-        def stats():
-            q.put(
-                (container_id,
-                 self.docker().containers.get(container_id).stats(stream=False))
-            )
-        return stats
+    def container_definition(self, container, with_stats=False):
+        definition = { 'id': container.id, 'name': container.name }
+        if with_stats:
+            definition.update(self.docker().containers.get(container.id).stats(stream=False))
+        definition['polled'] = with_stats
+        # Remove `/` prefix from container name; may be a slight bug in Python Docker library.
+        definition['name'] = definition['name'].strip('/')
+        return definition
 
     def containers(self):
         params = { 'filters': { 'status': 'running' } }
@@ -171,38 +181,19 @@ class StatRunner:
             # A container was removed while we were inspecting it.
             return []
 
-        q = queue.Queue()
-
-        threads = [self.create_thread(q, container) for container in containers]
-
-        for thread in threads:
-            thread.start()
-
-        for thread in threads:
-            thread.join()
-
-        containers = []
-
-        while True:
-            try:
-                container_id, stats = q.get(block=False)
-                stats['id'] = container_id
-                # Remove `/` prefix from container name; may be a slight bug in
-                # Python Docker library.
-                stats['name'] = stats['name'].strip('/')
-                containers.append(stats)
-            except queue.Empty:
-                break
-
-        return containers
-
-    def create_thread(self, q, container):
-        return threading.Thread(
-            group=None,
-            target=self.container_stats(q, container.id),
-            name=container.name,
-            daemon=True
-        )
+        definitions = []
+        polled_count = 0
+        for container in containers:
+            if container.id not in self.polled_containers and polled_count < self.opts['stats_batch_size']:
+                polled_count += 1
+                self.polled_containers.add(container.id)
+                poll = True
+            else:
+                poll = False
+            definitions.append(self.container_definition(container, poll))
+        if polled_count == 0:
+            self.polled_containers.clear()
+        return definitions
 
     def load(self):
         return {
@@ -318,5 +309,6 @@ if __name__ == '__main__':
         ),
         interval=int(os.environ.get('COLLECT_INTERVAL', '5')),
         duration=int(os.environ.get('SAMPLE_DURATION', '1')),
+        stats_batch_size=int(os.environ.get('CONTAINER_STATS_BATCH_SIZE', '1')),
         log_level=os.environ.get('LOG_LEVEL', 'INFO')
     ).run()

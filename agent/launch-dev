@@ -3,7 +3,7 @@ export SKEP_APP_URL=http://localhost:60420/
 export SKEP_CHARTS_URL=http://localhost:5040/
 export HOSTFS_PATH=linux_metrics/test_filesystem/
 export LOG_LEVEL=debug
-export SKEP_HOST=DOCKER-DESKTOP
+export SKEP_HOST="$(hostname)" # Use 'docker-desktop' for OS X
 if [ -z "${FILE_SYSTEMS}" ]
 then
   export FILE_SYSTEMS=/
