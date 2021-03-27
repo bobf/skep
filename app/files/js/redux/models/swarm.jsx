@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const UPDATE = 'skep/swarm/UPDATE';
 const DISCONNECT = 'skep/swarm/DISCONNECT';
 const PING = 'skep/swarm/PING';

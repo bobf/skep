@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from "react-dom";
+import $ from 'jquery';
 import '../css/main.scss';
 import io from 'socket.io-client';
 import 'bootstrap';

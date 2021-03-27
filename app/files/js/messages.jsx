@@ -1,3 +1,5 @@
+import React from 'react';
+
 const Messages = {
   pluralize: (word, count) => `${word}${Math.round(count) !== 1 ? "s" : ""}`,
   skep: {

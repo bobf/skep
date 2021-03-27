@@ -1,3 +1,4 @@
+import React from 'react';
 import * as Icon from 'react-feather';
 import { connect } from 'react-redux';
 

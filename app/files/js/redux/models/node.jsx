@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const PING = 'skep/node/PING';
 const UNPING = 'skep/node/UNPING';
 const SELECT = 'skep/node/SELECT';

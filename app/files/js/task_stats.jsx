@@ -1,3 +1,4 @@
+import React from 'react';
 import * as Icon from 'react-feather';
 
 class TaskStats extends React.Component {

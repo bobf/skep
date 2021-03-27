@@ -39,7 +39,7 @@ monitor/.build
 charts/.build
 
 app/node_modules
-app/files/bundle.js
+app/dist/
 
 bin/
 install/
