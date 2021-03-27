@@ -3,6 +3,7 @@ all:
 	mkdir -p .build/
 ifeq (${dev},1)
 	cp Dockerfile Pipfile Pipfile.lock .build/
+	rm -f .build/build.tar
 	tar zcf .build/build.tar --exclude build.tar  --exclude .build --exclude node_modules .
 	cp -r ../shared/skep .build/skep
 	cd .build/ && docker build . -t skep/app:dev
