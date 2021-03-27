@@ -1,3 +1,4 @@
+import React from 'react';
 import Mapping from './mapping';
 
 class Mounts extends Mapping {

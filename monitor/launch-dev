@@ -1,5 +1,4 @@
 #!/bin/bash
-cd monitor
 export SERVICE_URL_TEMPLATE='https://github.com/bobf/{name}'
 export IMAGE_URL_TEMPLATE='https://hub.docker.com/r/{organization}/{repository}'
 export SKEP_APP_URL=http://localhost:60420/

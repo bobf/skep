@@ -9,7 +9,7 @@
 
 .chart-wrapper {
   z-index: 9999999999;
-  width: 62em;
+  width: 63em;
   min-height: 35em;
 
   .header {
@@ -23,6 +23,10 @@
 
 .chart-wrapper.ready:hover {
   background-color: $modal-background-hover-color;
+}
+
+.modal-content-body.chart {
+  overflow-y: hidden;
 }
 
 .chart {

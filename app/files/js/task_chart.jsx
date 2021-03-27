@@ -1,3 +1,4 @@
+import React from 'react';
 import ChartBase from './chart_base';
 import { requestContainerChart } from './redux/models/charts';
 

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from 'react';
 import { connect } from 'react-redux';
 import * as Icon from 'react-feather';

@@ -1,3 +1,4 @@
+import React from 'react';
 const SELECT_SERVICE = 'skep/dashboard/SELECT-SERVICE';
 const SELECT_STACK = 'skep/dashboard/SELECT-STACK';
 

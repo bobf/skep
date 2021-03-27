@@ -1,0 +1,2 @@
+#!/bin/bash
+./node_modules/webpack/bin/webpack.js serve --port 8081

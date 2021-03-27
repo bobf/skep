@@ -1,3 +1,6 @@
+import React from 'react';
+import numeral from 'numeral';
+
 class FilesystemStats {
   constructor(stats) {
     this.stats = stats;

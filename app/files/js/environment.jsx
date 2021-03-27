@@ -1,3 +1,4 @@
+import React from 'react';
 import Mapping from './mapping';
 
 class Environment extends Mapping {

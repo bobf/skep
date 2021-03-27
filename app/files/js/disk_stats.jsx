@@ -1,3 +1,4 @@
+import React from 'react';
 class DiskStats {
   constructor(stats) {
     this.stats = stats;

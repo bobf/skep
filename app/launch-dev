@@ -1,5 +1,4 @@
 #!/bin/bash
-cd app
 export SKEP_ENV=development
 export FLASK_APP=controller.py
 export FLASK_DEBUG=1

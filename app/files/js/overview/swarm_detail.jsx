@@ -1,3 +1,5 @@
+import React from 'react';
+import moment from 'moment';
 import { connect } from 'react-redux';
 
 import OverviewDetail from './overview_detail';

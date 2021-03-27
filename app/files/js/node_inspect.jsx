@@ -1,3 +1,4 @@
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { closeInspect } from './redux/models/node_inspect';
 import store from './redux/store';

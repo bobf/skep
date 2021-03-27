@@ -1,3 +1,6 @@
+import React from 'react';
+import numeral from 'numeral';
+
 class NetworkStats {
   constructor(stats) {
     this.stats = stats;

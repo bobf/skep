@@ -1,3 +1,4 @@
+import React from 'react';
 import { createStore, combineReducers } from 'redux';
 import charts from './models/charts';
 import dashboard from './models/dashboard';

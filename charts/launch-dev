@@ -1,5 +1,4 @@
 #!/bin/bash
-cd charts
 export SKEP_APP_URL=http://localhost:60420/
 export SKEP_CHARTS_URL=http://localhost:5040/
 export SKEP_ENV=development

@@ -1,3 +1,4 @@
+import numeral from 'numeral';
 import React from 'react';
 import * as Icon from 'react-feather';
 
