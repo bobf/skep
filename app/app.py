@@ -54,7 +54,6 @@ def root():
     return render_template(
         'layout.html',
         env=os.environ.get('SKEP_ENV', 'production'),
-        css_md5=os.environ.get('CSS_MD5', ''),
         js_md5=os.environ.get('JS_MD5', '')
     )
 
