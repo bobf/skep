@@ -41,6 +41,10 @@ logger.addHandler(handler)
 def log(msg, params=None, level='INFO'):
     getattr(logger, level.lower())(msg.format(**(params or {})))
 
+@application.route('/files/<path:path>')
+def files(path):
+    return send_from_directory('files', path)
+
 @application.route('/dist/<path:path>')
 def dist(path):
     return send_from_directory('dist', path)
