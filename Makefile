@@ -11,8 +11,7 @@ build:
 
 .PHONY: push
 push:
-ifneq (1,$(dev))
-	$(MAKE) push-dev
+ifeq (1,$(dev))
 	docker push skep/agent:dev
 	docker push skep/monitor:dev
 	docker push skep/app:dev
