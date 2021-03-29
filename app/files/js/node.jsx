@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import * as Icon from 'react-feather';
 
@@ -123,9 +124,9 @@ class ConnectedNode extends React.Component {
     const { tstamp } = this.agentData();
     const { tooltip: messages } = Messages.node;
     const now = Date.now();
-    const since = (now - tstamp) / 1000
+    const since = ((now / 1000) - tstamp);
     const rows = [
-      messages.lastUpdated(since),
+      messages.lastUpdated(moment.unix(tstamp).format('HH:mm:ss YYYY-MM-DD')),
       messages.hostname(this.hostname()),
       messages.version(this.version()),
       messages.containers(this.containers()),
@@ -303,7 +304,6 @@ class ConnectedNode extends React.Component {
     const { ping } = this.agentData() || {};
     const classes = ['node'];
 
-    if (ping) classes.push('ping');
     if (this.isHighlighted()) classes.push('highlighted');
     if (this.isSelected()) classes.push('selected');
     return (

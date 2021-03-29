@@ -67,6 +67,7 @@ class Monitor:
 
     def ping(self):
         manifest = Swarm().manifest()
+        manifest['tstamp'] = time.time() * 1000
         data = json.dumps(manifest, cls=DelegatingJSONEncoder).encode('utf8')
         self.publish('app', data)
 

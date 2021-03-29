@@ -54,6 +54,9 @@
   opacity: 0.8;
   transition: color 1500ms, opacity 1500ms;
   border-radius: 0.6em;
+  opacity: 1;
+  color: $success;
+  animation: pulse-node-ping-loop 5s infinite;
 
   &.warning {
     animation: pulse-warning-loop 5s infinite;
@@ -64,12 +67,6 @@
     animation: pulse-error-loop 5s infinite;
     color: $danger;
   }
-}
-
-.node.ping .light {
-  opacity: 1;
-  color: $success;
-  transition: color 700ms ease, opacity 700ms;
 }
 
 .minimized .node {

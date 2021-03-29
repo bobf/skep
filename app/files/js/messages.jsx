@@ -35,7 +35,7 @@ const Messages = {
 
   node: {
     tooltip : {
-      lastUpdated: when => `Last updated <em>${Math.round(when)} ${Messages.pluralize('second', when)} ago</em>`,
+      lastUpdated: when => `Last updated: <em>${when}</em>`,
       hostname: hostname => `Hostname: <em>${hostname}</em>`,
       version:  version => `Docker Engine Version: <em>${version}</em>`,
       containers: containers => `Active Containers: <em>${containers.length}</em>`,

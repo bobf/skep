@@ -53,8 +53,8 @@ $(function () {
         success: 50,
         warning: 70,
         timeout: {
-          warning: 300,
-          danger: 600,
+          warning: 5,
+          danger: 10,
         },
       },
     },

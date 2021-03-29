@@ -76,6 +76,15 @@
   }
 }
 
+@keyframes pulse-node-ping-loop {
+  0% { color: $success; }
+  20% { color: rgba($success, 0.8); }
+  40% { color: rgba($success, 0.7); }
+  60% { color: rgba($success, 0.7); }
+  80% { color: rgba($success, 0.8); }
+  100% { color: $success; }
+}
+
 @keyframes pulse-percent-0 {
   0% { background-color: $background-color-translucent; }
   50% { background-color: $background-color-updating-percent-0; }
