@@ -59,7 +59,7 @@ class StatRunner:
         request = self.request(url, data)
 
         try:
-            response = urllib.request.urlopen(request)
+            response = urllib.request.urlopen(request, timeout=5)
         except self.connection_errors as e:
             self.log.warning(
                 'Could not publish %s stats: %s (%s)' % (type, url, e)
