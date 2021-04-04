@@ -9,6 +9,7 @@ import os.path
 import queue
 import random
 import pprint
+import socket
 import string
 import sys
 import shutil
@@ -32,6 +33,7 @@ class StatRunner:
         self.opts = kwargs
         self.connection_errors = (
             urllib.error.URLError,
+            socket.timeout,
             http.client.RemoteDisconnected,
             ConnectionResetError
         )

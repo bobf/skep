@@ -7,9 +7,9 @@ from operator import itemgetter
 from charts.orm.base import Base as ORMBase
 
 class Base:
-    def __init__(self, db_path, data, publisher, logger):
+    def __init__(self, db_connection, data, publisher, logger):
         self.logger = logger
-        self.db_path = db_path
+        self.db_connection = db_connection
         self.time_indices, self.data = self.fetch_data(data)
         self.period = self.calculate_period()
         self.publisher = publisher
@@ -40,11 +40,8 @@ class Base:
 
         return { 'titles': self.titles(), 'data': self.chart_data() }
 
-    def connect(self):
-        return ORMBase(self.db_path, self.logger).connect()
-
     def fetch_data(self, data):
-        now = time.time()
+        now = time.time() / 1000
 
         try:
             period = int(data.get('period', '3600'))
@@ -89,18 +86,17 @@ class Base:
         return list(zip(self.time_indices, *charts))
 
     def execute(self, now, then):
-        db, cursor = self.connect()
+        cursor = self.db_connection.cursor()
         params = [self.id, now, then]
         columns = ', '.join(self.columns)
-        cursor.execute('''SELECT {columns} FROM {table}
-                          WHERE id = ?
-                          AND tstamp < ?
-                          AND tstamp > ?'''.format(
-                            columns=columns,
-                            table=self.table
-                          ),
-                          params)
+        query = '''SELECT {columns} FROM {table}
+                    WHERE id = %s
+                      AND tstamp < %s
+                      AND tstamp > %s'''.format(columns=columns, table=self.table)
+
+        cursor.execute(query, params)
         rows = cursor.fetchall()
+        cursor.close()
         return [dict((key, row[index])
                 for index, key in enumerate(self.columns))
                 for row in rows]

@@ -1,37 +1,31 @@
-import sqlite3
+from psycopg2 import sql
 import random
 
 class Base:
-    def __init__(self, db_path, logger):
-        self.db_path = db_path
+    def __init__(self, db_connection, logger):
+        self.db_connection = db_connection
         self.logger = logger
 
-    def connect(self):
-        db = self.database()
-        cursor = db.cursor()
-        self.compact(cursor)
+    def execute(self, query, values=None):
+        cursor = self.db_connection.cursor()
+        try:
+            cursor.execute(query, values)
+        except psycopg2.errors.InFailedSqlTransaction:
+            cursor.rollback()
+        else:
+            self.db_connection.commit()
+        finally:
+            cursor.close()
 
-        return db, cursor
-
-    def compact(self, cursor):
-        if random.randrange(1, 100000) != 666:
-            return
-
-        for table in ('nodes', 'containers'):
-            sql = "DELETE FROM {table} WHERE DATETIME(tstamp, 'unixepoch') < DATETIME('now', '-30 days')".format(table=table)
-            self.logger.warn('Compacting database: {sql}'.format(sql=sql))
-            cursor.execute(sql)
-
-    def database(self):
-        return sqlite3.connect(self.db_path)
-
-    def save_db(self, cursor, table, row):
+    def save_db(self, table, row):
         columns, values = zip(*row.items())
         params = dict(
             table=table,
             columns=', '.join(columns),
-            values=', '.join(['?'] * len(values))
+            values=', '.join(['%s'] * len(values))
         )
-        sql = "INSERT INTO {table} ({columns}) VALUES ({values})".format(**params)
+        query = sql.SQL(
+            "INSERT INTO {table} ({columns}) VALUES ({values})".format(**params)
+        )
 
-        return cursor.execute(sql, values)
+        return self.execute(query, values)

@@ -45,12 +45,7 @@ services:
     environment:
       SKEP_APP_URL: http://app:6666
       SKEP_CHARTS_URL: http://charts:8080
-      SKEP_CHARTS_DB_PATH: /skep/database/charts.db
-      SKEP_CHARTS_DB_PERSIST:
       LOG_LEVEL:
-    # To persist database storage, use a configuration similar to this:
-    # volumes:
-    #   - "/shared/network/storage/skep/:/skep/database/:rw"
 
   monitor:
     image: skep/monitor:${BUILD_TAG:-latest}
@@ -68,6 +63,19 @@ services:
       SKEP_CHARTS_URL: http://charts:8080
       SERVICE_URL_TEMPLATE:
       IMAGE_URL_TEMPLATE: https://hub.docker.com/r/{organization}/{repository}
+
+  database:
+    image: postgres:12
+    networks:
+      - skep
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      PGDATA: /var/lib/postgres/data
+    # To persist database storage, use a configuration similar to this:
+    # volumes:
+    #   - "/shared/network/storage/skep/:/var/lib/postgres/data/:rw"
 
 networks:
   skep: {}

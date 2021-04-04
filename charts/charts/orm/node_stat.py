@@ -1,16 +1,13 @@
 import dateutil.parser
-import sqlite3
 
 from charts.orm.base import Base
 
 class NodeStat(Base):
     def save(self, data, tstamp):
-        db, cursor = self.connect()
-        self.save_node(tstamp, data, cursor)
-        db.commit()
+        self.save_node(tstamp, data)
 
-    def save_node(self, tstamp, data, cursor):
-        self.save_db(cursor, 'nodes',
+    def save_node(self, tstamp, data):
+        self.save_db('nodes',
             {
                 'tstamp': tstamp,
                 'id': self.hostname(data),

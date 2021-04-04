@@ -1,6 +1,6 @@
 FROM python:3.9-alpine
 RUN pip install pipenv \
- && apk add --update build-base gcc npm outils-md5 \
+ && apk add --update build-base gcc npm outils-md5 postgresql-dev \
  && mkdir /skep \
  && mkdir /skep/database/
 COPY Pipfile Pipfile.lock /skep/

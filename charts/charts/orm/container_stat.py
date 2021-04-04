@@ -1,18 +1,15 @@
 import dateutil.parser
-import sqlite3
 
 from charts.orm.base import Base
 
 class ContainerStat(Base):
     def save(self, data, tstamp):
         self.period = self.period(data)
-        db, cursor = self.connect()
-        self.save_container(tstamp, data, cursor)
-        db.commit()
+        self.save_container(tstamp, data)
 
-    def save_container(self, tstamp, container, cursor):
+    def save_container(self, tstamp, container):
         ram_usage, ram_limit = self.ram_usage(container)
-        self.save_db(cursor, 'containers',
+        self.save_db('containers',
             {
                 'tstamp': tstamp,
                 'id': container['id'],

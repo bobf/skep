@@ -9,6 +9,7 @@ import secrets
 import socket
 import time
 import urllib
+import psycopg2
 from multiprocessing import Pool
 
 from flask import Flask, request, jsonify
@@ -30,17 +31,29 @@ logger.addHandler(handler)
 
 app_url = os.environ.get('SKEP_APP_URL', 'http://app:8080')
 charts_url = os.environ.get('SKEP_CHARTS_URL', 'http://charts:8080')
-db_path = os.environ.get('SKEP_CHARTS_DB_PATH', '/charts.db')
+db_host = os.environ.get('SKEP_CHARTS_DB_HOST', 'database:5432')
 pool_size = int(os.environ.get('SKEP_CHARTS_CONCURRENCY', '4'))
 
 application = Flask(__name__)
-pool = Pool(pool_size)
+
 publisher = Publisher(app_url, logger)
-create_database(db_path)
+create_database(db_host)
 chart_types = {
     'container': ContainerChart,
     'node': NodeChart
 }
+
+def create_db_connection():
+    return psycopg2.connect('postgresql://postgres:@%s/skep' % db_host)
+
+db_connection = create_db_connection()
+
+def publish_chart(data):
+    chart_type = data['chartType']
+    chart = chart_types[chart_type](db_connection, data['params'], publisher, logger)
+    chart.build(data['sid'])
+
+pool = Pool(pool_size)
 
 @application.route("/chart", methods=["POST"])
 def chart_create():
@@ -52,10 +65,7 @@ def chart_create():
             422
         )
 
-    params = data['params']
-    chart_type = data['chartType']
-    chart = chart_types[chart_type](db_path, params, publisher, logger)
-    _result = pool.apply_async(chart.build, (data['sid'],))
+    pool.apply_async(publish_chart, (data,))
 
     return 'OK', 200
 
@@ -65,8 +75,8 @@ def stats_create():
     containers = data['containers']
     # Convert JS microseconds to Python milliseconds:
     tstamp = data['tstamp'] / 1000
-    [ContainerStat(db_path, logger).save(container, tstamp) for container in containers]
-    NodeStat(db_path, logger).save(data, tstamp)
+    [ContainerStat(db_connection, logger).save(container, tstamp) for container in containers]
+    NodeStat(db_connection, logger).save(data, tstamp)
 
     try:
         urllib.request.urlopen(

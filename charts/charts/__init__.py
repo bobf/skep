@@ -1,47 +1,66 @@
 import logging
 import os
-import sqlite3
+import psycopg2
+from psycopg2.errors import DuplicateDatabase, DuplicateTable
 
 logger = logging.getLogger('skep:charts')
 
-def create_database(db_path):
-    if 'SKEP_CHARTS_DB_PERSIST' not in os.environ:
-        _delete_database(db_path)
+def create_database(db_host):
+    try:
+        _create_database(db_host)
+        logger.info("Database 'skep' created")
+    except DuplicateDatabase:
+        logger.info("Database 'skep' exists")
 
     try:
-        _create_database(db_path)
-        logger.info('Database created: {path}'.format(path=db_path))
-    except sqlite3.OperationalError:
-        logger.info('Using existing database: {path}'.format(path=db_path))
+        _create_containers_table(db_host)
+        logger.info("Table 'containers' created")
+    except DuplicateTable:
+        logger.info("Table 'containers' exists")
 
-def _delete_database(db_path):
     try:
-        os.remove(db_path)
-        logger.info('Previous database removed: {path}'.format(path=db_path))
-    except FileNotFoundError:
-        pass
+        _create_nodes_table(db_host)
+        logger.info("Table 'nodes' created")
+    except DuplicateTable:
+        logger.info("Table 'nodes' exists")
 
-def _create_database(db_path):
-    database = sqlite3.connect(db_path)
-    database.execute('''CREATE TABLE containers
+def _create_database(db_host):
+    connection = psycopg2.connect('postgresql://postgres:@%s/postgres' % db_host)
+    connection.autocommit = True
+    cursor = connection.cursor()
+    cursor.execute("CREATE DATABASE skep")
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+
+def _create_containers_table(db_host):
+    connection = psycopg2.connect('postgresql://postgres:@%s/skep' % db_host)
+    cursor = connection.cursor()
+    cursor.execute('''CREATE TABLE containers
         (tstamp real,
-         id text,
+         id varchar(255),
          cpu real,
          system_cpu real,
          ram_usage real,
          ram_limit real,
          disk_ops real,
          network_bytes real)''')
+    cursor.execute('''CREATE INDEX ON containers (id, tstamp)''')
+    connection.commit()
+    cursor.close()
+    connection.close()
 
-    database.execute('''CREATE TABLE nodes
+def _create_nodes_table(db_host):
+    connection = psycopg2.connect('postgresql://postgres:@%s/skep' % db_host)
+    cursor = connection.cursor()
+    cursor.execute('''CREATE TABLE nodes
         (tstamp real,
-         id text,
-         load real,
+         id varchar(255),
          cpu real,
+         load real,
          ram real)''')
-
-    database.execute('''CREATE INDEX containers_id_id_idx
-        ON containers(id)''')
-
-    database.execute('''CREATE INDEX nodes_id_idx
-        ON nodes(id)''')
+    cursor.execute('''CREATE INDEX ON nodes (id, tstamp)''')
+    connection.commit()
+    cursor.close()
+    connection.close()

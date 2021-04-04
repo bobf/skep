@@ -6,7 +6,6 @@ export FLASK_APP=controller.py
 export FLASK_DEBUG=1
 export SKEP_LISTEN_HOST=0.0.0.0
 export SKEP_CHARTS_PORT=5040
-export SKEP_CHARTS_DB_PATH=/tmp/charts.db
-export SKEP_CHARTS_DB_PERSIST=1
+export SKEP_CHARTS_DB_HOST=localhost:5432
 export LOG_LEVEL=debug
 pipenv run python app.py
