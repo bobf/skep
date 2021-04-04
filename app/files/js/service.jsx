@@ -3,6 +3,7 @@ import React from 'react';
 import Task from './task';
 import Environment from './environment';
 import Mounts from './mounts';
+import Networks from './networks';
 import Messages from './messages';
 import Copyable from './copyable';
 
@@ -329,6 +330,18 @@ class ConnectedService extends React.Component {
     return selectedService.id === id;
   }
 
+  networkedServices() {
+    const { networks, id } = this.props.service;
+    const { stacks } = this.props.swarm.manifest;
+    const networkIds = new Set(networks.map(network => network.id));
+    const services = stacks.map(stack => stack.services).flat();
+    return services.map(service => {
+      const serviceNetworkIds = service.networks.map(network => network.id);
+      const intersect = service.networks.filter(network => networkIds.has(network.id));
+      return { intersect, service, id: service.id };
+    }).filter(service => service.intersect.length && service.id !== id);
+  }
+
   commonNetworks() {
     const { selectedService } = this.props.dashboard;
     const { networks, id } = this.props.service;
@@ -549,7 +562,7 @@ class ConnectedService extends React.Component {
   }
 
   renderExpanded() {
-    const { name, image, environment, mounts, updating } = this.props.service;
+    const { name, image, environment, mounts, updating, networks } = this.props.service;
     const { organization, repository, tag } = image;
     const { stack } = this.props;
     const classes = ['service'];
@@ -568,17 +581,19 @@ class ConnectedService extends React.Component {
         </h2>
 
         <div className={'buttons'}>
-          <div className={'image-wrapper'}>
-            {this.updateStatus()}
-            <Copyable copyText={`${organization}/${repository}:${tag}`}>
-              <span className={'image-id'}>
-                {this.imageLink()}
-              </span>
-            </Copyable>
-          </div>
+          <Networks serviceName={name} joinedNetworks={networks} networkedServices={this.networkedServices()} />
           <Environment serviceName={name} environment={environment} />
           <Mounts serviceName={name} mounts={mounts} />
           {this.renderPortsExpanded()}
+        </div>
+
+        <div className={'image-wrapper'}>
+          {this.updateStatus()}
+          <Copyable copyText={`${organization}/${repository}:${tag}`}>
+            <span className={'image-id'}>
+              {this.imageLink()}
+            </span>
+          </Copyable>
         </div>
 
         <div className={'tasks'}>

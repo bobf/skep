@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Icon from 'react-feather';
+import $ from 'jquery';
 
 import Modal from './modal';
 
@@ -112,6 +113,8 @@ class Mapping extends React.Component {
     const rows = Object.keys(data).sort().map(
       key => this.renderRow(key, data[key])
     );
+
+    $('.tooltip.fade').remove();
 
     return (
       <Modal

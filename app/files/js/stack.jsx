@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Icon from 'react-feather';
 import { connect } from 'react-redux';
+import $ from 'jquery';
 
 import { selectStack } from './redux/models/dashboard';
 import Service from './service';

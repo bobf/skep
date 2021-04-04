@@ -1,0 +1,63 @@
+.networks {
+  padding: 2em;
+
+  h2.joined, h2.reachable {
+    font-size: 1.4em;
+  }
+
+  .joined-networks {
+    margin-top: 1em;
+  }
+
+  .joined-network {
+    font-family: $monospace;
+    font-size: 1.2em;
+
+    .network-name {
+      color: $label-text-dark;
+    }
+
+    .network-id {
+      color: $accent-dark;
+    }
+  }
+
+  table {
+    margin-top: 1em;
+    min-width: 100%;
+  }
+
+  th {
+    padding-right: 1em;
+    text-align: center;
+  }
+
+  th span.aliases {
+    color: $info;
+  }
+
+
+  tbody tr.networked-service {
+    border-top: 1px solid $outline-dark;
+  }
+
+  .alias {
+    color: $info;
+  }
+
+  .syntax {
+    color: $dark;
+  }
+
+  .reachable-network-name {
+    padding: 0 0.2em;
+    font-size: 1.1em;
+    color: $label-text-dark;
+  }
+
+  .networked-service {
+    font-size: 1.1em;
+    font-family: $monospace;
+    color: $dark;
+  }
+}

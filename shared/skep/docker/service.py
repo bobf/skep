@@ -64,7 +64,7 @@ class Service(ImageParser, ISO8601TimestampParser):
         if 'Networks' not in attrs['Spec']['TaskTemplate']:
             return {}
         return dict(
-            (network['Target'], network['Aliases'])
+            (network['Target'], network.get('Aliases', []))
             for network in attrs['Spec']['TaskTemplate']['Networks']
         )
 
