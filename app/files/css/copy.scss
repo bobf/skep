@@ -1,0 +1,19 @@
+.icon.copy {
+  position: absolute;
+  z-index: 9999999999999999;
+  background-color: $gray-dark;
+  padding: 0.2em;
+  color: $gray;
+  width: 1.6em;
+  height: 1.6em;
+  cursor: pointer;
+
+  &:hover {
+    color: #aaa;
+  }
+
+  &.highlight {
+    opacity: 1;
+    color: $success;
+  }
+}

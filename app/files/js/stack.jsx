@@ -71,48 +71,28 @@ class ConnectedStack extends React.Component {
     );
   }
 
-  tasksSummary() {
-    const { services } = this.props.stack;
-    const tasks = services.map(service => service.tasks).flat();
-    return (
-      <span className="stack-overview tasks summary">
-        <span>Tasks</span>
-        <em>{tasks.length}</em>
-      </span>
-    );
-  }
-
-  servicesSummary() {
-    const { services } = this.props.stack;
-    return (
-      <span className="stack-overview services summary">
-        <span>Services</span>
-        <em>{services.length}</em>
-      </span>
-    );
-  }
-
-  overviewBadges() {
-    const { services } = this.props.stack;
+  overviewBadge() {
+    const { services, name } = this.props.stack;
     const { nodes } = this.props.manifest;
 
-    return services.map(
+    const summary = services.map(
       service => {
         const runningCount = service.tasks.filter(task => task.state === 'running').length;
         const expectedCount = service.replicas === null ? Object.values(nodes).length : service.replicas;
         const level = runningCount === expectedCount ? 'success' : (runningCount === 0 ? 'danger' : 'warning');
-        const tooltip = `<div class='align-left'><em><b>${service.name}<b></em><br/>${runningCount}<em>/</em>${expectedCount} <em>replicas running.</em></div>`;
-        return (
-          <span
-            key={`${service.name}-overview-badges`}
-            className={`stack-overview badge bg-${level}`}
-            data-html={'true'}
-            data-original-title={tooltip}
-            data-toggle={'tooltip'}>
-            {runningCount}
-          </span>
-        );
+        return `<div class='align-left'><em><span class="text-${level}">&#11042; </span><b>${service.name}<b></em>: ${runningCount}<em>/</em>${expectedCount} <em>replicas running.</em></div>`;
       }
+    ).join("<br/>");
+
+    return (
+      <span
+        key={`${name}-overview-badges`}
+        className={`stack-overview badge bg-info`}
+        data-html={'true'}
+        data-original-title={summary}
+        data-toggle={'tooltip'}>
+        {services.reduce((count, service) => count + service.tasks.length, 0)}
+      </span>
     );
   }
 
@@ -120,10 +100,7 @@ class ConnectedStack extends React.Component {
     return (
       <div className="stack-summary-wrapper">
         <div className="stack-summary">
-          <div className="cell services-summary">{this.servicesSummary()}</div>
-          <div className="cell syntax">|</div>
-          <div className="cell tasks-summary">{this.tasksSummary()}</div>
-          <div className="cell overview-badges">{this.overviewBadges()}</div>
+          <div className="cell overview-badges">{this.overviewBadge()}</div>
         </div>
       </div>
     );

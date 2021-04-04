@@ -4,8 +4,8 @@ import Task from './task';
 import Environment from './environment';
 import Mounts from './mounts';
 import Messages from './messages';
+import Copyable from './copyable';
 
-import copyTextToClipboard from './copy';
 import { selectService } from './redux/models/dashboard';
 import { selectNode } from './redux/models/node';
 
@@ -466,40 +466,23 @@ class ConnectedService extends React.Component {
     const { imageURL } = this.props.service;
     const { copyImageVisible: showCopy } = this.state;
 
-    const copyIcon = showCopy ? <Icon.Copy onClick={(ev) => this.copyImage(ev)} className="icon copy" /> : null;
     if (!imageURL) return (
       <span className={'image'}>
         {this.imageLabel()}
-        {copyIcon}
       </span>
     );
 
     return (
       <a className={'image'} href={imageURL} target={'_blank'}>
         {this.imageLabel()}
-        {copyIcon}
       </a>
     );
-  }
-
-  copyImage(ev) {
-    const { organization, repository, tag } = this.props.service.image;
-    ev.preventDefault();
-    ev.stopPropagation();
-    copyTextToClipboard(`${organization}/${repository}:${tag}`);
-  }
-
-  showCopyImage() {
-    this.setState({ copyImageVisible: true });
-  }
-
-  hideCopyImage() {
-    this.setState({ copyImageVisible: false });
   }
 
   renderCollapsed() {
     const { name, environment, mounts, updating } = this.props.service;
     const { stack, service, dashboard } = this.props;
+    const { organization, repository, tag } = this.props.service.image;
     const classes = ['service', 'collapsed'];
     const networks = this.commonNetworks();
     const networkMessage = Messages.service.networks(this.networkNames(networks));
@@ -545,19 +528,18 @@ class ConnectedService extends React.Component {
           {this.countBadge()}
           {this.renderMode()}
           <span>
-            {this.nameLink()}
+            <Copyable copyText={name}><span className={'title'}>{this.nameLink()}</span></Copyable>
           </span>
         </th>
         <td>
           <Environment compact={true} serviceName={name} environment={environment} />
           <Mounts compact={true} serviceName={name} mounts={mounts} />
           {this.updateStatus()}
-          <span
-            onMouseEnter={() => this.showCopyImage()}
-            onMouseLeave={() => this.hideCopyImage()}
-            className={'image-id'}>
-            {this.imageLink()}
-          </span>
+          <Copyable copyText={`${organization}/${repository}:${tag}`}>
+            <span className={'image-id'}>
+              {this.imageLink()}
+            </span>
+          </Copyable>
         </td>
         <td className={'ports'}>
           {this.renderPortsCollapsed()}
@@ -568,6 +550,7 @@ class ConnectedService extends React.Component {
 
   renderExpanded() {
     const { name, image, environment, mounts, updating } = this.props.service;
+    const { organization, repository, tag } = image;
     const { stack } = this.props;
     const classes = ['service'];
 
@@ -581,16 +564,20 @@ class ConnectedService extends React.Component {
           {this.renderMode()}
         </div>
         <h2>
-          <span className={'title'}>{this.nameLink()}</span>
+          <Copyable copyText={name}><span className={'title'}>{this.nameLink()}</span></Copyable>
         </h2>
 
         <div className={'buttons'}>
-          <Environment serviceName={name} environment={environment} />
-          <Mounts serviceName={name} mounts={mounts} />
           <div className={'image-wrapper'}>
             {this.updateStatus()}
-            {this.imageLink()}
+            <Copyable copyText={`${organization}/${repository}:${tag}`}>
+              <span className={'image-id'}>
+                {this.imageLink()}
+              </span>
+            </Copyable>
           </div>
+          <Environment serviceName={name} environment={environment} />
+          <Mounts serviceName={name} mounts={mounts} />
           {this.renderPortsExpanded()}
         </div>
 
