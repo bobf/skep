@@ -71,11 +71,20 @@ class ChartBase extends React.Component {
     );
   }
 
+  renderError(error) {
+    return (
+      <div className={'error'}>
+        {error}
+      </div>
+    );
+  }
+
   chart() {
     const { loading, periodDefault } = this.state;
-    const { chart, period } = this.props.data;
+    const { chart, period, error } = this.props.data;
 
     if (chart === NO_DATA) return this.renderNoData();
+    if (error) return this.renderError(error);
     if (loading) return this.renderLoading();
 
     return (

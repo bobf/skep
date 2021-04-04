@@ -5,8 +5,12 @@ import traceback
 from charts.charts.base import Base
 
 class Container(Base):
+    @classmethod
+    def get_id(class_, data):
+        return  data.get('containerID', None)
+
     def __init__(self, db_connection, data, publisher, logger):
-        self.id = data.get('containerID', None)
+        self.id = Container.get_id(data)
         self.table = 'containers'
         self.columns = ['tstamp', 'id', 'cpu', 'system_cpu',
                         'ram_usage', 'ram_limit', 'disk_ops', 'network_bytes']

@@ -1,3 +1,4 @@
+import traceback
 import json
 import urllib.parse
 import urllib.request
@@ -7,26 +8,40 @@ class Publisher:
     def __init__(self, app_url, log):
         self.app_url = app_url
         self.log = log
+        self.url = urllib.parse.urljoin(self.app_url, 'chart_response')
+        self.headers = { 'Content-Type': 'application/json' }
+
+    def publish_error(self, sid, meta):
+        meta['error'] = True
+        request = Request(
+            self.url,
+            data=json.dumps({ 'sid': sid, 'meta': meta }).encode('utf8'),
+            headers=self.headers
+        )
+        try:
+            response = urllib.request.urlopen(request)
+        except Exception as e:
+            traceback.print_exc()
+            raise
+        self.log.debug('Published error: %s [%s] %s' % (self.url, response.getcode(), response.read()))
 
     def publish(self, period, chart_data, sid, meta):
-        url = urllib.parse.urljoin(self.app_url, 'chart_response')
-        request = self.request(url, period, chart_data, sid, meta)
+        request = self.request(period, chart_data, sid, meta)
 
         try:
             response = urllib.request.urlopen(request)
         except urllib.error.URLError as e:
             self.log.warning(
-                'Could not publish chart: %s (%s)' % (url, e)
+                'Could not publish chart: %s (%s)' % (self.url, e)
             )
         else:
             self.log.debug(
                 'Published chart: %s [%s] %s' % (
-                    url, response.getcode(), response.read()
+                    self.url, response.getcode(), response.read()
                 )
             )
 
-    def request(self, url, period, chart_data, sid, meta):
-        headers = { 'Content-Type': 'application/json' }
+    def request(self, period, chart_data, sid, meta):
         params = {
             'sid': sid,
             'period': period,
@@ -35,8 +50,8 @@ class Publisher:
         }
 
         return Request(
-            url,
+            self.url,
             data=json.dumps(params).encode('utf8'),
-            headers=headers
+            headers=self.headers
         )
 

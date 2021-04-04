@@ -50,8 +50,13 @@ db_connection = create_db_connection()
 
 def publish_chart(data):
     chart_type = data['chartType']
-    chart = chart_types[chart_type](db_connection, data['params'], publisher, logger)
-    chart.build(data['sid'])
+    chart_id = chart_types[chart_type].get_id(data)
+    try:
+        chart = chart_types[chart_type](db_connection, data['params'], publisher, logger)
+        chart.build(data['sid'])
+    except Exception:
+        publisher.publish_error(data['sid'], { 'id': chart_id, 'type': chart_type })
+        raise
 
 pool = Pool(pool_size)
 

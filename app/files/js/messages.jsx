@@ -30,7 +30,7 @@ const Messages = {
   chart: {
     noData: 'Metrics currently unavailable. Try again in a few minutes.',
     loading: 'Loading chart data ...',
-    error: 'An error occurred requesting chart data.',
+    error: 'An unexpected error occurred requesting chart data. Please try again.',
   },
 
   node: {

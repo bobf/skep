@@ -5,8 +5,12 @@ import traceback
 from charts.charts.base import Base
 
 class Node(Base):
+    @classmethod
+    def get_id(class_, data):
+        return data.get('hostname', '').lower()
+
     def __init__(self, db_connection, data, publisher, logger):
-        self.id = data.get('hostname', '').lower()
+        self.id = Node.get_id(data)
         self.table = 'nodes'
         self.columns = ['tstamp', 'id', 'load', 'cpu', 'ram']
         self.meta = { 'id': self.id, 'type': 'node' }

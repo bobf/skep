@@ -16,13 +16,18 @@ function requestChart(type, chartsParams) {
 function reduceResponse(state, action) {
   const newState = {};
   const { payload } = action;
-  if (payload.error) return { error: true };
+  if (payload.error || payload.meta.error) return { error: true };
 
   const { type, id } = payload.meta;
+  const { error } = payload;
 
   newState.node = Object.assign({}, state.nodes, {});
   newState.container = Object.assign({}, state.containers, {});
-  newState[type][id] = formatPayload(action.payload);
+  if (!error) {
+    newState[type][id] = formatPayload(action.payload);
+  } else {
+    newState[type][id] = { error };
+  }
 
   return newState;
 }
