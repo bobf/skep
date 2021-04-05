@@ -7,7 +7,7 @@ from charts.charts.base import Base
 class Container(Base):
     @classmethod
     def get_id(class_, data):
-        return  data.get('containerID', None)
+        return data.get('containerID', None)
 
     def __init__(self, db_connection, data, publisher, logger):
         self.id = Container.get_id(data)

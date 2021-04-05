@@ -73,6 +73,7 @@ services:
       replicas: 1
     environment:
       PGDATA: /var/lib/postgres/data
+      POSTGRES_HOST_AUTH_METHOD: trust
     # To persist database storage, use a configuration similar to this:
     # volumes:
     #   - "/shared/network/storage/skep/:/var/lib/postgres/data/:rw"

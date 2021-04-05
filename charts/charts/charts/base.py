@@ -23,7 +23,7 @@ class Base:
         if not data:
             return None
 
-        return max(x['tstamp'] for x in data) - min(x['tstamp'] for x in data)
+        return min(1, max(x['tstamp'] for x in data) - min(x['tstamp'] for x in data))
 
     def build(self, sid):
         try:
