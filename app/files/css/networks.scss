@@ -29,7 +29,7 @@
 
   th {
     padding-right: 1em;
-    text-align: center;
+    text-align: left;
   }
 
   th span.aliases {
@@ -37,8 +37,21 @@
   }
 
 
+  td.aliases {
+    text-align: left;
+    width: 100%;
+    padding-left: 2em;
+  }
+
   tbody tr.networked-service {
-    border-top: 1px solid $outline-dark;
+    line-height: 1em;
+
+    &:hover {
+      td {
+        text-decoration: underline;
+        text-decoration-color: $info;
+      }
+    }
   }
 
   .alias {

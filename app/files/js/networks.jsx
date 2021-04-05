@@ -88,7 +88,7 @@ const Content = (props) => {
                       {network.name}
                     </div>
                   </td>
-                  <td>
+                  <td className="aliases">
                     {([service.name].concat(service.aliases[network.id] || [])).map(
                       (alias, index) => (
                         <span className="alias" key={`${serviceName}-reachable-${service.name}-${network.id}-${alias}`}>

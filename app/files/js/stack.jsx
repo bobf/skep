@@ -76,19 +76,33 @@ class ConnectedStack extends React.Component {
     const { services, name } = this.props.stack;
     const { nodes } = this.props.manifest;
 
+    const getRunningCount = (service) => service.tasks.filter(task => task.state === 'running').length;
+    const getExpectedCount = (service) => service.replicas === null ? Object.values(nodes).length : service.replicas;
+    const getServiceLevel = (service) => {
+      const runningCount = getRunningCount(service);
+      return runningCount === getExpectedCount(service) ? 2 : (runningCount === 0 ? 0 : 1);
+    };
+
+    const serviceLevels = ['danger', 'warning', 'success'];
+
     const summary = services.map(
       service => {
-        const runningCount = service.tasks.filter(task => task.state === 'running').length;
-        const expectedCount = service.replicas === null ? Object.values(nodes).length : service.replicas;
-        const level = runningCount === expectedCount ? 'success' : (runningCount === 0 ? 'danger' : 'warning');
-        return `<div class='align-left'><em><span class="text-${level}">&#11042; </span><b>${service.name}<b></em>: ${runningCount}<em>/</em>${expectedCount} <em>replicas running.</em></div>`;
+        const level = serviceLevels[getServiceLevel(service)];
+        return `<div class='service-overview align-left'><em><span class="text-${level}">&#11042; </span><b>${service.name}<b></em>: ${getRunningCount(service)}<em>/</em>${getExpectedCount(service)} <em>replicas running.</em></div>`;
       }
-    ).join("<br/>");
+    ).join("\n");
+
+    const stackLevel = serviceLevels[services.reduce(
+      (level, service) => {
+        const serviceLevel = getServiceLevel(service);
+        return Math.min(serviceLevel, level);
+      },
+    2)];
 
     return (
       <span
         key={`${name}-overview-badges`}
-        className={`stack-overview badge bg-info`}
+        className={`stack-overview badge bg-${stackLevel}`}
         data-html={'true'}
         data-original-title={summary}
         data-toggle={'tooltip'}>
