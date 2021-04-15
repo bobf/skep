@@ -28,6 +28,7 @@ import stats.memory as memory
 
 class StatRunner:
     cache = collections.deque([], 10)
+    container_cache = {}
 
     def __init__(self, **kwargs):
         self.opts = kwargs
@@ -170,6 +171,9 @@ class StatRunner:
         definition = { 'id': container.id, 'name': container.name }
         if with_stats:
             definition.update(self.docker().containers.get(container.id).stats(stream=False))
+            self.container_cache[container.id] = definition
+        elif container.id in self.container_cache:
+            definition.update(self.container_cache[container.id])
         definition['polled'] = with_stats
         # Remove `/` prefix from container name; may be a slight bug in Python Docker library.
         definition['name'] = definition['name'].strip('/')
