@@ -9,12 +9,12 @@ class Node(Base):
     def get_id(class_, data):
         return data.get('hostname', '').lower()
 
-    def __init__(self, db_connection, data, publisher, logger):
+    def __init__(self, create_db_connection, data, publisher, logger):
         self.id = Node.get_id(data)
         self.table = 'nodes'
         self.columns = ['tstamp', 'id', 'load', 'cpu', 'ram']
         self.meta = { 'id': self.id, 'type': 'node' }
-        super().__init__(db_connection, data, publisher, logger)
+        super().__init__(create_db_connection, data, publisher, logger)
 
     def titles(self):
         return ('Time', 'Load', 'RAM', 'CPU')

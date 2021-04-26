@@ -9,13 +9,13 @@ class Container(Base):
     def get_id(class_, data):
         return data.get('containerID', None)
 
-    def __init__(self, db_connection, data, publisher, logger):
+    def __init__(self, create_db_connection, data, publisher, logger):
         self.id = Container.get_id(data)
         self.table = 'containers'
         self.columns = ['tstamp', 'id', 'cpu', 'system_cpu',
                         'ram_usage', 'ram_limit', 'disk_ops', 'network_bytes']
         self.meta = { 'id': self.id, 'type': 'container' }
-        super().__init__(db_connection, data, publisher, logger)
+        super().__init__(create_db_connection, data, publisher, logger)
 
     def titles(self):
         return ('Time', 'Disk', 'Network', 'RAM', 'CPU')

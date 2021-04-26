@@ -52,9 +52,10 @@ def publish_chart(data):
     chart_type = data['chartType']
     chart_id = chart_types[chart_type].get_id(data)
     try:
-        chart = chart_types[chart_type](db_connection, data['params'], publisher, logger)
+        chart = chart_types[chart_type](create_db_connection, data['params'], publisher, logger)
         chart.build(data['sid'])
-    except Exception:
+    except Exception as e:
+        print(e)
         publisher.publish_error(data['sid'], { 'id': chart_id, 'type': chart_type })
         raise
 
@@ -80,8 +81,8 @@ def stats_create():
     containers = data['containers']
     # Convert JS microseconds to Python milliseconds:
     tstamp = data['tstamp'] / 1000
-    [ContainerStat(db_connection, logger).save(container, tstamp) for container in containers]
-    NodeStat(db_connection, logger).save(data, tstamp)
+    [ContainerStat(create_db_connection, logger).save(container, tstamp) for container in containers]
+    NodeStat(create_db_connection, logger).save(data, tstamp)
 
     try:
         urllib.request.urlopen(

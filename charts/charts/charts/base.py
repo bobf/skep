@@ -7,9 +7,10 @@ from operator import itemgetter
 from charts.orm.base import Base as ORMBase
 
 class Base:
-    def __init__(self, db_connection, data, publisher, logger):
+    def __init__(self, create_db_connection, data, publisher, logger):
         self.logger = logger
-        self.db_connection = db_connection
+        self.create_db_connection = create_db_connection
+        self.db_connection = self.create_db_connection()
         self.time_indices, self.data = self.fetch_data(data)
         self.period = self.calculate_period()
         self.publisher = publisher
@@ -86,7 +87,12 @@ class Base:
         return list(zip(self.time_indices, *charts))
 
     def execute(self, now, then):
-        cursor = self.db_connection.cursor()
+        try:
+            cursor = self.db_connection.cursor()
+        except psycopg2.InterfaceError:
+            self.db_connection = self.create_db_connection()
+            cursor = self.db_connection.cursor()
+
         params = [self.id, now, then]
         columns = ', '.join(self.columns)
         query = '''SELECT {columns} FROM {table}
